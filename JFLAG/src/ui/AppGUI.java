@@ -8,7 +8,9 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import propertymanager.PropertyManager;
 
 import java.io.FileNotFoundException;
@@ -24,9 +26,6 @@ import java.nio.file.Paths;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import static settings.AppPropertyType.*;
@@ -39,7 +38,7 @@ public class AppGUI implements AppStyleArbiter{
     private Stage primaryStage;
     private Scene primaryScene;
     private BorderPane appPane;
-    private TilePane toolbarPane;
+    private Pane toolbarPane;
     private Button loginoutbtn;
     private Button homebtn;
     private Button helpbtn;
@@ -53,7 +52,11 @@ public class AppGUI implements AppStyleArbiter{
     public Stage getPrimaryStage(){return primaryStage;}
     public Scene getPrimaryScene(){return primaryScene;}
     public BorderPane getAppPane(){return appPane;}
-    public TilePane getToolbarPane(){return toolbarPane;}
+    public Pane getToolbarPane(){return toolbarPane;}
+    public Button getLoginoutbtn(){return loginoutbtn;}
+    public Button getHomebtn(){return homebtn;}
+    public Button getHelpbtn(){return helpbtn;}
+    public Button getQuitbtn(){return quitbtn;}
 
     public AppGUI(Stage primaryStage, String title, AppTemplate app) throws  Exception{
         this(primaryStage, title, app, -1, -1);
@@ -70,18 +73,35 @@ public class AppGUI implements AppStyleArbiter{
     }
 
     private void initializeToolbar()throws Exception{
-        toolbarPane = new TilePane(Orientation.VERTICAL);
-        toolbarPane.setPadding(new Insets(50));
-        toolbarPane.setTileAlignment(Pos.CENTER);
-        toolbarPane.setPrefColumns(1);
-        toolbarPane.setPrefRows(10);
-        loginoutbtn = initializeChildButton(toolbarPane, LOGOUTSTATE_ICON.toString(), false);
-        homebtn = initializeChildButton(toolbarPane, HOME_ICON.toString(), true);
-        helpbtn = initializeChildButton(toolbarPane, HELP_ICON.toString(), false);
-        quitbtn = initializeChildButton(toolbarPane, QUIT_ICON.toString(), false);
+        toolbarPane = new Pane();
+        toolbarPane.setPrefSize(200, 200);
+
+        Rectangle toolbarBackgroundRectangle = new Rectangle();
+        toolbarBackgroundRectangle.setHeight(550);
+        toolbarBackgroundRectangle.setWidth(145);
+
+
+        loginoutbtn = initializeChildButton(LOGOUTSTATE_ICON.toString(), false);
+        homebtn = initializeChildButton(HOME_ICON.toString(), true);
+        helpbtn = initializeChildButton(HELP_ICON.toString(), false);
+        quitbtn = initializeChildButton(QUIT_ICON.toString(), false);
+
+        loginoutbtn.setPrefSize(150, 30);
+        loginoutbtn.setLayoutX(26);
+        loginoutbtn.setLayoutY(83);
+        loginoutbtn.setMnemonicParsing(false);
+
+        homebtn.setPrefSize(150, 30);
+        homebtn.setLayoutX(26);
+        homebtn.setLayoutY(161);
+        homebtn.setMnemonicParsing(false);
+
+        helpbtn.setPrefSize(145, 30);
+        helpbtn.relocate(0,500);
+        toolbarPane.getChildren().addAll(toolbarBackgroundRectangle, loginoutbtn, homebtn, helpbtn);
     }
 
-    public Button initializeChildButton(Pane pane, String icon, boolean disable) throws Exception{
+    public Button initializeChildButton(String icon, boolean disable) throws Exception{
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         URL imageDirectoryURL = AppTemplate.class.getClassLoader().getResource(APP_IMAGE_DIR_PATH.getParameter());
@@ -95,7 +115,6 @@ public class AppGUI implements AppStyleArbiter{
             button.setDisable(disable);
             button.setGraphic(new ImageView(btnimage));
 
-            pane.getChildren().add(button);
         }catch (URISyntaxException e){
             e.printStackTrace();
             System.exit(1);
@@ -130,6 +149,7 @@ public class AppGUI implements AppStyleArbiter{
 
         appPane = new BorderPane();
         appPane.setLeft(toolbarPane);
+        appPane.setRight(quitbtn);
         primaryScene = appWindowWidth < 1 || appWindowHeight < 1 ?
                 new Scene(appPane)
                 :new Scene(appPane, appWindowWidth, appWindowHeight);
