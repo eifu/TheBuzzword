@@ -4,7 +4,8 @@ package settings;
 public enum AppPropertyType {
 
     // icons for application
-    LOGINOUT_ICON,
+    LOGINSTATE_ICON,
+    LOGOUTSTATE_ICON,
     HOME_ICON,
     HELP_ICON,
     QUIT_ICON,

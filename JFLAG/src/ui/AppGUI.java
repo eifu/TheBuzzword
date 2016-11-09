@@ -3,8 +3,12 @@ package ui;
 import apptemeplate.AppTemplate;
 import components.AppStyleArbiter;
 import controller.FileController;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import propertymanager.PropertyManager;
 
 import java.io.FileNotFoundException;
@@ -66,8 +70,12 @@ public class AppGUI implements AppStyleArbiter{
     }
 
     private void initializeToolbar()throws Exception{
-        toolbarPane = new TilePane();
-        loginoutbtn = initializeChildButton(toolbarPane, LOGINOUT_ICON.toString(), false);
+        toolbarPane = new TilePane(Orientation.VERTICAL);
+        toolbarPane.setPadding(new Insets(50));
+        toolbarPane.setTileAlignment(Pos.CENTER);
+        toolbarPane.setPrefColumns(1);
+        toolbarPane.setPrefRows(10);
+        loginoutbtn = initializeChildButton(toolbarPane, LOGOUTSTATE_ICON.toString(), false);
         homebtn = initializeChildButton(toolbarPane, HOME_ICON.toString(), true);
         helpbtn = initializeChildButton(toolbarPane, HELP_ICON.toString(), false);
         quitbtn = initializeChildButton(toolbarPane, QUIT_ICON.toString(), false);
@@ -121,7 +129,7 @@ public class AppGUI implements AppStyleArbiter{
         primaryStage.setTitle(appTitle);
 
         appPane = new BorderPane();
-        appPane.setTop(toolbarPane);
+        appPane.setLeft(toolbarPane);
         primaryScene = appWindowWidth < 1 || appWindowHeight < 1 ?
                 new Scene(appPane)
                 :new Scene(appPane, appWindowWidth, appWindowHeight);
