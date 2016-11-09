@@ -5,6 +5,7 @@ import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import propertymanager.PropertyManager;
 
@@ -41,13 +42,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
         gui.getAppPane().setId(pm.getPropertyValue(ROOT_BORDERPANE_ID));
         gui.getToolbarPane().getStyleClass().setAll(pm.getPropertyValue(SEGMENTED_BUTTON_BAR));
-        gui.getToolbarPane().setId(pm.getPropertyValue(TOP_TOOLBAR_ID));
 
         ObservableList<Node> toolbarChildren = gui.getToolbarPane().getChildren();
-        toolbarChildren.get(0).getStyleClass().add(pm.getPropertyValue(FIRST_TOOLBAR_BUTTON));
-        toolbarChildren.get(toolbarChildren.size() - 1).getStyleClass().add(pm.getPropertyValue(LAST_TOOLBAR_BUTTON));
+        toolbarChildren.get(0).setId(pm.getPropertyValue(TOP_TOOLBAR_ID));
 
         workspace.getStyleClass().add(CLASS_BORDERED_PANE);
+
+        gui.getQuitbtn().getStyleClass().add(pm.getPropertyValue(QUIT_BUTTON));
+        gui.getHelpbtn().getStyleClass().add(pm.getPropertyValue(HELP_BUTTON));
+
+
 //        guiHeadingLabel.getStyleClass().setAll(pm.getPropertyValue(HEADING_LABEL));
 
     }
