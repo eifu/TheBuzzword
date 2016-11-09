@@ -8,8 +8,8 @@ import javafx.scene.layout.Pane;
 public abstract class AppWorkspaceComponent implements AppStyleArbiter{
 
 
-    private Pane workspace;
-    private boolean workspaceActivated;
+    protected Pane workspace;
+    protected boolean workspaceActivated;
 
     public void activateWorkspace(BorderPane appPane){
         if (!workspaceActivated){

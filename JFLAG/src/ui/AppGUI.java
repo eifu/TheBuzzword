@@ -49,6 +49,7 @@ public class AppGUI implements AppStyleArbiter{
     public Stage getPrimaryStage(){return primaryStage;}
     public Scene getPrimaryScene(){return primaryScene;}
     public BorderPane getAppPane(){return appPane;}
+    public TilePane getToolbarPane(){return toolbarPane;}
 
     public AppGUI(Stage primaryStage, String title, AppTemplate app) throws  Exception{
         this(primaryStage, title, app, -1, -1);
