@@ -20,7 +20,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
     AppTemplate app;
     AppGUI gui;
     BuzzwordController controller;
-
     GameScreenState currentState;
 
     public BuzzwordWorkspace(AppTemplate app){
@@ -28,9 +27,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
         this.gui = app.getGui();
         controller = (BuzzwordController) gui.getFileController();
         currentState = HOME;
-
-
-        workspace = new VBox();
+        workspace = new GameScreen(currentState);
+        activateWorkspace(gui.getAppPane());
     }
 
 
@@ -58,7 +56,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
     @Override
     public void reloadWorkspace(){
-
+        ((GameScreen)workspace).change(currentState);
     }
 
 
