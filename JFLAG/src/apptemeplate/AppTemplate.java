@@ -30,6 +30,12 @@ public abstract class AppTemplate extends Application {
 
     public abstract AppComponentBuilder makeAppComponentBuilder();
 
+    // This method is for AppGUI to recall FilecController remotely
+    public String getFileControllerClass() {
+        return "FileController";
+    }
+
+
     public AppGameDataComponent getGameDataComponent(){return gameDataComponent;}
     public AppUserDataComponent getUserDataComponent(){return userDataComponent;}
     public AppFileComponent getFileComponent(){return fileComponent;}
@@ -49,7 +55,6 @@ public abstract class AppTemplate extends Application {
 
         try{
             if(loadProperties(APP_PROPERTIES_XML) && loadProperties(WORKSPACE_PROPERTIES_XML) ){
-
                 AppComponentBuilder builder = makeAppComponentBuilder();
 
                 fileComponent = builder.buildFileComponent();

@@ -35,5 +35,8 @@ public class Buzzword extends AppTemplate{
             }
         };
     }
+    public String getFileControllerClass() {
+        return "BuzzwordController";
+    }
 
 }

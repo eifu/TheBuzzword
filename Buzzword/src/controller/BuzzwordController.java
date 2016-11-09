@@ -11,6 +11,11 @@ public class BuzzwordController implements FileController{
     private BuzzwordGameData gameData;
     private BuzzwordUserData userData;
 
+    public BuzzwordController(AppTemplate app){
+        this.app = app;
+        this.gameData = null;
+        this.userData = null;
+    }
 
 
     @Override
