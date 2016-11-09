@@ -174,4 +174,13 @@ public class AppGUI implements AppStyleArbiter{
     public void initStyle(){
 
     }
+
+
+    public void setHomebtnDisable(boolean home){
+        homebtn.setDisable(home);
+    }
+
+    public void setLoginoutbtnDisable(boolean loginout){
+        loginoutbtn.setDisable(loginout);
+    }
 }

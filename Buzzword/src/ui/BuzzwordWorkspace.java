@@ -6,6 +6,7 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import propertymanager.PropertyManager;
 
@@ -31,6 +32,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
         activateWorkspace(gui.getAppPane());
     }
 
+    public AppGUI getGui(){return gui;}
 
     public void setCurrentState(GameScreenState state){this.currentState = state;}
 
@@ -49,14 +51,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
         gui.getQuitbtn().getStyleClass().add(pm.getPropertyValue(QUIT_BUTTON));
         gui.getHelpbtn().getStyleClass().add(pm.getPropertyValue(HELP_BUTTON));
 
-
-//        guiHeadingLabel.getStyleClass().setAll(pm.getPropertyValue(HEADING_LABEL));
-
     }
 
     @Override
-    public void reloadWorkspace(){
-        ((GameScreen)workspace).change(currentState);
+    public void reloadWorkspace(BorderPane appPane){
+        workspace = ((GameScreen)workspace).change(currentState);
+        appPane.setCenter(workspace);
     }
 
 

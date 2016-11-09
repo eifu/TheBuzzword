@@ -3,18 +3,21 @@ package ui;
 
 import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import propertymanager.PropertyManager;
+
+import java.util.Stack;
 
 import static settings.AppPropertyType.*;
 
@@ -104,6 +107,39 @@ public class GameScreen extends Pane {
 
                 container.getChildren().addAll(appTitle, circles);
                 this.getChildren().add(container);
+                break;
+            case SIGNINGIN:
+                VBox signingIncontainer = new VBox();
+                Label screenLabel = new Label("Sign In");
+                screenLabel.setAlignment(Pos.CENTER);
+                screenLabel.setFont(new Font("Roboto", 50));
+                screenLabel.setPrefSize(450, 100);
+
+                GridPane grid = new GridPane();
+                grid.setAlignment(Pos.CENTER);
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setPadding(new Insets(25,25,25,25));
+                grid.add(new Text("Welcome"), 0, 0, 2, 1);
+
+                grid.add(new Label("User Name:"), 0,1);
+                grid.add(new TextField(), 1,1);
+
+                grid.add(new Label("Password:"), 0,2);
+                grid.add(new TextField(), 1,2);
+
+                StackPane signInStackPane = new StackPane();
+                Button signInBtn = new Button("Sign In");
+                signInBtn.setTextFill(Paint.valueOf("white"));
+
+                HBox hbBtn = new HBox(10);
+                hbBtn.getChildren().add(signInBtn);
+                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+                grid.add(hbBtn, 1, 4);
+
+                signingIncontainer.getChildren().addAll(screenLabel, grid);
+                this.getChildren().add(signingIncontainer);
+                break;
         }
     }
 

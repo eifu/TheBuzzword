@@ -21,5 +21,5 @@ public abstract class AppWorkspaceComponent implements AppStyleArbiter{
     public void setWorkspace(Pane init){workspace =init;}
     public Pane getWorkspace(){return workspace;}
 
-    public abstract void reloadWorkspace();
+    public abstract void reloadWorkspace(BorderPane appPane);
 }
