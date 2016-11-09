@@ -6,15 +6,22 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
+import static settings.AppPropertyType.LOGINSTATE_ICON;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+
+import java.net.URISyntaxException;
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
@@ -22,14 +29,45 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
     AppGUI gui;
     BuzzwordController controller;
     GameScreenState currentState;
+    boolean signedIn;
 
     public BuzzwordWorkspace(AppTemplate app){
         this.app = app;
         this.gui = app.getGui();
-        controller = (BuzzwordController) gui.getFileController();
-        currentState = HOME;
-        workspace = new GameScreen(currentState);
+        this.controller = (BuzzwordController) gui.getFileController();
+        this.currentState = HOME;
+        this.workspace = new GameScreen(currentState);
+        this.signedIn = false;
         activateWorkspace(gui.getAppPane());
+    }
+
+    public void setHandler(GameScreenState state) {
+        switch (state){
+            case SIGNINGIN:
+                ObservableList<Node> workspaceChildren = workspace.getChildren();
+                ObservableList<Node> vboxChildren = ((VBox)workspaceChildren.get(0)).getChildren();
+
+                ObservableList<Node> gridChildren =  ((GridPane)vboxChildren.get(1)).getChildren();
+
+                Button signInBtn= (Button)((HBox)gridChildren.get(5)).getChildren().get(0);
+                signInBtn.setOnAction(e ->{
+                    TextField usernameTxt = (TextField) gridChildren.get(2);
+                    TextField passwordTxt = (TextField) gridChildren.get(4);
+
+                    String name = usernameTxt.getText();
+                    String pass = passwordTxt.getText();
+                    if (!name.equals("") && !pass.equals("")){
+                        setCurrentState(HOME);
+                        reloadWorkspace(gui.getAppPane());
+                        signedIn = true;
+                        gui.setLoginoutbtnIcon(true);
+
+                        gui.setHomebtnDisable(true);
+                        gui.setLoginoutbtnDisable(false);
+                    }
+                });
+
+        }
     }
 
     public AppGUI getGui(){return gui;}
@@ -57,6 +95,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
     public void reloadWorkspace(BorderPane appPane){
         workspace = ((GameScreen)workspace).change(currentState);
         appPane.setCenter(workspace);
+        setHandler(currentState);
     }
 
 

@@ -3,9 +3,11 @@ package ui;
 import apptemeplate.AppTemplate;
 import components.AppStyleArbiter;
 import controller.FileController;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -182,5 +184,28 @@ public class AppGUI implements AppStyleArbiter{
 
     public void setLoginoutbtnDisable(boolean loginout){
         loginoutbtn.setDisable(loginout);
+    }
+
+    public void setLoginoutbtnIcon(boolean in){
+        String s;
+        if (in){
+           s = LOGINSTATE_ICON.toString();
+        }else {
+            s = LOGOUTSTATE_ICON.toString();
+        }
+
+        try{
+            loginoutbtn = initializeChildButton(s, false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        loginoutbtn.setPrefSize(150, 30);
+        loginoutbtn.setLayoutX(26);
+        loginoutbtn.setLayoutY(83);
+        loginoutbtn.setMnemonicParsing(false);
+
+        ObservableList<Node> toolbarChildern = toolbarPane.getChildren();
+        toolbarChildern.set(1,loginoutbtn);
     }
 }

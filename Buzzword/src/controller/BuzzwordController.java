@@ -20,8 +20,6 @@ public class BuzzwordController implements FileController{
 
     @Override
     public void handleLoginoutRequest(){
-
-
         BuzzwordWorkspace buzzwordWorkspace = (BuzzwordWorkspace) app.getWorkspaceComponent();
         AppGUI gui = buzzwordWorkspace.getGui();
 
