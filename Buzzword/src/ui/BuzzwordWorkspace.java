@@ -5,6 +5,7 @@ import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import javafx.scene.layout.VBox;
 import propertymanager.PropertyManager;
 
 import static buzzword.GameScreenState.*;
@@ -27,6 +28,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
         controller = (BuzzwordController) gui.getFileController();
         currentState = HOME;
 
+
+        workspace = new VBox();
     }
 
 

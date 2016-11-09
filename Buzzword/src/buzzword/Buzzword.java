@@ -6,6 +6,7 @@ import data.BuzzwordFile;
 import data.BuzzwordGameData;
 import components.*;
 import data.BuzzwordUserData;
+import ui.BuzzwordWorkspace;
 
 
 public class Buzzword extends AppTemplate{
@@ -31,7 +32,7 @@ public class Buzzword extends AppTemplate{
 
             @Override
             public AppWorkspaceComponent buildWorkspaceComponent() {
-                return null;
+                return new BuzzwordWorkspace(Buzzword.this);
             }
         };
     }
