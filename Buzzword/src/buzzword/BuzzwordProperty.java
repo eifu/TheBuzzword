@@ -10,6 +10,7 @@ public enum BuzzwordProperty {
     LAST_TOOLBAR_BUTTON,
     HELP_BUTTON,
     QUIT_BUTTON,
+    PLAY_RESUME_BUTTON,
     HEADING_LABEL;
 
 }

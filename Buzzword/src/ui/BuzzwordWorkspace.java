@@ -6,6 +6,7 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -19,8 +20,7 @@ import java.util.Stack;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
-
-
+import static settings.AppPropertyType.PLAYGAME_ICON;
 
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent{
@@ -123,10 +123,33 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                 l.setText((String)comboBox.getValue());
 
-                for (int level = 0; level < progress; level ++){
+                for (int level = 0; level < totalLevel; level ++){
                     StackPane s = (StackPane)levelChildren.get(level);
                     Button b = (Button) s.getChildren().get(0);
-                    b.setDisable(false);
+                    b.setOnAction(e ->{
+                        setCurrentState(GAMEPLAY);
+                        reloadWorkspace(gui.getAppPane());
+
+                    });
+                    if (level < progress) {
+                        b.setDisable(false);
+                    }
+                }
+                break;
+            case GAMEPLAY:
+                PropertyManager pm = PropertyManager.getPropertyManager();
+
+                workspaceChildren = workspace.getChildren();
+                BorderPane gameWorkspace = (BorderPane)workspaceChildren.get(0);
+                VBox centerVBox = (VBox) gameWorkspace.getCenter();
+                try {
+                    Button playGameBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
+                    playGameBtn.setAlignment(Pos.BOTTOM_CENTER);
+                    playGameBtn.setPrefSize(450, 0);
+                    playGameBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
+                    centerVBox.getChildren().add(playGameBtn);
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
 
         }

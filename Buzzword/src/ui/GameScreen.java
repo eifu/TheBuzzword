@@ -10,12 +10,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
 
 
-import java.util.Stack;
 
 import static settings.AppPropertyType.*;
 
@@ -189,7 +189,51 @@ public class GameScreen extends Pane {
                 container.getChildren().addAll(buzzwordTitle, modeLabel, circles);
                 this.getChildren().add(container);
                 break;
+            case GAMEPLAY:
+                BorderPane gameWorkspace = new BorderPane();
 
+                VBox centerBox = new VBox();
+                buzzwordTitle = new Label("Buzzword");
+                buzzwordTitle.setPrefSize(450, 60);
+                buzzwordTitle.setAlignment(Pos.CENTER);
+                buzzwordTitle.setFont(new Font("Roboto", 30));
+
+                modeLabel = new Label("Label");
+                modeLabel.setPrefSize(450, 40);
+                modeLabel.setAlignment(Pos.CENTER);
+                modeLabel.setFont(new Font("Roboto", 16));
+
+                circles = new Pane();
+                for (int y = 0; y < 4; y ++) {
+                    for (int x = 0; x < 4; x++) {
+                        StackPane stackPane = new StackPane();
+                        stackPane.setLayoutX(x * 80 + 70);
+                        stackPane.setLayoutY(y * 80 + 30);
+
+                        Button btn = new Button();
+                        btn.setShape(new Circle(30));
+                        btn.setMinSize(2 * 30, 2 * 30);
+                        btn.setMaxSize(2 * 30, 2 * 30);
+                        btn.setDisable(true);
+
+                        stackPane.getChildren().add(btn);
+
+//                        Label l = new Label(""+(1+x+y*4));
+//                        l.setFont(new Font("Roboto", 24));
+//                        l.setTextFill(Paint.valueOf("white"));
+//                        stackPane.getChildren().add(l);
+                        circles.getChildren().add(stackPane);
+                    }
+                }
+                Label levelLabel = new Label();
+                levelLabel.setText("test");
+                levelLabel.setPrefSize(450, 40);
+                levelLabel.setAlignment(Pos.CENTER);
+
+                centerBox.getChildren().addAll(buzzwordTitle, modeLabel,circles, levelLabel);
+                gameWorkspace.setCenter(centerBox);
+                this.getChildren().add(gameWorkspace);
+                break;
         }
     }
 

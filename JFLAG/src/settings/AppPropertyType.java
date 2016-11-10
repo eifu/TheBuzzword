@@ -9,6 +9,8 @@ public enum AppPropertyType {
     HOME_ICON,
     HELP_ICON,
     QUIT_ICON,
+    PLAYGAME_ICON,
+    RESUMEGAME_ICON,
 
     //
     APP_LOGO,
@@ -20,6 +22,10 @@ public enum AppPropertyType {
 
     // error messages
     PROPERTY_LOAD_ERROR_MESSAGE,
-    PROPERTY_LOAD_ERROR_TITLE;
+    PROPERTY_LOAD_ERROR_TITLE,
+
+    // check message
+    CHECK_QUIT_MESSAGE,
+    CHECK_QUIT_TITLE;
 
 }
