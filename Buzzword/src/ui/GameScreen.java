@@ -35,23 +35,27 @@ public class GameScreen extends Pane {
                 for (int y = 0; y < 4; y ++){
                     for (int x = 0; x < 4; x ++){
                         StackPane stackPane = new StackPane();
+//                        stackPane.getStyleClass().add("test");
                         stackPane.setLayoutX(x*80 +70);
                         stackPane.setLayoutY(y*80 +30);
 
                         Button btn = new Button();
-                        btn.setShape(new Circle(30));
-                        btn.setMinSize(2*30, 2*30);
-                        btn.setMaxSize(2*30, 2*30);
+                        btn.getStyleClass().add("circle-button");
+
                         btn.setDisable(true);
 
                         stackPane.getChildren().add(btn);
                         Label l;
                         switch (x + y*4){
                             case 0:
-                                l = new Label("B");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("B");
+                                btn.setFont(new Font("arial",12));
+//                                btn.addStyle("-fx-font: 26 arial;");
+//                                btn.setTextFill(Paint.valueOf("white"));
+//                                l = new Label("B");
+//                                l.setFont(new Font("Roboto", 24));
+//                                l.setTextFill(Paint.valueOf("white"));
+//                                stackPane.getChildren().add(l);
                                 break;
                             case 1:
                                 l = new Label("U");
