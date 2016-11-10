@@ -11,6 +11,7 @@ public enum AppPropertyType {
     QUIT_ICON,
     PLAYGAME_ICON,
     RESUMEGAME_ICON,
+    FACE_ICON,
 
     //
     APP_LOGO,
@@ -26,6 +27,11 @@ public enum AppPropertyType {
 
     // check message
     CHECK_QUIT_MESSAGE,
-    CHECK_QUIT_TITLE;
+    CHECK_QUIT_TITLE,
+    CHECK_LOGOUT_MESSAGE,
+    CHECK_LOGOUT_TITLE,
+
+    //
+    USER_INFO_TITLE;
 
 }

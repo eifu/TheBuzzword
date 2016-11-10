@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
@@ -31,6 +32,7 @@ public class GameScreen extends Pane {
                 Label appTitle = new Label(pm.getPropertyValue(APP_TITLE));
                 appTitle.setAlignment(Pos.CENTER);
                 appTitle.setFont(new Font("Roboto", 50));
+                appTitle.setTextFill(Paint.valueOf("white"));
                 appTitle.setPrefSize(450, 100);
                 Pane circles = new Pane();
                 for (int y = 0; y < 4; y ++){
@@ -105,12 +107,12 @@ public class GameScreen extends Pane {
                 StackPane s = new StackPane();
                 Button gameStartButton = new Button();
                 gameStartButton.setPrefSize(200, 30);
-                Label t = new Label("Game Start");
-                t.setFont(new Font("Roboto", 24));
-                t.setTextFill(Paint.valueOf("white"));
+                Label gameStartLabel = new Label("Game Start");
+                gameStartLabel.setFont(new Font("Roboto", 24));
+                gameStartLabel.setTextFill(Paint.valueOf("white"));
 
                 s.setAlignment(Pos.BOTTOM_CENTER);
-                s.getChildren().addAll(gameStartButton, t);
+                s.getChildren().addAll(gameStartButton, gameStartLabel);
                 s.setPrefSize(450, 60);
                 s.setVisible(false);
                 container.getChildren().addAll(appTitle, circles, s);
@@ -119,35 +121,87 @@ public class GameScreen extends Pane {
             case SIGNINGIN:
                 VBox signingIncontainer = new VBox();
 
-                Label screenLabel = new Label("Sign In");
-                screenLabel.setAlignment(Pos.CENTER);
-                screenLabel.setFont(new Font("Roboto", 50));
-                screenLabel.setPrefSize(450, 100);
+                Label titleLabel = new Label("Sign In");
+                titleLabel.setAlignment(Pos.CENTER);
+                titleLabel.setFont(new Font("Roboto", 50));
+                titleLabel.setTextFill(Paint.valueOf("white"));
+                titleLabel.setPrefSize(450, 100);
 
                 GridPane grid = new GridPane();
                 grid.setAlignment(Pos.CENTER);
                 grid.setHgap(10);
                 grid.setVgap(10);
                 grid.setPadding(new Insets(25,25,25,25));
-                grid.add(new Text("Welcome"), 0, 0, 2, 1);
+                Text titleSignIn = new Text("Sign in or sign up for account.");
+                titleSignIn.setFill(Paint.valueOf("white"));
+                grid.add(titleSignIn, 0, 0, 2, 1);
 
-                grid.add(new Label("User Name:"), 0,1);
+                Label usernameLabel = new Label("User Name:");
+                usernameLabel.setTextFill(Paint.valueOf("white"));
+                grid.add(usernameLabel, 0,1);
                 TextField usernameTxt = new TextField();
                 grid.add(usernameTxt, 1,1);
 
-                grid.add(new Label("Password:"), 0,2);
-                TextField passwordTxt = new TextField();
+                Label passwordLabel = new Label("Password:");
+                passwordLabel.setTextFill(Paint.valueOf("white"));
+                grid.add(passwordLabel, 0,2);
+                PasswordField passwordTxt = new PasswordField();
                 grid.add(passwordTxt, 1,2);
 
                 Button signInBtn = new Button("Sign In");
                 signInBtn.setTextFill(Paint.valueOf("white"));
 
+                Button singUpBtn = new Button("Sign Up");
+                singUpBtn.setTextFill(Paint.valueOf("white"));
+
                 HBox hbBtn = new HBox(10);
+                hbBtn.getChildren().add(singUpBtn);
                 hbBtn.getChildren().add(signInBtn);
                 hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
                 grid.add(hbBtn, 1, 4);
 
-                signingIncontainer.getChildren().addAll(screenLabel, grid);
+                signingIncontainer.getChildren().addAll(titleLabel, grid);
+                this.getChildren().add(signingIncontainer);
+                break;
+            case SIGNUP:
+                signingIncontainer = new VBox();
+
+                titleLabel = new Label("Sign Up");
+                titleLabel.setAlignment(Pos.CENTER);
+                titleLabel.setFont(new Font("Roboto", 50));
+                titleLabel.setTextFill(Paint.valueOf("white"));
+                titleLabel.setPrefSize(450, 100);
+
+                grid = new GridPane();
+                grid.setAlignment(Pos.CENTER);
+                grid.setHgap(10);
+                grid.setVgap(10);
+                grid.setPadding(new Insets(25,25,25,25));
+                titleSignIn = new Text("Welcome to Buzzword.");
+                titleSignIn.setFill(Paint.valueOf("white"));
+                grid.add(titleSignIn, 0, 0, 2, 1);
+
+                usernameLabel = new Label("User Name:");
+                usernameLabel.setTextFill(Paint.valueOf("white"));
+                grid.add(usernameLabel, 0,1);
+                usernameTxt = new TextField();
+                grid.add(usernameTxt, 1,1);
+
+                passwordLabel = new Label("Password:");
+                passwordLabel.setTextFill(Paint.valueOf("white"));
+                grid.add(passwordLabel, 0,2);
+                passwordTxt = new PasswordField();
+                grid.add(passwordTxt, 1,2);
+
+                singUpBtn = new Button("Sign Up");
+                singUpBtn.setTextFill(Paint.valueOf("white"));
+
+                hbBtn = new HBox(10);
+                hbBtn.getChildren().add(singUpBtn);
+                hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+                grid.add(hbBtn, 1, 4);
+
+                signingIncontainer.getChildren().addAll(titleLabel, grid);
                 this.getChildren().add(signingIncontainer);
                 break;
 
@@ -157,11 +211,13 @@ public class GameScreen extends Pane {
                 buzzwordTitle.setPrefSize(450, 60);
                 buzzwordTitle.setAlignment(Pos.CENTER);
                 buzzwordTitle.setFont(new Font("Roboto", 30));
+                buzzwordTitle.setTextFill(Paint.valueOf("white"));
 
                 Label modeLabel = new Label("Label");
                 modeLabel.setPrefSize(450, 40);
                 modeLabel.setAlignment(Pos.CENTER);
                 modeLabel.setFont(new Font("Roboto", 16));
+                modeLabel.setTextFill(Paint.valueOf("white"));
 
                 circles = new Pane();
 
@@ -199,11 +255,13 @@ public class GameScreen extends Pane {
                 buzzwordTitle.setPrefSize(450, 60);
                 buzzwordTitle.setAlignment(Pos.CENTER);
                 buzzwordTitle.setFont(new Font("Roboto", 30));
+                buzzwordTitle.setTextFill(Paint.valueOf("white"));
 
                 modeLabel = new Label("Label");
                 modeLabel.setPrefSize(450, 40);
                 modeLabel.setAlignment(Pos.CENTER);
                 modeLabel.setFont(new Font("Roboto", 16));
+                modeLabel.setTextFill(Paint.valueOf("white"));
 
                 circles = new Pane();
                 for (int y = 0; y < 4; y ++) {
@@ -245,6 +303,8 @@ public class GameScreen extends Pane {
                 }
                 Label levelLabel = new Label();
                 levelLabel.setText("test");
+                levelLabel.setFont(new Font("Roboto", 16));
+                levelLabel.setTextFill(Paint.valueOf("white"));
                 levelLabel.setPrefSize(450, 40);
                 levelLabel.setAlignment(Pos.CENTER);
 

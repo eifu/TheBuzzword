@@ -8,13 +8,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import propertymanager.PropertyManager;
+import settings.InitializationParameters;
 import ui.AppGUI;
 import ui.AppYesNoCancelSingleton;
 import ui.BuzzwordWorkspace;
 
 import static buzzword.GameScreenState.*;
-import static settings.AppPropertyType.CHECK_QUIT_MESSAGE;
-import static settings.AppPropertyType.CHECK_QUIT_TITLE;
+import static settings.AppPropertyType.*;
 import static settings.InitializationParameters.YES;
 
 public class BuzzwordController implements FileController{
@@ -36,18 +36,26 @@ public class BuzzwordController implements FileController{
 
             gui.setHomebtnDisable(false);
             gui.setLoginoutbtnDisable(true);
+
         }else{
-            buzzwordWorkspace.setCurrentState(HOME);
-            buzzwordWorkspace.setSignedIn(false);
-            buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
+            PropertyManager pm = PropertyManager.getPropertyManager();
+            AppYesNoCancelSingleton dialog = AppYesNoCancelSingleton.getSingleton();
+            dialog.show(pm.getPropertyValue(CHECK_LOGOUT_TITLE),pm.getPropertyValue(CHECK_LOGOUT_MESSAGE));
 
-            // remove gamemode comboBox
-            ObservableList<Node> toolbarChiildren = gui.getToolbarPane().getChildren();
-            toolbarChiildren.remove(4);
+            if (dialog.getSelection().equals(YES.getParameter())) {
+                buzzwordWorkspace.setCurrentState(HOME);
+                buzzwordWorkspace.setSignedIn(false);
+                buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
 
-            gui.setLoginoutbtnIcon(false);
-            gui.setHomebtnDisable(true);
-            gui.setLoginoutbtnDisable(false);
+                // remove gamemode comboBox
+                ObservableList<Node> toolbarChiildren = gui.getToolbarPane().getChildren();
+                toolbarChiildren.remove(4);
+                toolbarChiildren.remove(4);
+
+                gui.setLoginoutbtnIcon(false);
+                gui.setHomebtnDisable(true);
+                gui.setLoginoutbtnDisable(false);
+            }
         }
     }
 

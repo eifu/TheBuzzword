@@ -11,6 +11,10 @@ public class BuzzwordUserData implements AppUserDataComponent {
     private Map<String, Integer> progress;
     private Map<String, Integer> highscore;
 
+    public void setUsername(String username){this.username = username;}
+    public String getUsername(){return username;}
+    public void setPassword(String password){this.password = password;}
+
     public BuzzwordUserData(){
         this.username = "";
         this.password = "";

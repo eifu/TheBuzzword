@@ -4,16 +4,18 @@ package ui;
 import apptemeplate.AppTemplate;
 import buzzword.Buzzword;
 import buzzword.GameScreenState;
+import com.sun.prism.shader.Solid_TextureFirstPassLCD_AlphaTest_Loader;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.BuzzwordGameData;
+import data.BuzzwordUserData;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -22,7 +24,9 @@ import java.util.Stack;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
+import static settings.AppPropertyType.FACE_ICON;
 import static settings.AppPropertyType.PLAYGAME_ICON;
+import static settings.AppPropertyType.USER_INFO_TITLE;
 
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent{
@@ -52,7 +56,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gamesStartBtn = (Button)s.getChildren().get(0);
 
-                    if (gui.getToolbarPane().getChildren().size() != 5) {
+                    if (gui.getToolbarPane().getChildren().size() != 6) { // TODO more efficient and elegant way needed
                         ObservableList<String> options =
                                 FXCollections.observableArrayList(
                                         "English Dictionary",
@@ -65,9 +69,41 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
                         comboBox.setPrefSize(150, 30);
                         comboBox.setLayoutX(26);
-                        comboBox.setLayoutY(244);
+                        comboBox.setLayoutY(336);
+
                         Pane toolbar = gui.getToolbarPane();
-                        toolbar.getChildren().add(comboBox);
+                        toolbar.getChildren().addAll(comboBox);
+                        try {
+                            Button personalBtn = gui.initializeChildButton(FACE_ICON.toString(), false);
+                            personalBtn.setOnAction(e -> {
+                                PropertyManager pm = PropertyManager.getPropertyManager();
+                                AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
+                                dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
+                            });
+
+
+                            Label usernameLabel = new Label();
+                            String name = ((BuzzwordUserData)app.getUserDataComponent()).getUsername();
+                            usernameLabel.setText(name);
+//                            usernameLabel.setFont(new Font("Roboto", ));
+                            usernameLabel.setTextFill(Paint.valueOf("white"));
+                            usernameLabel.setAlignment(Pos.CENTER);
+                            usernameLabel.setMinWidth(Region.USE_PREF_SIZE);
+                            usernameLabel.setMaxWidth(Region.USE_PREF_SIZE);
+                            usernameLabel.setPadding(new Insets(0,10,0,10));
+                            HBox face = new HBox();
+                            face.setLayoutX(30);
+                            face.setLayoutY(244);
+                            face.setPrefSize(150, 30);
+                            face.setAlignment(Pos.CENTER);
+                            face.getChildren().addAll(usernameLabel, personalBtn);
+                            toolbar.getChildren().add(face);
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+
                     }else {
                         gui.getToolbarPane().getChildren().get(4).setVisible(true);
                     }
@@ -90,7 +126,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
                 ObservableList<Node> gridChildren =  ((GridPane)vboxChildren.get(1)).getChildren();
 
-                Button signInBtn= (Button)((HBox)gridChildren.get(5)).getChildren().get(0);
+                Button signUpBtn = (Button)((HBox)gridChildren.get(5)).getChildren().get(0);
+                signUpBtn.setOnAction(e ->{
+                    setCurrentState(SIGNUP);
+                    reloadWorkspace(gui.getAppPane());
+
+                    setHandler();
+                });
+
+                Button signInBtn= (Button)((HBox)gridChildren.get(5)).getChildren().get(1);
                 signInBtn.setOnAction(e ->{
                     TextField usernameTxt = (TextField) gridChildren.get(2);
                     TextField passwordTxt = (TextField) gridChildren.get(4);
@@ -101,6 +145,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
                         signedIn = true;
+
+                        BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
+                        userData.setUsername(name);
+                        userData.setPassword(pass);
+
                         setHandler();
 
                         // gameStartBtn config
@@ -118,6 +167,39 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                     }
                 });
                 break;
+            case SIGNUP:
+                workspaceChildren = workspace.getChildren();
+                vboxChildren = ((VBox)workspaceChildren.get(0)).getChildren();
+
+                gridChildren =  ((GridPane)vboxChildren.get(1)).getChildren();
+                signInBtn= (Button)((HBox)gridChildren.get(5)).getChildren().get(0);
+                signInBtn.setOnAction(e ->{
+                    String name =((TextField)gridChildren.get(2)).getText();
+                    String pass =((TextField)gridChildren.get(4)).getText();
+                    setCurrentState(HOME);
+                    reloadWorkspace(gui.getAppPane());
+                    signedIn = true;
+
+                    BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
+                    userData.setUsername(name);
+                    userData.setPassword(pass);
+
+                    setHandler();
+
+                    // gameStartBtn config
+                    ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
+                    ObservableList<Node> vboxHomeChildren = ((VBox)workspaceHomeChildren.get(0)).getChildren();
+                    StackPane s = (StackPane) vboxHomeChildren.get(2);
+                    s.setVisible(true);
+
+                    // toolbar config
+                    gui.setLoginoutbtnIcon(true);
+                    gui.setHomebtnDisable(true);
+                    gui.setLoginoutbtnDisable(false);
+
+                });
+                break;
+
             case SELECTING:
                 int progress = 4; // TODO need to get from BuzzwordUserData
                 int totalLevel = 8; // TODO need to get from BuzzwordGameData
