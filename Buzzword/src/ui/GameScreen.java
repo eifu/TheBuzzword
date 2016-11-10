@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -175,6 +176,7 @@ public class GameScreen extends Pane {
                         btn.setMinSize(2 * 30, 2 * 30);
                         btn.setMaxSize(2 * 30, 2 * 30);
                         btn.setDisable(true);
+                        btn.setId(""+(1+x+y*4));
 
                         stackPane.getChildren().add(btn);
 
@@ -206,6 +208,21 @@ public class GameScreen extends Pane {
                 circles = new Pane();
                 for (int y = 0; y < 4; y ++) {
                     for (int x = 0; x < 4; x++) {
+                        if (x < 3) {
+                            Line hLine = new Line();
+                            hLine.setLayoutX(130 + 80 * x);
+                            hLine.setLayoutY(60 + 80 * y);
+                            hLine.setEndX(20);
+                            circles.getChildren().add(hLine);
+                        }
+                        if (y < 3){
+                            Line vLine = new Line();
+                            vLine.setLayoutX(90 + 80*x);
+                            vLine.setLayoutY(100 + 80*y);
+                            vLine.setRotate(90);
+                            vLine.setEndX(20);
+                            circles.getChildren().add(vLine);
+                        }
                         StackPane stackPane = new StackPane();
                         stackPane.setLayoutX(x * 80 + 70);
                         stackPane.setLayoutY(y * 80 + 30);
@@ -214,7 +231,7 @@ public class GameScreen extends Pane {
                         btn.setShape(new Circle(30));
                         btn.setMinSize(2 * 30, 2 * 30);
                         btn.setMaxSize(2 * 30, 2 * 30);
-                        btn.setDisable(true);
+                        btn.setId(""+(1+x+y*4));
 
                         stackPane.getChildren().add(btn);
 
@@ -222,13 +239,16 @@ public class GameScreen extends Pane {
 //                        l.setFont(new Font("Roboto", 24));
 //                        l.setTextFill(Paint.valueOf("white"));
 //                        stackPane.getChildren().add(l);
-                        circles.getChildren().add(stackPane);
+                        circles.getChildren().addAll(stackPane);
+
                     }
                 }
                 Label levelLabel = new Label();
                 levelLabel.setText("test");
                 levelLabel.setPrefSize(450, 40);
                 levelLabel.setAlignment(Pos.CENTER);
+
+
 
                 centerBox.getChildren().addAll(buzzwordTitle, modeLabel,circles, levelLabel);
                 gameWorkspace.setCenter(centerBox);
