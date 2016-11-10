@@ -2,9 +2,11 @@ package ui;
 
 
 import apptemeplate.AppTemplate;
+import buzzword.Buzzword;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import data.BuzzwordGameData;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -57,7 +59,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                                         "Places",
                                         "Science",
                                         "Famous People"
-                                );
+                                );// TODO get those data from gamedata
                         ComboBox<String> comboBox = new ComboBox<>(options);
                         comboBox.setValue("English Dictionary");
 
@@ -72,6 +74,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                     gamesStartBtn.setOnAction(e ->{
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
+
+                        BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
+                        ComboBox<String> gamemodeComboBox = (ComboBox)gui.getToolbarPane().getChildren().get(4);
+                        gamedata.setCurrentMode(gamemodeComboBox.getValue());
 
                         gui.setHomebtnDisable(false);
                         gui.getToolbarPane().getChildren().get(4).setVisible(false);
@@ -127,9 +133,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                     StackPane s = (StackPane)levelChildren.get(level);
                     Button b = (Button) s.getChildren().get(0);
                     b.setOnAction(e ->{
+                        BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
+                        gamedata.setCurrentLevel(Integer.parseInt(b.getId()));
+
                         setCurrentState(GAMEPLAY);
                         reloadWorkspace(gui.getAppPane());
-
                     });
                     if (level < progress) {
                         b.setDisable(false);
@@ -142,6 +150,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                 workspaceChildren = workspace.getChildren();
                 BorderPane gameWorkspace = (BorderPane)workspaceChildren.get(0);
                 VBox centerVBox = (VBox) gameWorkspace.getCenter();
+
+                Label modeLabel = (Label)centerVBox.getChildren().get(1);
+                String mode = "mode: " + ((BuzzwordGameData)app.getGameDataComponent()).getCurrentMode();
+                modeLabel.setText(mode);
+
+                Label levelLabel = (Label)centerVBox.getChildren().get(3);
+                String level = "Level: " + ((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel();
+                levelLabel.setText(level);
+
                 try {
                     Button playGameBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
                     playGameBtn.setAlignment(Pos.BOTTOM_CENTER);

@@ -17,6 +17,15 @@ public class BuzzwordGameData implements AppGameDataComponent{
     private Map<String, String>usernamePasswordMap;
     private Map<String, Path> usernameFilepathMap;
 
+    private int currentLevel;
+    private String currentMode;
+
+    public void setCurrentLevel(int currentLevel){this.currentLevel = currentLevel;}
+    public void setCurrentMode(String currentMode){this.currentMode = currentMode;}
+
+    public int getCurrentLevel(){return currentLevel;}
+    public String getCurrentMode(){return currentMode;}
+
     public BuzzwordGameData(AppTemplate app){
         this(app, false);
     }
