@@ -2,17 +2,20 @@ package controller;
 
 
 import apptemeplate.AppTemplate;
-import data.BuzzwordGameData;
-import data.BuzzwordUserData;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import propertymanager.PropertyManager;
 import ui.AppGUI;
+import ui.AppYesNoCancelSingleton;
 import ui.BuzzwordWorkspace;
 
 import static buzzword.GameScreenState.*;
+import static settings.AppPropertyType.CHECK_QUIT_MESSAGE;
+import static settings.AppPropertyType.CHECK_QUIT_TITLE;
+import static settings.InitializationParameters.YES;
 
 public class BuzzwordController implements FileController{
 
@@ -21,7 +24,6 @@ public class BuzzwordController implements FileController{
     public BuzzwordController(AppTemplate app){
         this.app = app;
     }
-
 
     @Override
     public void handleLoginoutRequest(){
@@ -39,6 +41,7 @@ public class BuzzwordController implements FileController{
             buzzwordWorkspace.setSignedIn(false);
             buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
 
+            // remove gamemode comboBox
             ObservableList<Node> toolbarChiildren = gui.getToolbarPane().getChildren();
             toolbarChiildren.remove(4);
 
@@ -47,6 +50,7 @@ public class BuzzwordController implements FileController{
             gui.setLoginoutbtnDisable(false);
         }
     }
+
     @Override
     public void handleHomeRequest(){
         BuzzwordWorkspace buzzwordWorkspace = (BuzzwordWorkspace) app.getWorkspaceComponent();
@@ -80,6 +84,14 @@ public class BuzzwordController implements FileController{
 
     @Override
     public void handleQuitRequest(){
+
+        PropertyManager pm = PropertyManager.getPropertyManager();
+        AppYesNoCancelSingleton yesNoCancelSingleton = AppYesNoCancelSingleton.getSingleton();
+        yesNoCancelSingleton.show(pm.getPropertyValue(CHECK_QUIT_TITLE), pm.getPropertyValue(CHECK_QUIT_MESSAGE));
+
+        if (yesNoCancelSingleton.getSelection().equals(YES.getParameter())){
+            System.exit(0);
+        }
 
     }
 
