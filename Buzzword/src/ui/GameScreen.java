@@ -4,15 +4,12 @@ package ui;
 import buzzword.GameScreenState;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.TriangleMesh;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
@@ -252,13 +249,13 @@ public class GameScreen extends Pane {
 
                 VBox centerBox = new VBox();
                 buzzwordTitle = new Label("Buzzword");
-                buzzwordTitle.setPrefSize(450, 60);
+                buzzwordTitle.setPrefSize(400, 60);
                 buzzwordTitle.setAlignment(Pos.CENTER);
                 buzzwordTitle.setFont(new Font("Roboto", 30));
                 buzzwordTitle.setTextFill(Paint.valueOf("white"));
 
                 modeLabel = new Label("Label");
-                modeLabel.setPrefSize(450, 40);
+                modeLabel.setPrefSize(400, 40);
                 modeLabel.setAlignment(Pos.CENTER);
                 modeLabel.setFont(new Font("Roboto", 16));
                 modeLabel.setTextFill(Paint.valueOf("white"));
@@ -305,13 +302,70 @@ public class GameScreen extends Pane {
                 levelLabel.setText("test");
                 levelLabel.setFont(new Font("Roboto", 16));
                 levelLabel.setTextFill(Paint.valueOf("white"));
-                levelLabel.setPrefSize(450, 40);
+                levelLabel.setPrefSize(400, 40);
                 levelLabel.setAlignment(Pos.CENTER);
-
-
 
                 centerBox.getChildren().addAll(buzzwordTitle, modeLabel,circles, levelLabel);
                 gameWorkspace.setCenter(centerBox);
+
+                Pane rightWorkspace = new Pane();
+                rightWorkspace.setPadding(new Insets(0, 10, 0, 0));
+                Rectangle timeOuterRect = new Rectangle();
+                timeOuterRect.setHeight(25);
+                timeOuterRect.setWidth(180);
+                timeOuterRect.setArcHeight(5.0);
+                timeOuterRect.setArcWidth(5.0);
+                timeOuterRect.setLayoutX(0);
+                timeOuterRect.setLayoutY(80);
+                timeOuterRect.setStyle("-fx-fill: rgb(127, 148, 176)");
+                Label timerLabel = new Label("TIME: REMAINING: 40 seconds");
+                timerLabel.setFont(new Font("Roboto", 12));
+                timerLabel.setTextFill(Paint.valueOf("red"));
+                timerLabel.setLayoutY(83);
+
+                VBox textInputVBox = new VBox();
+                Label textInputVBoxLabel = new Label("Text input");
+                textInputVBoxLabel.setTextFill(Paint.valueOf("white"));
+                TextField textInput = new TextField();
+                textInput.setMaxWidth(180);
+                textInputVBox.getChildren().addAll(textInputVBoxLabel, textInput);
+                textInputVBox.setLayoutX(0);
+                textInputVBox.setLayoutY(140);
+
+                VBox scoreVBox = new VBox();
+                SplitPane scoreWords = new SplitPane();
+                scoreWords.setPrefSize(180, 160);
+                scoreWords.getItems().add(new VBox(new Label("WAR"), new Label("RAW")));
+                scoreWords.getItems().add(new VBox(new Label("10"), new Label("20")));
+
+                SplitPane total = new SplitPane();
+                total.setPrefSize(180, 40);
+                total.getItems().add(new Label("TOTAL"));
+                total.getItems().add(new Label("30"));
+                scoreVBox.getChildren().addAll(scoreWords, total);
+                scoreVBox.setLayoutX(0);
+                scoreVBox.setLayoutY(200);
+
+                Rectangle targetOuterRect  = new Rectangle();
+                targetOuterRect.setArcWidth(5.0);
+                targetOuterRect.setArcHeight(5.0);
+                targetOuterRect.setHeight(50);
+                targetOuterRect.setWidth(180);
+                targetOuterRect.setLayoutY(420);
+                targetOuterRect.setStyle("-fx-fill: rgb(127, 148, 176)");
+                VBox targetVBox = new VBox();
+                Label target = new Label("Target:");
+                target.setAlignment(Pos.TOP_LEFT);
+                target.setTextFill(Paint.valueOf("white"));
+                Label points = new Label("75 points");
+                points.setTextFill(Paint.valueOf("white"));
+                points.setAlignment(Pos.CENTER);
+                targetVBox.getChildren().addAll(target, points);
+                targetVBox.setLayoutY(420);
+
+                rightWorkspace.getChildren().addAll(timeOuterRect,timerLabel, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
+                gameWorkspace.setRight(rightWorkspace);
+
                 this.getChildren().add(gameWorkspace);
                 break;
         }

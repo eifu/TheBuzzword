@@ -244,7 +244,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                 try {
                     Button playGameBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
                     playGameBtn.setAlignment(Pos.BOTTOM_CENTER);
-                    playGameBtn.setPrefSize(450, 0);
+                    playGameBtn.setPrefSize(400, 0);
                     playGameBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
                     centerVBox.getChildren().add(playGameBtn);
                 }catch(Exception e){
