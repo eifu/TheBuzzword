@@ -41,6 +41,8 @@ public class BuzzwordController implements FileController{
 
             ObservableList<Node> toolbarChiildren = gui.getToolbarPane().getChildren();
             toolbarChiildren.remove(4);
+
+            gui.setLoginoutbtnIcon(false);
             gui.setHomebtnDisable(true);
             gui.setLoginoutbtnDisable(false);
         }

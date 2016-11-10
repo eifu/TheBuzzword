@@ -8,11 +8,14 @@ import controller.BuzzwordController;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+
+import java.util.Stack;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
@@ -46,11 +49,32 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                     ObservableList<Node> vboxHomeChildren = ((VBox)workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gamesStartBtn = (Button)s.getChildren().get(0);
+
+                    if (gui.getToolbarPane().getChildren().size() != 5) {
+                        ObservableList<String> options =
+                                FXCollections.observableArrayList(
+                                        "English Dictionary",
+                                        "Places",
+                                        "Science",
+                                        "Famous People"
+                                );
+                        ComboBox<String> comboBox = new ComboBox<>(options);
+                        comboBox.setValue("English Dictionary");
+
+                        comboBox.setPrefSize(150, 30);
+                        comboBox.setLayoutX(26);
+                        comboBox.setLayoutY(244);
+                        Pane toolbar = gui.getToolbarPane();
+                        toolbar.getChildren().add(comboBox);
+                    }else {
+                        gui.getToolbarPane().getChildren().get(4).setVisible(true);
+                    }
                     gamesStartBtn.setOnAction(e ->{
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
 
                         gui.setHomebtnDisable(false);
+                        gui.getToolbarPane().getChildren().get(4).setVisible(false);
                     });
                 }
                 break;
@@ -84,24 +108,26 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                         gui.setHomebtnDisable(true);
                         gui.setLoginoutbtnDisable(false);
 
-                        ObservableList<String> options =
-                                FXCollections.observableArrayList(
-                                        "English Dictionary",
-                                        "Places",
-                                        "Science",
-                                        "Famous People"
-                                );
-                        ComboBox<String> comboBox = new ComboBox<>(options);
-                        comboBox.setValue("English Dictionary");
 
-                        comboBox.setPrefSize(150, 30);
-                        comboBox.setLayoutX(26);
-                        comboBox.setLayoutY(244);
-                        Pane toolbar = gui.getToolbarPane();
-                        toolbar.getChildren().add(comboBox);
                     }
                 });
                 break;
+            case SELECTING:
+                int progress = 4; // TODO need to get from BuzzwordUserData
+                int totalLevel = 8; // TODO need to get from BuzzwordGameData
+                workspaceChildren = workspace.getChildren();
+                vboxChildren = ((VBox)workspaceChildren.get(0)).getChildren();
+                ObservableList<Node> levelChildren = ((Pane)vboxChildren.get(2)).getChildren();
+                Label l = (Label) vboxChildren.get(1);
+
+                ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
+                l.setText((String)comboBox.getValue());
+
+                for (int level = 0; level < progress; level ++){
+                    StackPane s = (StackPane)levelChildren.get(level);
+                    Button b = (Button) s.getChildren().get(0);
+                    b.setDisable(false);
+                }
 
         }
     }
