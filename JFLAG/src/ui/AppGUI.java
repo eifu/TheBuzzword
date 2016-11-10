@@ -4,14 +4,10 @@ import apptemeplate.AppTemplate;
 import components.AppStyleArbiter;
 import controller.FileController;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import propertymanager.PropertyManager;
 
@@ -204,6 +200,8 @@ public class AppGUI implements AppStyleArbiter{
         loginoutbtn.setLayoutX(26);
         loginoutbtn.setLayoutY(83);
         loginoutbtn.setMnemonicParsing(false);
+
+        loginoutbtn.setOnAction(e->fileController.handleLoginoutRequest());
 
         ObservableList<Node> toolbarChildern = toolbarPane.getChildren();
         toolbarChildern.set(1,loginoutbtn);

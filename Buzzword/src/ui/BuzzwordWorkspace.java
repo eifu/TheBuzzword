@@ -5,23 +5,20 @@ import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.layout.*;
 import propertymanager.PropertyManager;
-
-import static buzzword.GameScreenState.*;
-import static buzzword.BuzzwordProperty.*;
-import static settings.AppPropertyType.LOGINSTATE_ICON;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
-import java.net.URISyntaxException;
+import static buzzword.GameScreenState.*;
+import static buzzword.BuzzwordProperty.*;
+
+
+
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent{
 
@@ -41,8 +38,22 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
         activateWorkspace(gui.getAppPane());
     }
 
-    public void setHandler(GameScreenState state) {
-        switch (state){
+    public void setHandler() {
+        switch (currentState){
+            case HOME:
+                if (signedIn){
+                    ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
+                    ObservableList<Node> vboxHomeChildren = ((VBox)workspaceHomeChildren.get(0)).getChildren();
+                    StackPane s = (StackPane) vboxHomeChildren.get(2);
+                    Button gamesStartBtn = (Button)s.getChildren().get(0);
+                    gamesStartBtn.setOnAction(e ->{
+                        setCurrentState(SELECTING);
+                        reloadWorkspace(gui.getAppPane());
+
+                        gui.setHomebtnDisable(false);
+                    });
+                }
+                break;
             case SIGNINGIN:
                 ObservableList<Node> workspaceChildren = workspace.getChildren();
                 ObservableList<Node> vboxChildren = ((VBox)workspaceChildren.get(0)).getChildren();
@@ -60,12 +71,37 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
                         signedIn = true;
-                        gui.setLoginoutbtnIcon(true);
+                        setHandler();
 
+                        // gameStartBtn config
+                        ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
+                        ObservableList<Node> vboxHomeChildren = ((VBox)workspaceHomeChildren.get(0)).getChildren();
+                        StackPane s = (StackPane) vboxHomeChildren.get(2);
+                        s.setVisible(true);
+
+                        // toolbar config
+                        gui.setLoginoutbtnIcon(true);
                         gui.setHomebtnDisable(true);
                         gui.setLoginoutbtnDisable(false);
+
+                        ObservableList<String> options =
+                                FXCollections.observableArrayList(
+                                        "English Dictionary",
+                                        "Places",
+                                        "Science",
+                                        "Famous People"
+                                );
+                        ComboBox<String> comboBox = new ComboBox<>(options);
+                        comboBox.setValue("English Dictionary");
+
+                        comboBox.setPrefSize(150, 30);
+                        comboBox.setLayoutX(26);
+                        comboBox.setLayoutY(244);
+                        Pane toolbar = gui.getToolbarPane();
+                        toolbar.getChildren().add(comboBox);
                     }
                 });
+                break;
 
         }
     }
@@ -95,8 +131,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
     public void reloadWorkspace(BorderPane appPane){
         workspace = ((GameScreen)workspace).change(currentState);
         appPane.setCenter(workspace);
-        setHandler(currentState);
+        setHandler();
     }
 
 
+    public boolean isSignedIn(){return signedIn;}
+    public void setSignedIn(boolean o){signedIn=o;}
 }

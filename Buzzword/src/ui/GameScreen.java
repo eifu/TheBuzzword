@@ -15,6 +15,8 @@ import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
 
 
+import java.util.Stack;
+
 import static settings.AppPropertyType.*;
 
 public class GameScreen extends Pane {
@@ -99,9 +101,18 @@ public class GameScreen extends Pane {
                         circles.getChildren().add(stackPane);
                     }
                 }
+                StackPane s = new StackPane();
+                Button gameStartButton = new Button();
+                gameStartButton.setPrefSize(200, 30);
+                Label t = new Label("Game Start");
+                t.setFont(new Font("Roboto", 24));
+                t.setTextFill(Paint.valueOf("white"));
 
-
-                container.getChildren().addAll(appTitle, circles);
+                s.setAlignment(Pos.BOTTOM_CENTER);
+                s.getChildren().addAll(gameStartButton, t);
+                s.setPrefSize(450, 60);
+                s.setVisible(false);
+                container.getChildren().addAll(appTitle, circles, s);
                 this.getChildren().add(container);
                 break;
             case SIGNINGIN:
@@ -140,7 +151,6 @@ public class GameScreen extends Pane {
                 break;
         }
     }
-
 
 
     public Pane change(GameScreenState state){
