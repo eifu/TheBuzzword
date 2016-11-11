@@ -15,15 +15,14 @@ import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
 
 
-
 import static settings.AppPropertyType.*;
 
 public class GameScreen extends Pane {
 
 
-    public GameScreen(GameScreenState state){
+    public GameScreen(GameScreenState state) {
         PropertyManager pm = PropertyManager.getPropertyManager();
-        switch (state){
+        switch (state) {
             case HOME:
                 VBox container = new VBox();
                 Label appTitle = new Label(pm.getPropertyValue(APP_TITLE));
@@ -32,17 +31,17 @@ public class GameScreen extends Pane {
                 appTitle.setTextFill(Paint.valueOf("white"));
                 appTitle.setPrefSize(450, 100);
                 Pane circles = new Pane();
-                for (int y = 0; y < 4; y ++){
-                    for (int x = 0; x < 4; x ++){
+                for (int y = 0; y < 4; y++) {
+                    for (int x = 0; x < 4; x++) {
 
                         Button btn = new Button();
-                        btn.setLayoutX(x*80+70);
-                        btn.setLayoutY(y*80+30);
+                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutY(y * 80 + 30);
                         btn.setMnemonicParsing(false);
-
                         btn.setDisable(true);
                         btn.getStyleClass().add("circle-button");
-                        switch (x + y*4){
+
+                        switch (x + y * 4) {
                             case 0:
                                 btn.setText("B");
                                 break;
@@ -86,6 +85,7 @@ public class GameScreen extends Pane {
                 container.getChildren().addAll(appTitle, circles, s);
                 this.getChildren().add(container);
                 break;
+
             case SIGNINGIN:
                 VBox signingIncontainer = new VBox();
 
@@ -99,22 +99,22 @@ public class GameScreen extends Pane {
                 grid.setAlignment(Pos.CENTER);
                 grid.setHgap(10);
                 grid.setVgap(10);
-                grid.setPadding(new Insets(25,25,25,25));
+                grid.setPadding(new Insets(25, 25, 25, 25));
                 Text titleSignIn = new Text("Sign in or sign up for account.");
                 titleSignIn.setFill(Paint.valueOf("white"));
                 grid.add(titleSignIn, 0, 0, 2, 1);
 
                 Label usernameLabel = new Label("User Name:");
                 usernameLabel.setTextFill(Paint.valueOf("white"));
-                grid.add(usernameLabel, 0,1);
+                grid.add(usernameLabel, 0, 1);
                 TextField usernameTxt = new TextField();
-                grid.add(usernameTxt, 1,1);
+                grid.add(usernameTxt, 1, 1);
 
                 Label passwordLabel = new Label("Password:");
                 passwordLabel.setTextFill(Paint.valueOf("white"));
-                grid.add(passwordLabel, 0,2);
+                grid.add(passwordLabel, 0, 2);
                 PasswordField passwordTxt = new PasswordField();
-                grid.add(passwordTxt, 1,2);
+                grid.add(passwordTxt, 1, 2);
 
                 Button signInBtn = new Button("Sign In");
                 signInBtn.setTextFill(Paint.valueOf("white"));
@@ -144,22 +144,22 @@ public class GameScreen extends Pane {
                 grid.setAlignment(Pos.CENTER);
                 grid.setHgap(10);
                 grid.setVgap(10);
-                grid.setPadding(new Insets(25,25,25,25));
+                grid.setPadding(new Insets(25, 25, 25, 25));
                 titleSignIn = new Text("Welcome to Buzzword.");
                 titleSignIn.setFill(Paint.valueOf("white"));
                 grid.add(titleSignIn, 0, 0, 2, 1);
 
                 usernameLabel = new Label("User Name:");
                 usernameLabel.setTextFill(Paint.valueOf("white"));
-                grid.add(usernameLabel, 0,1);
+                grid.add(usernameLabel, 0, 1);
                 usernameTxt = new TextField();
-                grid.add(usernameTxt, 1,1);
+                grid.add(usernameTxt, 1, 1);
 
                 passwordLabel = new Label("Password:");
                 passwordLabel.setTextFill(Paint.valueOf("white"));
-                grid.add(passwordLabel, 0,2);
+                grid.add(passwordLabel, 0, 2);
                 passwordTxt = new PasswordField();
-                grid.add(passwordTxt, 1,2);
+                grid.add(passwordTxt, 1, 2);
 
                 singUpBtn = new Button("Sign Up");
                 singUpBtn.setTextFill(Paint.valueOf("white"));
@@ -189,17 +189,17 @@ public class GameScreen extends Pane {
 
                 circles = new Pane();
 
-                for (int y = 0; y < 2; y ++) {
+                for (int y = 0; y < 2; y++) {
                     for (int x = 0; x < 4; x++) {
 
                         Button btn = new Button();
 
-                        btn.setLayoutX(x*80 + 70);
-                        btn.setLayoutY(y*80 + 30);
+                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutY(y * 80 + 30);
                         btn.setDisable(true);
-                        btn.setId(""+(1+x+y*4));
+                        btn.setId("" + (1 + x + y * 4));
                         btn.getStyleClass().add("circle-button");
-                        btn.setText(""+(1+x+y*4));
+                        btn.setText("" + (1 + x + y * 4));
 
 
                         circles.getChildren().add(btn);
@@ -208,6 +208,8 @@ public class GameScreen extends Pane {
                 container.getChildren().addAll(buzzwordTitle, modeLabel, circles);
                 this.getChildren().add(container);
                 break;
+
+
             case GAMEPLAY:
                 BorderPane gameWorkspace = new BorderPane();
 
@@ -225,7 +227,7 @@ public class GameScreen extends Pane {
                 modeLabel.setTextFill(Paint.valueOf("white"));
 
                 circles = new Pane();
-                for (int y = 0; y < 4; y ++) {
+                for (int y = 0; y < 4; y++) {
                     for (int x = 0; x < 4; x++) {
                         if (x < 3) {
                             Line hLine = new Line();
@@ -234,31 +236,26 @@ public class GameScreen extends Pane {
                             hLine.setEndX(20);
                             circles.getChildren().add(hLine);
                         }
-                        if (y < 3){
+                        if (y < 3) {
                             Line vLine = new Line();
-                            vLine.setLayoutX(90 + 80*x);
-                            vLine.setLayoutY(100 + 80*y);
+                            vLine.setLayoutX(90 + 80 * x);
+                            vLine.setLayoutY(100 + 80 * y);
                             vLine.setRotate(90);
                             vLine.setEndX(20);
                             circles.getChildren().add(vLine);
                         }
-                        StackPane stackPane = new StackPane();
-                        stackPane.setLayoutX(x * 80 + 70);
-                        stackPane.setLayoutY(y * 80 + 30);
 
                         Button btn = new Button();
-                        btn.setShape(new Circle(30));
-                        btn.setMinSize(2 * 30, 2 * 30);
-                        btn.setMaxSize(2 * 30, 2 * 30);
-                        btn.setId(""+(1+x+y*4));
-
-                        stackPane.getChildren().add(btn);
+                        btn.setId("" + (1 + x + y * 4));
+                        btn.getStyleClass().add("circle-button");
+                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutY(y * 80 + 30);
 
 //                        Label l = new Label(""+(1+x+y*4));
 //                        l.setFont(new Font("Roboto", 24));
 //                        l.setTextFill(Paint.valueOf("white"));
 //                        stackPane.getChildren().add(l);
-                        circles.getChildren().addAll(stackPane);
+                        circles.getChildren().addAll(btn);
 
                     }
                 }
@@ -269,7 +266,7 @@ public class GameScreen extends Pane {
                 levelLabel.setPrefSize(400, 40);
                 levelLabel.setAlignment(Pos.CENTER);
 
-                centerBox.getChildren().addAll(buzzwordTitle, modeLabel,circles, levelLabel);
+                centerBox.getChildren().addAll(buzzwordTitle, modeLabel, circles, levelLabel);
                 gameWorkspace.setCenter(centerBox);
 
                 Pane rightWorkspace = new Pane();
@@ -310,7 +307,7 @@ public class GameScreen extends Pane {
                 scoreVBox.setLayoutX(0);
                 scoreVBox.setLayoutY(200);
 
-                Rectangle targetOuterRect  = new Rectangle();
+                Rectangle targetOuterRect = new Rectangle();
                 targetOuterRect.setArcWidth(5.0);
                 targetOuterRect.setArcHeight(5.0);
                 targetOuterRect.setHeight(50);
@@ -327,7 +324,7 @@ public class GameScreen extends Pane {
                 targetVBox.getChildren().addAll(target, points);
                 targetVBox.setLayoutY(420);
 
-                rightWorkspace.getChildren().addAll(timeOuterRect,timerLabel, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
+                rightWorkspace.getChildren().addAll(timeOuterRect, timerLabel, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
                 gameWorkspace.setRight(rightWorkspace);
 
                 this.getChildren().add(gameWorkspace);
@@ -336,7 +333,7 @@ public class GameScreen extends Pane {
     }
 
 
-    public Pane change(GameScreenState state){
+    public Pane change(GameScreenState state) {
         return new GameScreen(state);
     }
 }
