@@ -56,50 +56,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gamesStartBtn = (Button) s.getChildren().get(0);
 
-                    if (gui.getToolbarPane().getChildren().size() != 6) { // TODO more efficient and elegant way needed
-                        ObservableList<String> options =
-                                FXCollections.observableArrayList(
-                                        "English Dictionary",
-                                        "Places",
-                                        "Science",
-                                        "Famous People"
-                                );// TODO get those data from gamedata
-                        ComboBox<String> comboBox = new ComboBox<>(options);
-                        comboBox.setValue("English Dictionary");
+                    // let comboBox visible
+                    gui.getToolbarPane().getChildren().get(4).setVisible(true);
 
-                        comboBox.setPrefSize(150, 30);
-                        comboBox.setLayoutX(26);
-                        comboBox.setLayoutY(336);
-
-                        Pane toolbar = gui.getToolbarPane();
-                        toolbar.getChildren().addAll(comboBox);
-                        Button personalBtn = null;
-                        String name = ((BuzzwordUserData) app.getUserDataComponent()).getUsername();
-
-                        try {
-                            personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        personalBtn.setOnAction(e -> {
-                            PropertyManager pm = PropertyManager.getPropertyManager();
-                            AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
-                            dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
-                        });
-
-
-                        personalBtn.setMinWidth(150);
-                        personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
-                        personalBtn.setLayoutX(30);
-                        personalBtn.setLayoutY(244);
-
-                        toolbar.getChildren().add(personalBtn);
-
-
-                    } else {
-                        gui.getToolbarPane().getChildren().get(4).setVisible(true);
-                    }
                     gamesStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
@@ -137,6 +96,46 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     if (!name.equals("") && !pass.equals("")) {
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
+
+
+                        ObservableList<String> options =
+                                FXCollections.observableArrayList(
+                                        "English Dictionary",
+                                        "Places",
+                                        "Science",
+                                        "Famous People"
+                                );// TODO get those data from gamedata
+                        ComboBox<String> comboBox = new ComboBox<>(options);
+                        comboBox.setValue("English Dictionary");
+
+                        comboBox.setPrefSize(150, 30);
+                        comboBox.setLayoutX(26);
+                        comboBox.setLayoutY(336);
+
+                        Pane toolbar = gui.getToolbarPane();
+                        toolbar.getChildren().addAll(comboBox);
+                        Button personalBtn = null;
+                        try {
+                            personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+
+                        personalBtn.setOnAction(e2 -> {
+                            PropertyManager pm = PropertyManager.getPropertyManager();
+                            AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
+                            dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
+                        });
+
+
+                        personalBtn.setMinWidth(150);
+                        personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
+                        personalBtn.setLayoutX(30);
+                        personalBtn.setLayoutY(244);
+
+                        toolbar.getChildren().add(personalBtn);
+
+
                         signedIn = true;
 
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
