@@ -99,6 +99,12 @@ public class AppGUI implements AppStyleArbiter{
         toolbarPane.getChildren().addAll(toolbarBackgroundRectangle, loginoutbtn, homebtn, helpbtn);
     }
 
+    public Button initializeChildButton(String text, String icon, boolean disable) throws  Exception{
+        Button b = initializeChildButton(icon, disable);
+        b.setText(text);
+        return b;
+    }
+
     public Button initializeChildButton(String icon, boolean disable) throws Exception{
         PropertyManager pm = PropertyManager.getPropertyManager();
 
