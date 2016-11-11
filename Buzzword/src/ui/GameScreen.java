@@ -42,7 +42,6 @@ public class GameScreen extends Pane {
 
                         btn.setDisable(true);
                         btn.getStyleClass().add("circle-button");
-                        System.out.println(x+y*4);
                         switch (x + y*4){
                             case 0:
                                 btn.setText("B");
@@ -192,25 +191,18 @@ public class GameScreen extends Pane {
 
                 for (int y = 0; y < 2; y ++) {
                     for (int x = 0; x < 4; x++) {
-                        StackPane stackPane = new StackPane();
-                        stackPane.setLayoutX(x * 80 + 70);
-                        stackPane.setLayoutY(y * 80 + 30);
 
                         Button btn = new Button();
-                        btn.setShape(new Circle(30));
-                        btn.setMinSize(2 * 30, 2 * 30);
-                        btn.setMaxSize(2 * 30, 2 * 30);
+
+                        btn.setLayoutX(x*80 + 70);
+                        btn.setLayoutY(y*80 + 30);
                         btn.setDisable(true);
                         btn.setId(""+(1+x+y*4));
+                        btn.getStyleClass().add("circle-button");
+                        btn.setText(""+(1+x+y*4));
 
-                        stackPane.getChildren().add(btn);
 
-                        Label l = new Label(""+(1+x+y*4));
-                        l.setFont(new Font("Roboto", 24));
-                        l.setTextFill(Paint.valueOf("white"));
-                        stackPane.getChildren().add(l);
-
-                        circles.getChildren().add(stackPane);
+                        circles.getChildren().add(btn);
                     }
                 }
                 container.getChildren().addAll(buzzwordTitle, modeLabel, circles);

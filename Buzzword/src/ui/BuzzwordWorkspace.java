@@ -212,8 +212,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent{
                 l.setText((String)comboBox.getValue());
 
                 for (int level = 0; level < totalLevel; level ++){
-                    StackPane s = (StackPane)levelChildren.get(level);
-                    Button b = (Button) s.getChildren().get(0);
+                    Button b = (Button) levelChildren.get(level);
                     b.setOnAction(e ->{
                         BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
                         gamedata.setCurrentLevel(Integer.parseInt(b.getId()));
