@@ -34,75 +34,43 @@ public class GameScreen extends Pane {
                 Pane circles = new Pane();
                 for (int y = 0; y < 4; y ++){
                     for (int x = 0; x < 4; x ++){
-                        StackPane stackPane = new StackPane();
-//                        stackPane.getStyleClass().add("test");
-                        stackPane.setLayoutX(x*80 +70);
-                        stackPane.setLayoutY(y*80 +30);
 
                         Button btn = new Button();
-                        btn.getStyleClass().add("circle-button");
+                        btn.setLayoutX(x*80+70);
+                        btn.setLayoutY(y*80+30);
+                        btn.setMnemonicParsing(false);
 
                         btn.setDisable(true);
-
-                        stackPane.getChildren().add(btn);
-                        Label l;
+                        btn.getStyleClass().add("circle-button");
+                        System.out.println(x+y*4);
                         switch (x + y*4){
                             case 0:
                                 btn.setText("B");
-                                btn.setFont(new Font("arial",12));
-//                                btn.addStyle("-fx-font: 26 arial;");
-//                                btn.setTextFill(Paint.valueOf("white"));
-//                                l = new Label("B");
-//                                l.setFont(new Font("Roboto", 24));
-//                                l.setTextFill(Paint.valueOf("white"));
-//                                stackPane.getChildren().add(l);
                                 break;
                             case 1:
-                                l = new Label("U");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("U");
                                 break;
                             case 4:
-                                l = new Label("Z");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("Z");
                                 break;
                             case 5:
-                                l = new Label("Z");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("Z");
                                 break;
                             case 10:
-                                l = new Label("W");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("W");
                                 break;
                             case 11:
-                                l = new Label("O");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("O");
                                 break;
                             case 14:
-                                l = new Label("R");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("R");
                                 break;
                             case 15:
-                                l = new Label("D");
-                                l.setFont(new Font("Roboto", 24));
-                                l.setTextFill(Paint.valueOf("white"));
-                                stackPane.getChildren().add(l);
+                                btn.setText("D");
                                 break;
 
                         }
-
-                        circles.getChildren().add(stackPane);
+                        circles.getChildren().add(btn);
                     }
                 }
                 StackPane s = new StackPane();
