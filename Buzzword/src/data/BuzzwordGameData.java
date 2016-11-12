@@ -62,6 +62,10 @@ public class BuzzwordGameData implements AppGameDataComponent {
         this.modeList.add(mode);
     }
 
+    public boolean validateUsernamePassword(String name, String pass){
+        return this.usernamePasswordMap.get(name) != null && this.usernamePasswordMap.get(name).equals(pass);
+    }
+
     @Override
     public void reset() {
     }

@@ -115,7 +115,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                     String name = usernameTxt.getText();
                     String pass = passwordTxt.getText();
-                    if (!name.equals("") && !pass.equals("")) {
+
+                    BuzzwordGameData gamedata = (BuzzwordGameData)app.getGameDataComponent();
+                    if (gamedata.validateUsernamePassword(name, pass)) {
 
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
