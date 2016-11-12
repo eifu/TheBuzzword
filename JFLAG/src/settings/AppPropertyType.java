@@ -11,6 +11,8 @@ public enum AppPropertyType {
     QUIT_ICON,
     PLAYGAME_ICON,
     RESUMEGAME_ICON,
+    PREVGAME_ICON,
+    NEXTGAME_ICON,
     FACE_ICON,
 
     //

@@ -18,9 +18,7 @@ import javafx.scene.Node;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
-import static settings.AppPropertyType.FACE_ICON;
-import static settings.AppPropertyType.PLAYGAME_ICON;
-import static settings.AppPropertyType.USER_INFO_TITLE;
+import static settings.AppPropertyType.*;
 
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent {
@@ -173,6 +171,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         setCurrentState(GAMEPLAY);
                         reloadWorkspace(gui.getAppPane());
+
+                        renderGamePlay();
                     });
                     if (level < progress) {
                         b.setDisable(false);
@@ -181,29 +181,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 break;
 
             case GAMEPLAY:
-                PropertyManager pm = PropertyManager.getPropertyManager();
 
-                workspaceChildren = workspace.getChildren();
-                BorderPane gameWorkspace = (BorderPane) workspaceChildren.get(0);
-                VBox centerVBox = (VBox) gameWorkspace.getCenter();
-
-                Label modeLabel = (Label) centerVBox.getChildren().get(1);
-                String mode = "mode: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
-                modeLabel.setText(mode);
-
-                Label levelLabel = (Label) centerVBox.getChildren().get(3);
-                String level = "Level: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
-                levelLabel.setText(level);
-
-                try {
-                    Button playGameBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
-                    playGameBtn.setAlignment(Pos.BOTTOM_CENTER);
-                    playGameBtn.setPrefSize(400, 0);
-                    playGameBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
-                    centerVBox.getChildren().add(playGameBtn);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
         }
     }
@@ -282,5 +260,53 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         gui.setLoginoutbtnIcon(true);
         gui.setHomebtnDisable(true);
         gui.setLoginoutbtnDisable(false);
+    }
+
+    public void renderGamePlay(){
+        PropertyManager pm = PropertyManager.getPropertyManager();
+
+        ObservableList<Node> workspaceChildren = workspace.getChildren();
+        BorderPane gameWorkspace = (BorderPane) workspaceChildren.get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getCenter();
+
+        Label modeLabel = (Label) centerVBox.getChildren().get(1);
+        String mode = "mode: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
+        modeLabel.setText(mode);
+
+        Label levelLabel = (Label) centerVBox.getChildren().get(3);
+        String level = "Level: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
+        levelLabel.setText(level);
+
+        Button playResumeBtn = null;
+        try {
+            playResumeBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
+
+        Button nextGameBtn = null;
+        try {
+            nextGameBtn = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
+
+
+        Button prevGameBtn = null;
+        try {
+            prevGameBtn = gui.initializeChildButton(PREVGAME_ICON.toString(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
+
+        BorderPane buttons = new BorderPane();
+        buttons.setLeft(prevGameBtn);
+        buttons.setCenter(playResumeBtn);
+        buttons.setRight(nextGameBtn);
+
+        centerVBox.getChildren().add(buttons);
     }
 }

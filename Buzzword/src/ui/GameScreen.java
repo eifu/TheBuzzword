@@ -275,6 +275,8 @@ public class GameScreen extends Pane {
                 levelLabel.setPrefSize(400, 40);
                 levelLabel.setAlignment(Pos.CENTER);
 
+
+
                 centerBox.getChildren().addAll(buzzwordTitle, modeLabel, circles, levelLabel);
                 gameWorkspace.setCenter(centerBox);
 

@@ -11,6 +11,8 @@ public enum BuzzwordProperty {
     HELP_BUTTON,
     QUIT_BUTTON,
     PLAY_RESUME_BUTTON,
+    NEXT_GAME_BUTTON,
+    PREV_GAME_BUTTON,
     HEADING_LABEL;
 
 }
