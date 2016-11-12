@@ -248,14 +248,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     public void renderHome(String name) {
         ObservableList<String> options =
-                FXCollections.observableArrayList(
-                        "English Dictionary",
-                        "Places",
-                        "Science",
-                        "Famous People"
-                );// TODO get those data from gamedata
+                FXCollections.observableArrayList(((BuzzwordGameData)app.getGameDataComponent()).getModeList());
         ComboBox<String> comboBox = new ComboBox<>(options);
-        comboBox.setValue("English Dictionary");
+        comboBox.setValue(options.get(0));
         comboBox.setPrefSize(150, 30);
         comboBox.setLayoutX(26);
         comboBox.setLayoutY(336);

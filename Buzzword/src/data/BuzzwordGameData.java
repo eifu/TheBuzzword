@@ -37,6 +37,8 @@ public class BuzzwordGameData implements AppGameDataComponent {
         return currentMode;
     }
 
+    public ArrayList<String> getModeList(){return modeList;}
+
     public BuzzwordGameData(AppTemplate app) {
         this(app, false);
     }
