@@ -34,6 +34,8 @@ public class BuzzwordController implements FileController{
             buzzwordWorkspace.setCurrentState(SIGNINGIN);
             buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
 
+            buzzwordWorkspace.setHandler();
+
             gui.setHomebtnDisable(false);
             gui.setLoginoutbtnDisable(true);
 
@@ -66,6 +68,8 @@ public class BuzzwordController implements FileController{
 
         buzzwordWorkspace.setCurrentState(HOME);
         buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
+
+        buzzwordWorkspace.setHandler();
 
         Pane workspace = buzzwordWorkspace.getWorkspace();
 

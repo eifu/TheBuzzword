@@ -28,6 +28,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     BuzzwordController controller;
     GameScreenState currentState;
     boolean signedIn;
+    boolean gamePlay;
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -36,6 +37,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         this.currentState = HOME;
         this.workspace = new GameScreen(currentState);
         this.signedIn = false;
+        this.gamePlay = false;
         activateWorkspace(gui.getAppPane());
     }
 
@@ -82,6 +84,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
 
+                        setHandler();
+
                         BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
                         ComboBox<String> gamemodeComboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                         gamedata.setCurrentMode(gamemodeComboBox.getValue());
@@ -112,6 +116,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     String name = usernameTxt.getText();
                     String pass = passwordTxt.getText();
                     if (!name.equals("") && !pass.equals("")) {
+
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
 
@@ -169,10 +174,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
                         gamedata.setCurrentLevel(Integer.parseInt(b.getId()));
 
+
                         setCurrentState(GAMEPLAY);
                         reloadWorkspace(gui.getAppPane());
 
-                        renderGamePlay();
+                        initGamePlay();
+
+                        setHandler();
                     });
                     if (level < progress) {
                         b.setDisable(false);
@@ -181,7 +189,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 break;
 
             case GAMEPLAY:
+                workspaceChildren = workspace.getChildren();
+                BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
+                VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
 
+                BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
+
+                Button playResumeButton = (Button) buttons.getCenter();
+                playResumeButton.setOnAction(e -> {
+                    renderGamePlay();
+                });
 
         }
     }
@@ -215,7 +232,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void reloadWorkspace(BorderPane appPane) {
         workspace = ((GameScreen) workspace).change(currentState);
         appPane.setCenter(workspace);
-        setHandler();
+//        setHandler();
     }
 
 
@@ -242,17 +259,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         comboBox.setLayoutY(336);
         gui.getToolbarPane().getChildren().add(comboBox);
 
-        Button personalBtn = null;
+        Button personalBtn;
         try {
             personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
+            personalBtn.setMinWidth(150);
+            personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
+            personalBtn.setLayoutX(30);
+            personalBtn.setLayoutY(244);
+            gui.getToolbarPane().getChildren().add(personalBtn);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        personalBtn.setMinWidth(150);
-        personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
-        personalBtn.setLayoutX(30);
-        personalBtn.setLayoutY(244);
-        gui.getToolbarPane().getChildren().add(personalBtn);
 
         renderGameScreen();
 
@@ -262,7 +279,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         gui.setLoginoutbtnDisable(false);
     }
 
-    public void renderGamePlay(){
+    public void initGamePlay() {
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         ObservableList<Node> workspaceChildren = workspace.getChildren();
@@ -278,29 +295,28 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         levelLabel.setText(level);
 
         Button playResumeBtn = null;
+        Button nextGameBtn = null;
+        Button prevGameBtn = null;
+
         try {
             playResumeBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
-
-        Button nextGameBtn = null;
-        try {
             nextGameBtn = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
-
-
-        Button prevGameBtn = null;
-        try {
             prevGameBtn = gui.initializeChildButton(PREVGAME_ICON.toString(), false);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
+        nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
         prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
+
+        if (((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel() == 1){
+            prevGameBtn.setDisable(true);
+        }
+        if (((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel()
+                == ((BuzzwordUserData)app.getUserDataComponent()).getProgress(
+                ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode())){
+            nextGameBtn.setDisable(true);
+        }
 
         BorderPane buttons = new BorderPane();
         buttons.setLeft(prevGameBtn);
@@ -308,5 +324,30 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         buttons.setRight(nextGameBtn);
 
         centerVBox.getChildren().add(buttons);
+    }
+
+    public void renderGamePlay() {
+        ObservableList<Node> workspaceChildren = workspace.getChildren();
+        BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
+        VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
+
+        BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
+
+        Button playResumeButton = (Button) buttons.getCenter();
+        try {
+            if (gamePlay) {
+                playResumeButton = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
+                this.gamePlay = false;
+            } else {
+                playResumeButton = gui.initializeChildButton(RESUMEGAME_ICON.toString(), false);
+                this.gamePlay = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        playResumeButton.getStyleClass().add("play-resume-game-button");
+        buttons.setCenter(playResumeButton);
+
+        setHandler();
     }
 }
