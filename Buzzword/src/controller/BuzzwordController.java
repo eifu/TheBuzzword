@@ -40,7 +40,7 @@ public class BuzzwordController implements FileController{
         }else{
             PropertyManager pm = PropertyManager.getPropertyManager();
             AppYesNoCancelSingleton dialog = AppYesNoCancelSingleton.getSingleton();
-            dialog.show(pm.getPropertyValue(CHECK_LOGOUT_TITLE),pm.getPropertyValue(CHECK_LOGOUT_MESSAGE));
+            dialog.show(pm.getPropertyValue(CHECK_LOGOUT_TITLE),pm.getPropertyValue(CHECK_LOGOUT_MESSAGE), false);
 
             if (dialog.getSelection().equals(YES.getParameter())) {
                 buzzwordWorkspace.setCurrentState(HOME);
@@ -95,9 +95,9 @@ public class BuzzwordController implements FileController{
 
         PropertyManager pm = PropertyManager.getPropertyManager();
         AppYesNoCancelSingleton yesNoCancelSingleton = AppYesNoCancelSingleton.getSingleton();
-        yesNoCancelSingleton.show(pm.getPropertyValue(CHECK_QUIT_TITLE), pm.getPropertyValue(CHECK_QUIT_MESSAGE));
+        yesNoCancelSingleton.show(pm.getPropertyValue(CHECK_QUIT_TITLE), pm.getPropertyValue(CHECK_QUIT_MESSAGE), false);
 
-        if (yesNoCancelSingleton.getSelection().equals(YES.getParameter())){
+        if (yesNoCancelSingleton != null && yesNoCancelSingleton.getSelection().equals(YES.getParameter())){
             System.exit(0);
         }
 

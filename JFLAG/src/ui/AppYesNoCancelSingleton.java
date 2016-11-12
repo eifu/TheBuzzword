@@ -13,7 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import settings.InitializationParameters;
 
-public class AppYesNoCancelSingleton  extends Stage{
+public class AppYesNoCancelSingleton extends Stage {
 
     private static AppYesNoCancelSingleton singleton;
 
@@ -21,22 +21,24 @@ public class AppYesNoCancelSingleton  extends Stage{
     private VBox messagePane;
     private Label messageLbl;
 
-    private  Button yesBtn;
-    private   Button noBtn;
-    private  Button cancelBtn;
+    private Button yesBtn;
+    private Button noBtn;
+    private Button cancelBtn;
     private String selection;
 
 
-    private AppYesNoCancelSingleton(){};
+    private AppYesNoCancelSingleton() {
+    }
 
-    public static AppYesNoCancelSingleton getSingleton(){
-        if (singleton == null){
+
+    public static AppYesNoCancelSingleton getSingleton() {
+        if (singleton == null) {
             singleton = new AppYesNoCancelSingleton();
         }
         return singleton;
     }
 
-    public void init(Stage owner){
+    public void init(Stage owner) {
 
         initModality(Modality.WINDOW_MODAL);
         initOwner(owner);
@@ -48,7 +50,7 @@ public class AppYesNoCancelSingleton  extends Stage{
         noBtn = new Button(InitializationParameters.NO.getParameter());
         cancelBtn = new Button(InitializationParameters.CANCEL.getParameter());
 
-        EventHandler<ActionEvent> yesNoCancelHandler = event ->{
+        EventHandler<ActionEvent> yesNoCancelHandler = event -> {
             AppYesNoCancelSingleton.this.selection = ((Button) event.getSource()).getText();
             AppYesNoCancelSingleton.this.hide();
         };
@@ -60,7 +62,7 @@ public class AppYesNoCancelSingleton  extends Stage{
         HBox buttonBox = new HBox();
         buttonBox.getChildren().add(yesBtn);
         buttonBox.getChildren().add(noBtn);
-        buttonBox.getChildren().add(cancelBtn);
+//        buttonBox.getChildren().add(cancelBtn);
 
         messagePane = new VBox();
         messagePane.setAlignment(Pos.CENTER);
@@ -74,15 +76,26 @@ public class AppYesNoCancelSingleton  extends Stage{
         this.setScene(messageScene);
     }
 
-    public String getSelection(){return selection;}
+    public String getSelection() {
+        return selection;
+    }
 
-    public void show(String title, String message){
-        // setTitle is implemented in Stage class
+
+    public void show(String title, String message, boolean hasCancel){
+        if (hasCancel){
+            ((HBox)messagePane.getChildren().get(1)).getChildren().add(cancelBtn);
+        }
+
         setTitle(title);
 
         messageLbl.setText(message);
 
         showAndWait();
+
+        if (hasCancel){
+            ((HBox)messagePane.getChildren().get(1)).getChildren().remove(2);
+        }
+
     }
 
 }

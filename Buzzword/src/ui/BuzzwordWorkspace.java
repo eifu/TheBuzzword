@@ -133,8 +133,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             case SIGNUP:
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
-
                 gridChildren = ((GridPane) vboxChildren.get(1)).getChildren();
+
                 signInBtn = (Button) ((HBox) gridChildren.get(5)).getChildren().get(0);
                 signInBtn.setOnAction(e -> {
                     String name = ((TextField) gridChildren.get(2)).getText();
