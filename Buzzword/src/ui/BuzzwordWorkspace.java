@@ -16,6 +16,8 @@ import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
+import java.io.IOException;
+
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
 import static settings.AppPropertyType.*;
@@ -127,8 +129,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         signedIn = true;
 
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
-                        userData.setUsername(name);
-                        userData.setPassword(pass);
+                        try{
+                            userData.login(app);
+                        }catch (IOException eio){
+                            eio.printStackTrace();
+                        }
 
                         setHandler();
 
