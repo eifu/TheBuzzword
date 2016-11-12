@@ -74,15 +74,22 @@ public class GameScreen extends Pane {
                     }
                 }
                 StackPane s = new StackPane();
-                Button gameStartButton = new Button();
-                gameStartButton.setPrefSize(200, 30);
-                Label gameStartLabel = new Label("Game Start");
-                gameStartLabel.setFont(new Font("Roboto", 24));
-                gameStartLabel.setTextFill(Paint.valueOf("white"));
+                s.setPrefSize(450, 100);
 
-                s.setAlignment(Pos.BOTTOM_CENTER);
-                s.getChildren().addAll(gameStartButton, gameStartLabel);
-                s.setPrefSize(450, 60);
+                Button gameStartButton = new Button("Game Start");
+                gameStartButton.setTextFill(Paint.valueOf("white"));
+                gameStartButton.setFont(new Font("ariel", 25));
+                gameStartButton.setMinWidth(Region.USE_PREF_SIZE);
+                gameStartButton.setAlignment(Pos.CENTER);
+//                gameStartButton.setVisible(false);
+                gameStartButton.getStyleClass().add("gamestart-button");
+//                Label gameStartLabel = new Label("Game Start");
+//                gameStartLabel.setFont(new Font("Roboto", 24));
+//                gameStartLabel.setTextFill(Paint.valueOf("white"));
+
+//                s.setAlignment(Pos.BOTTOM_CENTER);
+                s.getChildren().addAll(gameStartButton);
+//                s.setPrefSize(450, 60);
                 s.setVisible(false);
                 container.getChildren().addAll(appTitle, circles, s);
                 this.getChildren().add(container);

@@ -68,7 +68,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
                     ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
-                    Button gamesStartBtn = (Button) s.getChildren().get(0);
+                    Button gameStartBtn = (Button) s.getChildren().get(0);
 
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
@@ -80,7 +80,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
                     });
 
-                    gamesStartBtn.setOnAction(e -> {
+                    gameStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
 
@@ -160,10 +160,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
                 ObservableList<Node> levelChildren = ((Pane) vboxChildren.get(2)).getChildren();
-                Label l = (Label) vboxChildren.get(1);
 
+                Label gameModeLabel = (Label) vboxChildren.get(1);
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
-                l.setText((String) comboBox.getValue());
+                gameModeLabel.setText((String) comboBox.getValue());
 
                 for (int level = 0; level < totalLevel; level++) {
                     Button b = (Button) levelChildren.get(level);
