@@ -2,8 +2,10 @@ package ui;
 
 
 import buzzword.GameScreenState;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
@@ -337,23 +339,26 @@ public class GameScreen extends Pane {
         return new GameScreen(state);
     }
 
-    public void home(){
+    public void home() {
+        ObservableList<Node> workspaceHomeChildren = this.getChildren();
+        ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
+        StackPane s = (StackPane) vboxHomeChildren.get(2);
+        s.setVisible(true);
+    }
+
+    public void signingIn() {
 
     }
 
-    public void signingIn(){
+    public void signUp() {
 
     }
 
-    public void signUp(){
+    public void selecting() {
 
     }
 
-    public void selecting(){
-
-    }
-
-    public void gamePlay(){
+    public void gamePlay() {
 
     }
 }

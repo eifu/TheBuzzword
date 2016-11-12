@@ -2,25 +2,19 @@ package ui;
 
 
 import apptemeplate.AppTemplate;
-import buzzword.Buzzword;
 import buzzword.GameScreenState;
-import com.sun.prism.shader.Solid_TextureFirstPassLCD_AlphaTest_Loader;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
+
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-
-import java.util.Stack;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
@@ -47,22 +41,22 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         activateWorkspace(gui.getAppPane());
     }
 
-    public void renderGUI(){
-        switch (currentState){
+    public void renderGameScreen() {
+        switch (currentState) {
             case HOME:
-                ((GameScreen)workspace).home();
+                ((GameScreen) workspace).home();
                 break;
             case SIGNINGIN:
-                ((GameScreen)workspace).signingIn();
+                ((GameScreen) workspace).signingIn();
                 break;
             case SIGNUP:
-                ((GameScreen)workspace).signUp();
+                ((GameScreen) workspace).signUp();
                 break;
             case SELECTING:
-                ((GameScreen)workspace).selecting();
+                ((GameScreen) workspace).selecting();
                 break;
             case GAMEPLAY:
-                ((GameScreen)workspace).gamePlay();
+                ((GameScreen) workspace).gamePlay();
                 break;
         }
     }
@@ -79,7 +73,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
 
-                    Button personalBtn = (Button)gui.getToolbarPane().getChildren().get(5);
+                    Button personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
                     personalBtn.setOnAction(e2 -> {
                         PropertyManager pm = PropertyManager.getPropertyManager();
                         AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
@@ -157,17 +151,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                     setHandler();
 
-                    // gameStartBtn config
-                    ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
-                    ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
-                    StackPane s = (StackPane) vboxHomeChildren.get(2);
-                    s.setVisible(true);
-
-                    // toolbar config
-                    gui.setLoginoutbtnIcon(true);
-                    gui.setHomebtnDisable(true);
-                    gui.setLoginoutbtnDisable(false);
-
                 });
                 break;
 
@@ -196,6 +179,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     }
                 }
                 break;
+
             case GAMEPLAY:
                 PropertyManager pm = PropertyManager.getPropertyManager();
 
@@ -265,7 +249,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         signedIn = o;
     }
 
-    public void renderHome(String name){
+    public void renderHome(String name) {
         ObservableList<String> options =
                 FXCollections.observableArrayList(
                         "English Dictionary",
@@ -292,12 +276,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         personalBtn.setLayoutY(244);
         gui.getToolbarPane().getChildren().add(personalBtn);
 
-
-        // gameStartBtn config
-        ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
-        ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
-        StackPane s = (StackPane) vboxHomeChildren.get(2);
-        s.setVisible(true);
+        renderGameScreen();
 
         // toolbar config
         gui.setLoginoutbtnIcon(true);
