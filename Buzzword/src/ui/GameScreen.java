@@ -236,18 +236,19 @@ public class GameScreen extends Pane {
                 modeLabel.setTextFill(Paint.valueOf("white"));
 
                 circles = new Pane();
+                circles.setPrefSize(400, 345);
                 for (int y = 0; y < 4; y++) {
                     for (int x = 0; x < 4; x++) {
                         if (x < 3) {
                             Line hLine = new Line();
-                            hLine.setLayoutX(130 + 80 * x);
+                            hLine.setLayoutX(110 + 80 * x);
                             hLine.setLayoutY(60 + 80 * y);
                             hLine.setEndX(20);
                             circles.getChildren().add(hLine);
                         }
                         if (y < 3) {
                             Line vLine = new Line();
-                            vLine.setLayoutX(90 + 80 * x);
+                            vLine.setLayoutX(70 + 80 * x);
                             vLine.setLayoutY(100 + 80 * y);
                             vLine.setRotate(90);
                             vLine.setEndX(20);
@@ -257,7 +258,7 @@ public class GameScreen extends Pane {
                         Button btn = new Button();
                         btn.setId("" + (1 + x + y * 4));
                         btn.getStyleClass().add("circle-button");
-                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutX(x * 80 + 50);
                         btn.setLayoutY(y * 80 + 30);
 
 //                        Label l = new Label(""+(1+x+y*4));
@@ -274,7 +275,6 @@ public class GameScreen extends Pane {
                 levelLabel.setTextFill(Paint.valueOf("white"));
                 levelLabel.setPrefSize(400, 40);
                 levelLabel.setAlignment(Pos.CENTER);
-
 
 
                 centerBox.getChildren().addAll(buzzwordTitle, modeLabel, circles, levelLabel);
@@ -369,5 +369,25 @@ public class GameScreen extends Pane {
 
     public void gamePlay() {
 
+    }
+
+    public void pose(Pane posemenu) {
+        System.out.println("test");
+
+        BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
+        VBox centerVBox = (VBox)gameWorkspace.getCenter();
+        Pane circles = (Pane) centerVBox.getChildren().get(2);
+
+        circles.getChildren().add(posemenu);
+
+
+    }
+
+    public void play(Pane posemenu){
+        BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
+        VBox centerVBox = (VBox)gameWorkspace.getCenter();
+        Pane circles = (Pane) centerVBox.getChildren().get(2);
+
+        circles.getChildren().remove(posemenu);
     }
 }

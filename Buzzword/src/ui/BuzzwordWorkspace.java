@@ -31,6 +31,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     GameScreenState currentState;
     boolean signedIn;
     boolean gamePlay;
+    Pane posemenu;
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -165,14 +166,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 int totalLevel = 8; // TODO need to get from BuzzwordGameData
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
+
                 ObservableList<Node> levelChildren = ((Pane) vboxChildren.get(2)).getChildren();
 
                 Label gameModeLabel = (Label) vboxChildren.get(1);
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
-                gameModeLabel.setText((String) comboBox.getValue());
+                String mode = (String)comboBox.getValue();
+                gameModeLabel.setText(mode);
 
                 BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
-                int progress = userData.getProgress((String)comboBox.getValue());
+                int progress = userData.getProgress(mode);
 
                 for (int level = 0; level < totalLevel; level++) {
                     Button b = (Button) levelChildren.get(level);
@@ -238,7 +241,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void reloadWorkspace(BorderPane appPane) {
         workspace = ((GameScreen) workspace).change(currentState);
         appPane.setCenter(workspace);
-//        setHandler();
     }
 
 
@@ -325,6 +327,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         buttons.setRight(nextGameBtn);
 
         centerVBox.getChildren().add(buttons);
+
+        posemenu = new Pane();
+        posemenu.setPrefSize(380, 330);
+        posemenu.setStyle("-fx-background-color: darkblue;" +
+                          "-fx-opacity: 0.8;");
+        posemenu.setLayoutX(10);
+        posemenu.setLayoutY(15);
+
+        renderGamePlay();
     }
 
     public void renderGamePlay() {
@@ -332,8 +343,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
         VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
 
-        BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
+        if (gamePlay){
+            ((GameScreen)workspace).play(posemenu);
+        }else{
+            ((GameScreen)workspace).pose(posemenu);
+        }
 
+        // change the icon of playresume game button.
+        BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
         Button playResumeButton = (Button) buttons.getCenter();
         try {
             if (gamePlay) {
