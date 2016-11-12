@@ -3,34 +3,52 @@ package data;
 
 import apptemeplate.AppTemplate;
 import components.AppGameDataComponent;
+import propertymanager.PropertyManager;
 
+import java.io.FileNotFoundException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BuzzwordGameData implements AppGameDataComponent{
+import static settings.AppPropertyType.*;
+import static settings.InitializationParameters.APP_IMAGE_DIR_PATH;
+
+
+public class BuzzwordGameData implements AppGameDataComponent {
 
     private AppTemplate app;
     private Map<String, MatrixData[]> modeMatrixMap;
-    private Map<String,Integer[]> modeTimeLimitMap;
+    private Map<String, Integer[]> modeTimeLimitMap;
     private String[] modeList;
-    private Map<String, String>usernamePasswordMap;
+    private Map<String, String> usernamePasswordMap;
     private Map<String, Path> usernameFilepathMap;
 
     private int currentLevel;
     private String currentMode;
 
-    public void setCurrentLevel(int currentLevel){this.currentLevel = currentLevel;}
-    public void setCurrentMode(String currentMode){this.currentMode = currentMode;}
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
+    }
 
-    public int getCurrentLevel(){return currentLevel;}
-    public String getCurrentMode(){return currentMode;}
+    public void setCurrentMode(String currentMode) {
+        this.currentMode = currentMode;
+    }
 
-    public BuzzwordGameData(AppTemplate app){
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public String getCurrentMode() {
+        return currentMode;
+    }
+
+    public BuzzwordGameData(AppTemplate app) {
         this(app, false);
     }
 
-    public BuzzwordGameData(AppTemplate app, boolean initiateGame) {
+    public BuzzwordGameData(AppTemplate app, boolean initiateGame)  {
         if (initiateGame) {
             this.app = app;
             this.modeMatrixMap = new HashMap<>();
@@ -38,12 +56,18 @@ public class BuzzwordGameData implements AppGameDataComponent{
             this.modeList = new String[]{"normal", "hard"};
             this.usernamePasswordMap = new HashMap<>();
             this.usernameFilepathMap = new HashMap<>();
+
+
         } else {
             this.app = app;
         }
     }
 
+    public void addNamePassMap(String name, String pass){
+       this.usernamePasswordMap.put(name, pass);
+    }
+
     @Override
-    public void reset(){
+    public void reset() {
     }
 }

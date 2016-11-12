@@ -1,9 +1,11 @@
 package components;
 
 
+import java.io.FileNotFoundException;
+
 public interface AppComponentBuilder {
 
-    AppGameDataComponent buildGameDataComponent();
+    AppGameDataComponent buildGameDataComponent() throws FileNotFoundException;
 
     AppUserDataComponent buildUserDataComponent();
 

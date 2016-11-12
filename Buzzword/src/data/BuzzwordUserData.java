@@ -14,6 +14,7 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public void setUsername(String username){this.username = username;}
     public String getUsername(){return username;}
     public void setPassword(String password){this.password = password;}
+    public int getProgress(String mode){return progress.get(mode);}
 
     public BuzzwordUserData(){
         this.username = "";

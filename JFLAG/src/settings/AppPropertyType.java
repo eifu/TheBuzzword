@@ -22,6 +22,7 @@ public enum AppPropertyType {
     APP_TITLE,
     APP_CSS,
     APP_PATH_CSS,
+    APP_PATH_GAMEDATA,
 
     // error messages
     PROPERTY_LOAD_ERROR_MESSAGE,
