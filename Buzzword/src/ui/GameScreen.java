@@ -336,4 +336,24 @@ public class GameScreen extends Pane {
     public Pane change(GameScreenState state) {
         return new GameScreen(state);
     }
+
+    public void home(){
+
+    }
+
+    public void signingIn(){
+
+    }
+
+    public void signUp(){
+
+    }
+
+    public void selecting(){
+
+    }
+
+    public void gamePlay(){
+
+    }
 }

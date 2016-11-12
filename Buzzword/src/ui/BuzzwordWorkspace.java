@@ -47,6 +47,26 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         activateWorkspace(gui.getAppPane());
     }
 
+    public void renderGUI(){
+        switch (currentState){
+            case HOME:
+                ((GameScreen)workspace).home();
+                break;
+            case SIGNINGIN:
+                ((GameScreen)workspace).signingIn();
+                break;
+            case SIGNUP:
+                ((GameScreen)workspace).signUp();
+                break;
+            case SELECTING:
+                ((GameScreen)workspace).selecting();
+                break;
+            case GAMEPLAY:
+                ((GameScreen)workspace).gamePlay();
+                break;
+        }
+    }
+
     public void setHandler() {
         switch (currentState) {
             case HOME:
@@ -58,6 +78,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
+
+                    Button personalBtn = (Button)gui.getToolbarPane().getChildren().get(5);
+                    personalBtn.setOnAction(e2 -> {
+                        PropertyManager pm = PropertyManager.getPropertyManager();
+                        AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
+                        dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
+                    });
 
                     gamesStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
@@ -75,10 +102,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             case SIGNINGIN:
                 ObservableList<Node> workspaceChildren = workspace.getChildren();
                 ObservableList<Node> vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
-
                 ObservableList<Node> gridChildren = ((GridPane) vboxChildren.get(1)).getChildren();
-
                 Button signUpBtn = (Button) ((HBox) gridChildren.get(5)).getChildren().get(0);
+
                 signUpBtn.setOnAction(e -> {
                     setCurrentState(SIGNUP);
                     reloadWorkspace(gui.getAppPane());
@@ -97,44 +123,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
 
-
-                        ObservableList<String> options =
-                                FXCollections.observableArrayList(
-                                        "English Dictionary",
-                                        "Places",
-                                        "Science",
-                                        "Famous People"
-                                );// TODO get those data from gamedata
-                        ComboBox<String> comboBox = new ComboBox<>(options);
-                        comboBox.setValue("English Dictionary");
-
-                        comboBox.setPrefSize(150, 30);
-                        comboBox.setLayoutX(26);
-                        comboBox.setLayoutY(336);
-
-                        Pane toolbar = gui.getToolbarPane();
-                        toolbar.getChildren().addAll(comboBox);
-                        Button personalBtn = null;
-                        try {
-                            personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
-
-                        personalBtn.setOnAction(e2 -> {
-                            PropertyManager pm = PropertyManager.getPropertyManager();
-                            AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
-                            dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
-                        });
-
-
-                        personalBtn.setMinWidth(150);
-                        personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
-                        personalBtn.setLayoutX(30);
-                        personalBtn.setLayoutY(244);
-
-                        toolbar.getChildren().add(personalBtn);
-
+                        renderHome(name);
 
                         signedIn = true;
 
@@ -143,18 +132,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         userData.setPassword(pass);
 
                         setHandler();
-
-                        // gameStartBtn config
-                        ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
-                        ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
-                        StackPane s = (StackPane) vboxHomeChildren.get(2);
-                        s.setVisible(true);
-
-                        // toolbar config
-                        gui.setLoginoutbtnIcon(true);
-                        gui.setHomebtnDisable(true);
-                        gui.setLoginoutbtnDisable(false);
-
 
                     }
                 });
@@ -170,8 +147,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     String pass = ((TextField) gridChildren.get(4)).getText();
                     setCurrentState(HOME);
                     reloadWorkspace(gui.getAppPane());
-                    signedIn = true;
 
+                    renderHome(name);
+
+                    signedIn = true;
                     BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
                     userData.setUsername(name);
                     userData.setPassword(pass);
@@ -284,5 +263,45 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     public void setSignedIn(boolean o) {
         signedIn = o;
+    }
+
+    public void renderHome(String name){
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        "English Dictionary",
+                        "Places",
+                        "Science",
+                        "Famous People"
+                );// TODO get those data from gamedata
+        ComboBox<String> comboBox = new ComboBox<>(options);
+        comboBox.setValue("English Dictionary");
+        comboBox.setPrefSize(150, 30);
+        comboBox.setLayoutX(26);
+        comboBox.setLayoutY(336);
+        gui.getToolbarPane().getChildren().add(comboBox);
+
+        Button personalBtn = null;
+        try {
+            personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        personalBtn.setMinWidth(150);
+        personalBtn.setMaxWidth(Region.USE_PREF_SIZE);
+        personalBtn.setLayoutX(30);
+        personalBtn.setLayoutY(244);
+        gui.getToolbarPane().getChildren().add(personalBtn);
+
+
+        // gameStartBtn config
+        ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
+        ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
+        StackPane s = (StackPane) vboxHomeChildren.get(2);
+        s.setVisible(true);
+
+        // toolbar config
+        gui.setLoginoutbtnIcon(true);
+        gui.setHomebtnDisable(true);
+        gui.setLoginoutbtnDisable(false);
     }
 }
