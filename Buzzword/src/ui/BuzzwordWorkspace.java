@@ -118,7 +118,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     String name = usernameTxt.getText();
                     String pass = passwordTxt.getText();
 
-                    BuzzwordGameData gamedata = (BuzzwordGameData)app.getGameDataComponent();
+                    BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
                     if (gamedata.validateUsernamePassword(name, pass)) {
 
                         setCurrentState(HOME);
@@ -129,11 +129,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         signedIn = true;
 
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
-                        try{
-                            userData.login(app);
-                        }catch (IOException eio){
-                            eio.printStackTrace();
-                        }
+                        userData.login(app);
 
                         setHandler();
 
@@ -165,7 +161,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 break;
 
             case SELECTING:
-                int progress = 4; // TODO need to get from BuzzwordUserData
+
                 int totalLevel = 8; // TODO need to get from BuzzwordGameData
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
@@ -174,6 +170,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 Label gameModeLabel = (Label) vboxChildren.get(1);
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                 gameModeLabel.setText((String) comboBox.getValue());
+
+                BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
+                int progress = userData.getProgress((String)comboBox.getValue());
 
                 for (int level = 0; level < totalLevel; level++) {
                     Button b = (Button) levelChildren.get(level);
@@ -253,7 +252,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     public void renderHome(String name) {
         ObservableList<String> options =
-                FXCollections.observableArrayList(((BuzzwordGameData)app.getGameDataComponent()).getModeList());
+                FXCollections.observableArrayList(((BuzzwordGameData) app.getGameDataComponent()).getModeList());
         ComboBox<String> comboBox = new ComboBox<>(options);
         comboBox.setValue(options.get(0));
         comboBox.setPrefSize(150, 30);
@@ -311,12 +310,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
         prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
 
-        if (((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel() == 1){
+        if (((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel() == 1) {
             prevGameBtn.setDisable(true);
         }
-        if (((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel()
-                == ((BuzzwordUserData)app.getUserDataComponent()).getProgress(
-                ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode())){
+        if (((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel()
+                == ((BuzzwordUserData) app.getUserDataComponent()).getProgress(
+                ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode())) {
             nextGameBtn.setDisable(true);
         }
 

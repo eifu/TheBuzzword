@@ -32,12 +32,14 @@ public class BuzzwordUserData implements AppUserDataComponent {
         highscore = new HashMap<>();
     }
 
-    public void login(AppTemplate app) throws IOException {
+    public void login(AppTemplate app) {
 
         try {
             app.getFileComponent().loadUserData(this, Paths.get(AppTemplate.class.getClassLoader().getResource("data/test1.json").toURI()));
         }catch(URISyntaxException uris){
             uris.printStackTrace();
+        }catch (IOException ioe){
+            ioe.printStackTrace();
         }
 
 
@@ -47,8 +49,8 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public void reset(){
         this.username = "";
         this.password = "";
-        progress = null;
-        highscore = null;
+        progress = new HashMap<>();
+        highscore = new HashMap<>();
     }
 
 }

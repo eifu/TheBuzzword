@@ -66,7 +66,9 @@ public class BuzzwordFile implements AppFileComponent {
                             progress = jsonParser.getIntValue();
 
                             userData.setProgress(mode, progress);
+                            jsonParser.nextToken(); // inner "]"
                         }
+                        break;
 
                 }
             }
