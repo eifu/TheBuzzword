@@ -9,15 +9,13 @@ import data.BuzzwordUserData;
 import propertymanager.PropertyManager;
 import ui.BuzzwordWorkspace;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static buzzword.BuzzwordProperty.*;
 
 
 public class Buzzword extends AppTemplate {
@@ -30,14 +28,15 @@ public class Buzzword extends AppTemplate {
         return new AppComponentBuilder() {
             @Override
             public AppGameDataComponent buildGameDataComponent() throws FileNotFoundException {
-                PropertyManager pm = PropertyManager.getPropertyManager();
-
                 AppGameDataComponent gameDataComponent = new BuzzwordGameData(Buzzword.this, true);
 
                 URL gameDataURL = AppTemplate.class.getClassLoader().getResource("data/gamedata.json");
+                // TODO use propertymanager to load the file path
+
                 if (gameDataURL == null){
-                    throw new FileNotFoundException("Image resource folder does not exist");
+                    throw new FileNotFoundException("Json resource folder does not exist");
                 }
+
                 try {
                     getFileComponent().loadGameData(gameDataComponent, Paths.get(gameDataURL.toURI()));
                 }catch(URISyntaxException urie){

@@ -3,17 +3,11 @@ package data;
 
 import apptemeplate.AppTemplate;
 import components.AppGameDataComponent;
-import propertymanager.PropertyManager;
 
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static settings.AppPropertyType.*;
-import static settings.InitializationParameters.APP_IMAGE_DIR_PATH;
 
 
 public class BuzzwordGameData implements AppGameDataComponent {
@@ -21,9 +15,8 @@ public class BuzzwordGameData implements AppGameDataComponent {
     private AppTemplate app;
     private Map<String, MatrixData[]> modeMatrixMap;
     private Map<String, Integer[]> modeTimeLimitMap;
-    private String[] modeList;
+    private ArrayList<String> modeList;
     private Map<String, String> usernamePasswordMap;
-    private Map<String, Path> usernameFilepathMap;
 
     private int currentLevel;
     private String currentMode;
@@ -53,10 +46,8 @@ public class BuzzwordGameData implements AppGameDataComponent {
             this.app = app;
             this.modeMatrixMap = new HashMap<>();
             this.modeTimeLimitMap = new HashMap<>();
-            this.modeList = new String[]{"normal", "hard"};
+            this.modeList = new ArrayList<>();
             this.usernamePasswordMap = new HashMap<>();
-            this.usernameFilepathMap = new HashMap<>();
-
 
         } else {
             this.app = app;
@@ -65,6 +56,10 @@ public class BuzzwordGameData implements AppGameDataComponent {
 
     public void addNamePassMap(String name, String pass){
        this.usernamePasswordMap.put(name, pass);
+    }
+
+    public void addMode(String mode){
+        this.modeList.add(mode);
     }
 
     @Override

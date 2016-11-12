@@ -16,6 +16,7 @@ import java.nio.file.Path;
 public class BuzzwordFile implements AppFileComponent {
 
     public static final String NAME_PASS_MAP = "NAME_PASS_MAP";
+    public static final String MODE_LIST = "MODE_LIST";
 
     @Override
     public void saveUserData(AppUserDataComponent data, Path path){
@@ -48,20 +49,29 @@ public class BuzzwordFile implements AppFileComponent {
                 switch (fieldname) {
                     case NAME_PASS_MAP:
 
-                        jsonParser.nextToken(); // first [
+                        jsonParser.nextToken(); // outer "["
                         String name;
                         String pass;
-                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) { // inner "["
                             jsonParser.nextToken();
                             name = jsonParser.getText();
                             jsonParser.nextToken();
                             pass = jsonParser.getText();
 
                             gamedata.addNamePassMap(name, pass);
-                            jsonParser.nextToken();
-                            //jsonParser.nextToken();
+                            jsonParser.nextToken(); // inner "]"
                         }
                         break;
+
+                    case MODE_LIST:
+                        jsonParser.nextToken(); // outer "["
+                        String mode;
+                        while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                            mode = jsonParser.getText();
+                            gamedata.addMode(mode);
+                        }
+                        break;
+
                     default:
                         throw new JsonParseException(jsonParser, "Unable to load JSON data");
                 }

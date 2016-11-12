@@ -6,6 +6,12 @@ public enum BuzzwordProperty {
     ROOT_BORDERPANE_ID,
     TOP_TOOLBAR_ID,
     SEGMENTED_BUTTON_BAR,
+
+    // json files
+    JSON_DIR,
+    GAMEDATA_JSON,
+
+    // buttons
     FIRST_TOOLBAR_BUTTON,
     LAST_TOOLBAR_BUTTON,
     HELP_BUTTON,
