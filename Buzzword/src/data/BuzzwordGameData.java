@@ -4,10 +4,7 @@ package data;
 import apptemeplate.AppTemplate;
 import components.AppGameDataComponent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 
 
 public class BuzzwordGameData implements AppGameDataComponent {
@@ -17,6 +14,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
     private Map<String, Integer[]> modeTimeLimitMap;
     private ArrayList<String> modeList;
     private Map<String, String> usernamePasswordMap;
+    private Map<String, Set<String>> modeWordSetMap;
 
     private int currentLevel;
     private String currentMode;
@@ -50,6 +48,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
             this.modeTimeLimitMap = new HashMap<>();
             this.modeList = new ArrayList<>();
             this.usernamePasswordMap = new HashMap<>();
+            this.modeWordSetMap = new HashMap<>();
 
         } else {
             this.app = app;
@@ -62,6 +61,15 @@ public class BuzzwordGameData implements AppGameDataComponent {
 
     public void addMode(String mode){
         this.modeList.add(mode);
+    }
+
+    public void addModeWordSet(String mode, String word){
+        if (this.modeWordSetMap.get(mode) == null){
+            Set<String> wordSet = new HashSet<>();
+            this.modeWordSetMap.put(mode, wordSet);
+        }
+
+        this.modeWordSetMap.get(mode).add(word);
     }
 
     public boolean validateUsernamePassword(String name, String pass){

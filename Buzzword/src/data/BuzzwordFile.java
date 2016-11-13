@@ -16,35 +16,37 @@ import java.nio.file.Path;
 public class BuzzwordFile implements AppFileComponent {
 
     public static final String NAME = "NAME";
-    public static final String PASS ="PASS";
+    public static final String PASS = "PASS";
     public static final String PROGRESS = "PROGRESS";
 
     public static final String NAME_PASS_MAP = "NAME_PASS_MAP";
     public static final String MODE_LIST = "MODE_LIST";
+    public static final String MODE_WORDS = "MODE_WORDS";
+    public static final String COUNTRIES = "countries";
 
     @Override
-    public void saveUserData(AppUserDataComponent data, Path path){
+    public void saveUserData(AppUserDataComponent data, Path path) {
 
     }
 
     @Override
-    public void saveGameData(AppGameDataComponent data, Path path){
+    public void saveGameData(AppGameDataComponent data, Path path) {
 
     }
 
     @Override
-    public void loadUserData(AppUserDataComponent data, Path path) throws IOException{
+    public void loadUserData(AppUserDataComponent data, Path path) throws IOException {
         BuzzwordUserData userData = (BuzzwordUserData) data;
         userData.reset();
 
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser jsonParser = jsonFactory.createParser(Files.newInputStream(path));
 
-        while (!jsonParser.isClosed()){
+        while (!jsonParser.isClosed()) {
             JsonToken token = jsonParser.nextToken();
-            if (JsonToken.FIELD_NAME.equals(token)){
+            if (JsonToken.FIELD_NAME.equals(token)) {
                 String fieldname = jsonParser.getCurrentName();
-                switch (fieldname){
+                switch (fieldname) {
                     case NAME:
                         jsonParser.nextToken();
                         String name = jsonParser.getText();
@@ -59,7 +61,7 @@ public class BuzzwordFile implements AppFileComponent {
                         jsonParser.nextToken(); // outer "["
                         String mode;
                         int progress;
-                        while (jsonParser.nextToken() != JsonToken.END_ARRAY){
+                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                             jsonParser.nextToken();
                             mode = jsonParser.getText();
                             jsonParser.nextToken();
@@ -77,12 +79,12 @@ public class BuzzwordFile implements AppFileComponent {
     }
 
     @Override
-    public void loadGameData(AppGameDataComponent data, Path path) throws IOException{
+    public void loadGameData(AppGameDataComponent data, Path path) throws IOException {
         BuzzwordGameData gamedata = (BuzzwordGameData) data;
         gamedata.reset();
 
         JsonFactory jsonFactory = new JsonFactory();
-        JsonParser jsonParser  = jsonFactory.createParser(Files.newInputStream(path));
+        JsonParser jsonParser = jsonFactory.createParser(Files.newInputStream(path));
 
         while (!jsonParser.isClosed()) {
             JsonToken token = jsonParser.nextToken();
@@ -108,10 +110,24 @@ public class BuzzwordFile implements AppFileComponent {
                     case MODE_LIST:
                         jsonParser.nextToken(); // outer "["
                         String mode;
-                        while(jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                             mode = jsonParser.getText();
                             gamedata.addMode(mode);
                         }
+                        break;
+
+                    case MODE_WORDS:
+                        jsonParser.nextToken(); // starting object of mode words.
+                        String modeName, countryName;
+                        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                            modeName = jsonParser.getText();
+                            jsonParser.nextToken(); // starting array of mode word list
+                            while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                                countryName = jsonParser.getText();
+                                gamedata.addModeWordSet(modeName, countryName);
+                            }
+                        }
+
                         break;
 
                     default:
