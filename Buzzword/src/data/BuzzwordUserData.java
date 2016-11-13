@@ -3,6 +3,7 @@ package data;
 import apptemeplate.AppTemplate;
 import components.AppUserDataComponent;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,13 +36,18 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public void login(AppTemplate app) {
 
         try {
-            app.getFileComponent().loadUserData(this, Paths.get(AppTemplate.class.getClassLoader().getResource("data/test1.json").toURI()));
-        }catch(URISyntaxException uris){
-            uris.printStackTrace();
+            // TODO get file path should be more simple.
+            app.getFileComponent().loadUserData(this, new File("data/"+username+".json").toPath());
+
         }catch (IOException ioe){
             ioe.printStackTrace();
         }
+    }
 
+    public void signup(AppTemplate app){
+        for (String mode : ((BuzzwordGameData)app.getGameDataComponent()).getModeList()){
+            progress.put(mode, 1);
+        }
 
     }
 

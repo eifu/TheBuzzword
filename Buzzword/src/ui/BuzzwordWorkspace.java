@@ -3,6 +3,7 @@ package ui;
 
 import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
+import components.AppGameDataComponent;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.BuzzwordGameData;
@@ -44,11 +45,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         activateWorkspace(gui.getAppPane());
     }
 
-    public GameScreenState getCurrentState(){return currentState;}
-    public boolean isPlayingGame(){return gamePlay;}
+    public GameScreenState getCurrentState() {
+        return currentState;
+    }
 
-    public void removePosemenu(){
-        ((GameScreen)workspace).removePosemenu(posemenu);
+    public boolean isPlayingGame() {
+        return gamePlay;
+    }
+
+    public void removePosemenu() {
+        ((GameScreen) workspace).removePosemenu(posemenu);
     }
 
     public void renderGameScreen() {
@@ -137,6 +143,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         signedIn = true;
 
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
+                        userData.setUsername(name);
                         userData.login(app);
 
                         setHandler();
@@ -153,18 +160,24 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 signInBtn.setOnAction(e -> {
                     String name = ((TextField) gridChildren.get(2)).getText();
                     String pass = ((TextField) gridChildren.get(4)).getText();
-                    setCurrentState(HOME);
-                    reloadWorkspace(gui.getAppPane());
+                    BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
+                    if (gameData.validateUsername(name)) {
+                        gameData.addNamePassMap(name, pass);
+                        gameData.save();
 
-                    renderHome(name);
+                        setCurrentState(HOME);
+                        reloadWorkspace(gui.getAppPane());
 
-                    signedIn = true;
-                    BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
-                    userData.setUsername(name);
-                    userData.setPassword(pass);
+                        renderHome(name);
 
-                    setHandler();
+                        signedIn = true;
+                        BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
+                        userData.setUsername(name);
+                        userData.setPassword(pass);
+                        userData.signup(app);
 
+                        setHandler();
+                    }
                 });
                 break;
 
@@ -178,8 +191,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 Label gameModeLabel = (Label) vboxChildren.get(1);
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
-                String mode = (String)comboBox.getValue();
-                gameModeLabel.setText("mode: "+mode);
+                String mode = (String) comboBox.getValue();
+                gameModeLabel.setText("mode: " + mode);
 
                 BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
                 int progress = userData.getProgress(mode);
@@ -343,7 +356,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         quitBtn.setLayoutX(545);
         gameWorkspace.getChildren().add(quitBtn);
-        quitBtn.setOnAction(e->{
+        quitBtn.setOnAction(e -> {
             gui.getFileController().handleQuitRequest();
         });
 
@@ -353,21 +366,21 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         posemenu = new Pane();
         posemenu.setPrefSize(380, 330);
         posemenu.setStyle("-fx-background-color: darkblue;" +
-                          "-fx-opacity: 0.8;");
+                "-fx-opacity: 0.8;");
         posemenu.setLayoutX(10);
         posemenu.setLayoutY(15);
 
-        ((GameScreen)workspace).pose(posemenu, null);
+        ((GameScreen) workspace).pose(posemenu, null);
     }
 
     public void renderGamePlay() {
 
         try {
             if (gamePlay) {
-                ((GameScreen)workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
+                ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 this.gamePlay = false;
             } else {
-                ((GameScreen)workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
+                ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
                 this.gamePlay = true;
             }
         } catch (Exception e) {

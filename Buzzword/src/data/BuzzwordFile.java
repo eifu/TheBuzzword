@@ -1,17 +1,19 @@
 package data;
 
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.*;
 import components.AppFileComponent;
 import components.AppGameDataComponent;
 import components.AppUserDataComponent;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BuzzwordFile implements AppFileComponent {
 
@@ -31,6 +33,57 @@ public class BuzzwordFile implements AppFileComponent {
 
     @Override
     public void saveGameData(AppGameDataComponent data, Path path) {
+        BuzzwordGameData gameData = (BuzzwordGameData) data;
+        Map<String, String> usernamePasswordMap = gameData.getUsernamePasswordMap();
+        ArrayList<String> modeList = gameData.getModeList();
+        Map<String, Set<String>> modeWordSetMap = gameData.getModeWordSetMap();
+
+
+        JsonFactory jsonFactory = new JsonFactory();
+
+        try( OutputStream out = Files.newOutputStream(path)){
+
+            JsonGenerator generator = jsonFactory.createGenerator(out, JsonEncoding.UTF8);
+
+            generator.writeStartObject();
+
+            generator.writeFieldName(NAME_PASS_MAP);
+            generator.writeStartArray(usernamePasswordMap.size());
+            for (String name : usernamePasswordMap.keySet()){
+                generator.writeStartArray();
+                generator.writeString(name);
+                generator.writeString(usernamePasswordMap.get(name));
+                generator.writeEndArray();
+            }
+            generator.writeEndArray();
+
+            generator.writeFieldName(MODE_LIST);
+            generator.writeStartArray(modeList.size());
+            for (String modeName : modeList){
+                generator.writeString(modeName);
+            }
+            generator.writeEndArray();
+
+            generator.writeFieldName(MODE_WORDS);
+            generator.writeStartObject();
+            for (String modeName : modeWordSetMap.keySet()){
+                generator.writeFieldName(modeName);
+                generator.writeStartArray();
+                for (String word : modeWordSetMap.get(modeName)){
+                    generator.writeString(word);
+                }
+                generator.writeEndArray();
+            }
+            generator.writeEndObject();
+
+            generator.writeEndObject();
+
+            generator.close();
+
+        }catch(IOException ioe){
+            ioe.printStackTrace();
+            System.exit(1);
+        }
 
     }
 
