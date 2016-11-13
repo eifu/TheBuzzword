@@ -2,6 +2,7 @@ package controller;
 
 
 import apptemeplate.AppTemplate;
+import buzzword.GameScreenState;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -65,6 +66,12 @@ public class BuzzwordController implements FileController{
     public void handleHomeRequest(){
         BuzzwordWorkspace buzzwordWorkspace = (BuzzwordWorkspace) app.getWorkspaceComponent();
         AppGUI gui = buzzwordWorkspace.getGui();
+
+        if (buzzwordWorkspace.getCurrentState().equals(GameScreenState.GAMEPLAY)){
+            if (!buzzwordWorkspace.isPlayingGame()){
+                buzzwordWorkspace.removePosemenu();
+            }
+        }
 
         buzzwordWorkspace.setCurrentState(HOME);
         buzzwordWorkspace.reloadWorkspace(gui.getAppPane());

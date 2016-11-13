@@ -73,25 +73,20 @@ public class GameScreen extends Pane {
                         circles.getChildren().add(btn);
                     }
                 }
-                StackPane s = new StackPane();
-                s.setPrefSize(450, 100);
+                StackPane gameStartButtonStack = new StackPane();
+                gameStartButtonStack.setPrefSize(450, 100);
 
                 Button gameStartButton = new Button("Game Start");
                 gameStartButton.setTextFill(Paint.valueOf("white"));
                 gameStartButton.setFont(new Font("ariel", 25));
                 gameStartButton.setMinWidth(Region.USE_PREF_SIZE);
                 gameStartButton.setAlignment(Pos.CENTER);
-//                gameStartButton.setVisible(false);
                 gameStartButton.getStyleClass().add("gamestart-button");
-//                Label gameStartLabel = new Label("Game Start");
-//                gameStartLabel.setFont(new Font("Roboto", 24));
-//                gameStartLabel.setTextFill(Paint.valueOf("white"));
 
-//                s.setAlignment(Pos.BOTTOM_CENTER);
-                s.getChildren().addAll(gameStartButton);
-//                s.setPrefSize(450, 60);
-                s.setVisible(false);
-                container.getChildren().addAll(appTitle, circles, s);
+                gameStartButtonStack.getChildren().addAll(gameStartButton);
+
+                gameStartButtonStack.setVisible(false);
+                container.getChildren().addAll(appTitle, circles, gameStartButtonStack);
                 this.getChildren().add(container);
                 break;
 
@@ -398,5 +393,13 @@ public class GameScreen extends Pane {
             BorderPane buttons = (BorderPane) centerVBox.getChildren().get(4);
             buttons.setCenter(playResumeButton);
         }
+    }
+
+    public void removePosemenu(Pane posemenu){
+        BorderPane gameWorkspace = (BorderPane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getCenter();
+        Pane circles = (Pane) centerVBox.getChildren().get(2);
+
+        circles.getChildren().remove(posemenu);
     }
 }

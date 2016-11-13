@@ -44,6 +44,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         activateWorkspace(gui.getAppPane());
     }
 
+    public GameScreenState getCurrentState(){return currentState;}
+    public boolean isPlayingGame(){return gamePlay;}
+
+    public void removePosemenu(){
+        ((GameScreen)workspace).removePosemenu(posemenu);
+    }
+
     public void renderGameScreen() {
         switch (currentState) {
             case HOME:
@@ -283,6 +290,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     }
 
     public void initGamePlay() {
+
+        gamePlay = false;
+
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         ObservableList<Node> workspaceChildren = workspace.getChildren();
@@ -339,17 +349,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     }
 
     public void renderGamePlay() {
-//        ObservableList<Node> workspaceChildren = workspace.getChildren();
-//        BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
-//        VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
-
-
-
-        // change the icon of playresume game button.
-        //BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
-
-
-        Button playResumeButton;
 
         try {
             if (gamePlay) {
