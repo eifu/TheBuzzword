@@ -335,39 +335,34 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         posemenu.setLayoutX(10);
         posemenu.setLayoutY(15);
 
-        ((GameScreen)workspace).pose(posemenu);
+        ((GameScreen)workspace).pose(posemenu, null);
     }
 
     public void renderGamePlay() {
-        ObservableList<Node> workspaceChildren = workspace.getChildren();
-        BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
-        VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
+//        ObservableList<Node> workspaceChildren = workspace.getChildren();
+//        BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
+//        VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
 
 
 
         // change the icon of playresume game button.
-        BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
-        Button playResumeButton = (Button) buttons.getCenter();
+        //BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
+
+
+        Button playResumeButton;
+
         try {
             if (gamePlay) {
-                playResumeButton = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
+                ((GameScreen)workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 this.gamePlay = false;
             } else {
-                playResumeButton = gui.initializeChildButton(RESUMEGAME_ICON.toString(), false);
+                ((GameScreen)workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
                 this.gamePlay = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        playResumeButton.getStyleClass().add("play-resume-game-button");
-        buttons.setCenter(playResumeButton);
 
-
-        if (gamePlay){
-            ((GameScreen)workspace).play(posemenu);
-        }else{
-            ((GameScreen)workspace).pose(posemenu);
-        }
 
         setHandler();
     }

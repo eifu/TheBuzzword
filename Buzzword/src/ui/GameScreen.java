@@ -371,21 +371,32 @@ public class GameScreen extends Pane {
 
     }
 
-    public void pose(Pane posemenu) {
+    public void pose(Pane posemenu, Button playResumeButton) {
+
+
         BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
         VBox centerVBox = (VBox)gameWorkspace.getCenter();
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().add(posemenu);
 
-
+        if (playResumeButton !=null) {
+            playResumeButton.getStyleClass().add("play-resume-game-button");
+            BorderPane buttons = (BorderPane) centerVBox.getChildren().get(4);
+            buttons.setCenter(playResumeButton);
+        }
     }
 
-    public void play(Pane posemenu){
-        BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
-        VBox centerVBox = (VBox)gameWorkspace.getCenter();
+    public void play(Pane posemenu, Button playResumeButton) {
+        BorderPane gameWorkspace = (BorderPane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getCenter();
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().remove(posemenu);
+        if (playResumeButton != null) {
+            playResumeButton.getStyleClass().add("play-resume-game-button");
+            BorderPane buttons = (BorderPane) centerVBox.getChildren().get(4);
+            buttons.setCenter(playResumeButton);
+        }
     }
 }
