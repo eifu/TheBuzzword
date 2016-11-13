@@ -335,7 +335,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         posemenu.setLayoutX(10);
         posemenu.setLayoutY(15);
 
-        renderGamePlay();
+        ((GameScreen)workspace).pose(posemenu);
     }
 
     public void renderGamePlay() {
@@ -343,11 +343,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
         VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
 
-        if (gamePlay){
-            ((GameScreen)workspace).play(posemenu);
-        }else{
-            ((GameScreen)workspace).pose(posemenu);
-        }
+
 
         // change the icon of playresume game button.
         BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
@@ -365,6 +361,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
         playResumeButton.getStyleClass().add("play-resume-game-button");
         buttons.setCenter(playResumeButton);
+
+
+        if (gamePlay){
+            ((GameScreen)workspace).play(posemenu);
+        }else{
+            ((GameScreen)workspace).pose(posemenu);
+        }
 
         setHandler();
     }

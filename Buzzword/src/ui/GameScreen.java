@@ -372,8 +372,6 @@ public class GameScreen extends Pane {
     }
 
     public void pose(Pane posemenu) {
-        System.out.println("test");
-
         BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
         VBox centerVBox = (VBox)gameWorkspace.getCenter();
         Pane circles = (Pane) centerVBox.getChildren().get(2);
