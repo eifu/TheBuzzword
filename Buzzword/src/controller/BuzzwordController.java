@@ -5,6 +5,7 @@ import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -46,6 +47,12 @@ public class BuzzwordController implements FileController{
             dialog.show(pm.getPropertyValue(CHECK_LOGOUT_TITLE),pm.getPropertyValue(CHECK_LOGOUT_MESSAGE), false);
 
             if (dialog.getSelection().equals(YES.getParameter())) {
+
+                if (buzzwordWorkspace.getCurrentState().equals(GameScreenState.GAMEPLAY)){
+                    Button quitBtn = gui.getQuitbtn();
+                    quitBtn.setVisible(true);
+                }
+
                 buzzwordWorkspace.setCurrentState(HOME);
                 buzzwordWorkspace.setSignedIn(false);
                 buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
@@ -71,6 +78,9 @@ public class BuzzwordController implements FileController{
             if (!buzzwordWorkspace.isPlayingGame()){
                 buzzwordWorkspace.removePosemenu();
             }
+
+            Button quitBtn = gui.getQuitbtn();
+            quitBtn.setVisible(true);
         }
 
         buzzwordWorkspace.setCurrentState(HOME);
@@ -111,7 +121,6 @@ public class BuzzwordController implements FileController{
         if (yesNoCancelSingleton != null && yesNoCancelSingleton.getSelection().equals(YES.getParameter())){
             System.exit(0);
         }
-
     }
 
 

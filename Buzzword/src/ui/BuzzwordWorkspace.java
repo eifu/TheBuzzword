@@ -206,8 +206,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             case GAMEPLAY:
                 workspaceChildren = workspace.getChildren();
-                BorderPane borderPaneChildren = (BorderPane) workspaceChildren.get(0);
-                VBox centerVBoxChildren = (VBox) borderPaneChildren.getCenter();
+                Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
+                VBox centerVBoxChildren = (VBox) borderPaneChildren.getChildren().get(0);
 
                 BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
 
@@ -296,8 +296,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         ObservableList<Node> workspaceChildren = workspace.getChildren();
-        BorderPane gameWorkspace = (BorderPane) workspaceChildren.get(0);
-        VBox centerVBox = (VBox) gameWorkspace.getCenter();
+        Pane gameWorkspace = (Pane) workspaceChildren.get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
 
         Label modeLabel = (Label) centerVBox.getChildren().get(1);
         String mode = "mode: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
@@ -310,17 +310,20 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         Button playResumeBtn = null;
         Button nextGameBtn = null;
         Button prevGameBtn = null;
+        Button quitBtn = null;
 
         try {
             playResumeBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
             nextGameBtn = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
             prevGameBtn = gui.initializeChildButton(PREVGAME_ICON.toString(), false);
+            quitBtn = gui.initializeChildButton(QUIT_ICON.toString(), false);
         } catch (Exception e) {
             e.printStackTrace();
         }
         playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
         nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
         prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
+        quitBtn.getStyleClass().add(pm.getPropertyValue(QUIT_BUTTON));
 
         if (((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel() == 1) {
             prevGameBtn.setDisable(true);
@@ -337,6 +340,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         buttons.setRight(nextGameBtn);
 
         centerVBox.getChildren().add(buttons);
+
+        quitBtn.setLayoutX(545);
+        gameWorkspace.getChildren().add(quitBtn);
+        quitBtn.setOnAction(e->{
+            gui.getFileController().handleQuitRequest();
+        });
+
+        Button guitBtnFromGUI = gui.getQuitbtn();
+        guitBtnFromGUI.setVisible(false);
 
         posemenu = new Pane();
         posemenu.setPrefSize(380, 330);

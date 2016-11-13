@@ -215,9 +215,11 @@ public class GameScreen extends Pane {
 
 
             case GAMEPLAY:
-                BorderPane gameWorkspace = new BorderPane();
+                Pane gameWorkspace = new Pane();
 
                 VBox centerBox = new VBox();
+                centerBox.setLayoutX(0);
+                centerBox.setLayoutY(0);
                 buzzwordTitle = new Label("Buzzword");
                 buzzwordTitle.setPrefSize(400, 60);
                 buzzwordTitle.setAlignment(Pos.CENTER);
@@ -273,10 +275,11 @@ public class GameScreen extends Pane {
 
 
                 centerBox.getChildren().addAll(buzzwordTitle, modeLabel, circles, levelLabel);
-                gameWorkspace.setCenter(centerBox);
+                gameWorkspace.getChildren().add(centerBox);
 
                 Pane rightWorkspace = new Pane();
-                rightWorkspace.setPadding(new Insets(0, 10, 0, 0));
+                rightWorkspace.setLayoutX(400);
+                rightWorkspace.setLayoutY(20);
                 Rectangle timeOuterRect = new Rectangle();
                 timeOuterRect.setHeight(25);
                 timeOuterRect.setWidth(180);
@@ -331,7 +334,8 @@ public class GameScreen extends Pane {
                 targetVBox.setLayoutY(420);
 
                 rightWorkspace.getChildren().addAll(timeOuterRect, timerLabel, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
-                gameWorkspace.setRight(rightWorkspace);
+//                gameWorkspace.setRight(rightWorkspace);
+                gameWorkspace.getChildren().add(rightWorkspace);
 
                 this.getChildren().add(gameWorkspace);
                 break;
@@ -369,8 +373,8 @@ public class GameScreen extends Pane {
     public void pose(Pane posemenu, Button playResumeButton) {
 
 
-        BorderPane gameWorkspace = (BorderPane)this.getChildren().get(0);
-        VBox centerVBox = (VBox)gameWorkspace.getCenter();
+        Pane gameWorkspace = (Pane)this.getChildren().get(0);
+        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().add(posemenu);
@@ -383,8 +387,8 @@ public class GameScreen extends Pane {
     }
 
     public void play(Pane posemenu, Button playResumeButton) {
-        BorderPane gameWorkspace = (BorderPane) this.getChildren().get(0);
-        VBox centerVBox = (VBox) gameWorkspace.getCenter();
+        Pane gameWorkspace = (Pane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().remove(posemenu);
@@ -396,8 +400,8 @@ public class GameScreen extends Pane {
     }
 
     public void removePosemenu(Pane posemenu){
-        BorderPane gameWorkspace = (BorderPane) this.getChildren().get(0);
-        VBox centerVBox = (VBox) gameWorkspace.getCenter();
+        Pane gameWorkspace = (Pane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().remove(posemenu);
