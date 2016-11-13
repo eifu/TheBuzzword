@@ -179,7 +179,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 Label gameModeLabel = (Label) vboxChildren.get(1);
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                 String mode = (String)comboBox.getValue();
-                gameModeLabel.setText(mode);
+                gameModeLabel.setText("mode: "+mode);
 
                 BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
                 int progress = userData.getProgress(mode);
