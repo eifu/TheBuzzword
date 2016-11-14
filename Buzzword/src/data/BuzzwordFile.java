@@ -28,6 +28,43 @@ public class BuzzwordFile implements AppFileComponent {
 
     @Override
     public void saveUserData(AppUserDataComponent data, Path path) {
+        System.out.println(path.toString());
+        BuzzwordUserData userData = (BuzzwordUserData)data;
+        Map<String, Integer> progressMap = userData.getProgressMap();
+
+        JsonFactory jsonFactory = new JsonFactory();
+
+        try( OutputStream out = Files.newOutputStream(path)){
+
+            JsonGenerator generator = jsonFactory.createGenerator(out, JsonEncoding.UTF8);
+
+            generator.writeStartObject();
+
+            generator.writeFieldName(NAME);
+            generator.writeString(userData.getUsername());
+
+            generator.writeFieldName(PASS);
+            generator.writeString(userData.getPassword());
+
+            generator.writeFieldName(PROGRESS);
+            generator.writeStartArray();
+            for (String mode : progressMap.keySet()){
+                generator.writeStartArray();
+                generator.writeString(mode);
+                generator.writeNumber(progressMap.get(mode));
+                generator.writeEndArray();
+            }
+            generator.writeEndArray();
+
+            generator.writeEndObject();
+
+            generator.close();
+
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+            System.exit(1);
+        }
+
 
     }
 
