@@ -33,6 +33,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     boolean signedIn;
     boolean gamePlay;
     Pane posemenu;
+    Pane personalInfo;
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -85,15 +86,22 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gameStartBtn = (Button) s.getChildren().get(0);
-
+                    Pane circles = (Pane)vboxHomeChildren.get(1);
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
 
                     Button personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
                     personalBtn.setOnAction(e2 -> {
-                        PropertyManager pm = PropertyManager.getPropertyManager();
-                        AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
-                        dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
+//                        PropertyManager pm = PropertyManager.getPropertyManager();
+//                        AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
+//                        dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
+
+                        circles.getChildren().add(personalInfo);
+
+                    });
+
+                    ((Button)personalInfo.getChildren().get(0)).setOnAction(e->{
+                        circles.getChildren().remove(personalInfo);
                     });
 
                     gameStartBtn.setOnAction(e -> {
@@ -292,6 +300,22 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             gui.getToolbarPane().getChildren().add(personalBtn);
         } catch (Exception e1) {
             e1.printStackTrace();
+        }
+
+        personalInfo = new Pane();
+        personalInfo.setPrefSize(380, 330);
+        personalInfo.setStyle("-fx-background-color: darkblue;" +
+                "-fx-opacity: 0.8;");
+        personalInfo.setLayoutX(10);
+        personalInfo.setLayoutY(15);
+        try{
+            Button close = gui.initializeChildButton(QUIT_ICON.toString(), false);
+            close.setLayoutX(180);
+            close.setLayoutY(300);
+            personalInfo.getChildren().add(close);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
         }
 
         renderGameScreen();
