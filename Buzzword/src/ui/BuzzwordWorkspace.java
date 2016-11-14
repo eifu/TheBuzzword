@@ -197,6 +197,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             case SELECTING:
 
+                personalBtn.setDisable(false);
+
                 int totalLevel = 8; // TODO need to get from BuzzwordGameData
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
@@ -234,6 +236,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 break;
 
             case GAMEPLAY:
+
+                personalBtn.setDisable(false);
+
                 workspaceChildren = workspace.getChildren();
                 Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
                 VBox centerVBoxChildren = (VBox) borderPaneChildren.getChildren().get(0);
