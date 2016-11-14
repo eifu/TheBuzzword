@@ -42,7 +42,12 @@ public class BuzzwordUserData implements AppUserDataComponent {
 
         try {
             // TODO get file path should be more simple.
-            app.getFileComponent().loadUserData(this, new File("data/"+username+".json").toPath());
+            PropertyManager pm = PropertyManager.getPropertyManager();
+
+            Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
+            Path targetPath = appDirPath.resolve("resources/data");
+
+            app.getFileComponent().loadUserData(this, new File(targetPath.toAbsolutePath() + File.separator +username+".json").toPath());
 
         }catch (IOException ioe){
             ioe.printStackTrace();
