@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -318,15 +319,23 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BuzzwordUserData userData = (BuzzwordUserData)app.getUserDataComponent();
         Label nameLbl = new Label(userData.getUsername());
         nameLbl.setTextFill(Paint.valueOf("white"));
+        nameLbl.setFont(new Font("ariel", 30));
         nameLbl.setLayoutX(25);
         nameLbl.setLayoutY(25);
         personalInfo.getChildren().add(nameLbl);
+        Label levelLbl = new Label("Level");
+        levelLbl.setTextFill(Paint.valueOf("white"));
+        levelLbl.setFont(new Font("ariel", 20));
+        levelLbl.setLayoutX(35);
+        levelLbl.setLayoutY(60);
+        personalInfo.getChildren().add(levelLbl);
         int count  = 1;
-        for (String mode : userData.getProgressMap().keySet()){
-            Label modeLbl = new Label(mode + ": "+ userData.getProgress(mode));
+        for (String mode : ((BuzzwordGameData)app.getGameDataComponent()).getModeList()){
+            Label modeLbl = new Label(mode + ": "+ userData.getProgress(mode)+ " out of 8");
             modeLbl.setTextFill(Paint.valueOf("white"));
-            modeLbl.setLayoutX(25);
-            modeLbl.setLayoutY(25+20*count);
+            modeLbl.setFont(new Font("ariel",20));
+            modeLbl.setLayoutX(30);
+            modeLbl.setLayoutY(60+25*count);
             count ++;
             personalInfo.getChildren().add(modeLbl);
         }
