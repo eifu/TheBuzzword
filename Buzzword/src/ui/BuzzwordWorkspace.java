@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import javafx.scene.paint.Paint;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -34,6 +35,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     boolean gamePlay;
     Pane posemenu;
     Pane personalInfo;
+    Button personalBtn;
+    Pane circles; // circle buttons that will be under personalInfo pane.
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -86,23 +89,22 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gameStartBtn = (Button) s.getChildren().get(0);
-                    Pane circles = (Pane)vboxHomeChildren.get(1);
+                    circles = (Pane)vboxHomeChildren.get(1);
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
 
-                    Button personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
+                    personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
+                    personalBtn.setDisable(false);
                     personalBtn.setOnAction(e2 -> {
-//                        PropertyManager pm = PropertyManager.getPropertyManager();
-//                        AppMessageSingleton dialog = AppMessageSingleton.getSingleton();
-//                        dialog.show(pm.getPropertyValue(USER_INFO_TITLE), "You are a master of buzzword.");
 
                         circles.getChildren().add(personalInfo);
-
+                        personalBtn.setDisable(true);
                     });
 
-                    ((Button)personalInfo.getChildren().get(0)).setOnAction(e->{
-                        circles.getChildren().remove(personalInfo);
-                    });
+//                    ((Button)personalInfo.getChildren().get(0)).setOnAction(e->{
+//                        circles.getChildren().remove(personalInfo);
+//                        personalBtn.setDisable(false);
+//                    });
 
                     gameStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
@@ -146,7 +148,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
 
-                        renderHome(name);
+
 
                         signedIn = true;
 
@@ -154,6 +156,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         userData.setUsername(name);
                         userData.login(app);
 
+
+                        renderHome(name);
                         setHandler();
 
                     }
@@ -176,7 +180,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
 
-                        renderHome(name);
+
 
                         signedIn = true;
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
@@ -184,6 +188,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         userData.setPassword(pass);
                         userData.signup(app);
 
+                        renderHome(name);
                         setHandler();
                     }
                 });
@@ -201,6 +206,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
+
+                circles = (Pane) vboxChildren.get(2);
 
                 BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
                 int progress = userData.getProgress(mode);
@@ -290,7 +297,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         comboBox.setLayoutY(336);
         gui.getToolbarPane().getChildren().add(comboBox);
 
-        Button personalBtn;
         try {
             personalBtn = gui.initializeChildButton(name, FACE_ICON.toString(), false);
             personalBtn.setMinWidth(150);
@@ -303,16 +309,38 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
 
         personalInfo = new Pane();
-        personalInfo.setPrefSize(380, 330);
+        personalInfo.setPrefSize(240, 240);
         personalInfo.setStyle("-fx-background-color: darkblue;" +
                 "-fx-opacity: 0.8;");
-        personalInfo.setLayoutX(10);
-        personalInfo.setLayoutY(15);
+        personalInfo.setLayoutX(80);
+        personalInfo.setLayoutY(60);
+
+        BuzzwordUserData userData = (BuzzwordUserData)app.getUserDataComponent();
+        Label nameLbl = new Label(userData.getUsername());
+        nameLbl.setTextFill(Paint.valueOf("white"));
+        nameLbl.setLayoutX(25);
+        nameLbl.setLayoutY(25);
+        personalInfo.getChildren().add(nameLbl);
+        int count  = 1;
+        for (String mode : userData.getProgressMap().keySet()){
+            Label modeLbl = new Label(mode + ": "+ userData.getProgress(mode));
+            modeLbl.setTextFill(Paint.valueOf("white"));
+            modeLbl.setLayoutX(25);
+            modeLbl.setLayoutY(25+20*count);
+            count ++;
+            personalInfo.getChildren().add(modeLbl);
+        }
+
         try{
             Button close = gui.initializeChildButton(QUIT_ICON.toString(), false);
-            close.setLayoutX(180);
-            close.setLayoutY(300);
+            close.getStyleClass().add("quit-button");
+            close.setLayoutX(190);
+            close.setLayoutY(0);
             personalInfo.getChildren().add(close);
+            close.setOnAction(e->{
+                circles.getChildren().remove(personalInfo);
+                personalBtn.setDisable(false);
+            });
         }catch (Exception e){
             e.printStackTrace();
             System.exit(1);
@@ -339,6 +367,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         Label modeLabel = (Label) centerVBox.getChildren().get(1);
         String mode = "mode: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
         modeLabel.setText(mode);
+
+        circles = (Pane) centerVBox.getChildren().get(2);
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
         String level = "Level: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();

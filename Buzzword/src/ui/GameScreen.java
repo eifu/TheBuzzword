@@ -31,13 +31,13 @@ public class GameScreen extends Pane {
                 appTitle.setAlignment(Pos.CENTER);
                 appTitle.setFont(new Font("Roboto", 50));
                 appTitle.setTextFill(Paint.valueOf("white"));
-                appTitle.setPrefSize(450, 100);
+                appTitle.setPrefSize(400, 100);
                 Pane circles = new Pane();
                 for (int y = 0; y < 4; y++) {
                     for (int x = 0; x < 4; x++) {
 
                         Button btn = new Button();
-                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutX(x * 80 + 50);
                         btn.setLayoutY(y * 80 + 30);
                         btn.setMnemonicParsing(false);
                         btn.setDisable(true);
@@ -74,7 +74,7 @@ public class GameScreen extends Pane {
                     }
                 }
                 StackPane gameStartButtonStack = new StackPane();
-                gameStartButtonStack.setPrefSize(450, 100);
+                gameStartButtonStack.setPrefSize(400, 100);
 
                 Button gameStartButton = new Button("Game Start");
                 gameStartButton.setTextFill(Paint.valueOf("white"));
@@ -97,7 +97,7 @@ public class GameScreen extends Pane {
                 titleLabel.setAlignment(Pos.CENTER);
                 titleLabel.setFont(new Font("Roboto", 50));
                 titleLabel.setTextFill(Paint.valueOf("white"));
-                titleLabel.setPrefSize(450, 100);
+                titleLabel.setPrefSize(400, 100);
 
                 GridPane grid = new GridPane();
                 grid.setAlignment(Pos.CENTER);
@@ -142,7 +142,7 @@ public class GameScreen extends Pane {
                 titleLabel.setAlignment(Pos.CENTER);
                 titleLabel.setFont(new Font("Roboto", 50));
                 titleLabel.setTextFill(Paint.valueOf("white"));
-                titleLabel.setPrefSize(450, 100);
+                titleLabel.setPrefSize(400, 100);
 
                 grid = new GridPane();
                 grid.setAlignment(Pos.CENTER);
@@ -180,13 +180,13 @@ public class GameScreen extends Pane {
             case SELECTING:
                 container = new VBox();
                 Label buzzwordTitle = new Label("Buzzword");
-                buzzwordTitle.setPrefSize(450, 60);
+                buzzwordTitle.setPrefSize(400, 60);
                 buzzwordTitle.setAlignment(Pos.CENTER);
                 buzzwordTitle.setFont(new Font("Roboto", 30));
                 buzzwordTitle.setTextFill(Paint.valueOf("white"));
 
                 Label modeLabel = new Label("Label");
-                modeLabel.setPrefSize(450, 40);
+                modeLabel.setPrefSize(400, 40);
                 modeLabel.setAlignment(Pos.CENTER);
                 modeLabel.setFont(new Font("Roboto", 16));
                 modeLabel.setTextFill(Paint.valueOf("white"));
@@ -198,7 +198,7 @@ public class GameScreen extends Pane {
 
                         Button btn = new Button();
 
-                        btn.setLayoutX(x * 80 + 70);
+                        btn.setLayoutX(x * 80 + 50);
                         btn.setLayoutY(y * 80 + 30);
                         btn.setDisable(true);
                         btn.setId("" + (1 + x + y * 4));
