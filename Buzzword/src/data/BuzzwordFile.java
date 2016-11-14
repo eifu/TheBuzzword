@@ -24,17 +24,15 @@ public class BuzzwordFile implements AppFileComponent {
     public static final String NAME_PASS_MAP = "NAME_PASS_MAP";
     public static final String MODE_LIST = "MODE_LIST";
     public static final String MODE_WORDS = "MODE_WORDS";
-    public static final String COUNTRIES = "countries";
 
     @Override
     public void saveUserData(AppUserDataComponent data, Path path) {
-        System.out.println(path.toString());
-        BuzzwordUserData userData = (BuzzwordUserData)data;
+        BuzzwordUserData userData = (BuzzwordUserData) data;
         Map<String, Integer> progressMap = userData.getProgressMap();
 
         JsonFactory jsonFactory = new JsonFactory();
 
-        try( OutputStream out = Files.newOutputStream(path)){
+        try (OutputStream out = Files.newOutputStream(path)) {
 
             JsonGenerator generator = jsonFactory.createGenerator(out, JsonEncoding.UTF8);
 
@@ -48,7 +46,7 @@ public class BuzzwordFile implements AppFileComponent {
 
             generator.writeFieldName(PROGRESS);
             generator.writeStartArray();
-            for (String mode : progressMap.keySet()){
+            for (String mode : progressMap.keySet()) {
                 generator.writeStartArray();
                 generator.writeString(mode);
                 generator.writeNumber(progressMap.get(mode));
@@ -60,7 +58,7 @@ public class BuzzwordFile implements AppFileComponent {
 
             generator.close();
 
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             System.exit(1);
         }
@@ -78,7 +76,7 @@ public class BuzzwordFile implements AppFileComponent {
 
         JsonFactory jsonFactory = new JsonFactory();
 
-        try( OutputStream out = Files.newOutputStream(path)){
+        try (OutputStream out = Files.newOutputStream(path)) {
 
             JsonGenerator generator = jsonFactory.createGenerator(out, JsonEncoding.UTF8);
 
@@ -86,7 +84,7 @@ public class BuzzwordFile implements AppFileComponent {
 
             generator.writeFieldName(NAME_PASS_MAP);
             generator.writeStartArray(usernamePasswordMap.size());
-            for (String name : usernamePasswordMap.keySet()){
+            for (String name : usernamePasswordMap.keySet()) {
                 generator.writeStartArray();
                 generator.writeString(name);
                 generator.writeString(usernamePasswordMap.get(name));
@@ -96,17 +94,17 @@ public class BuzzwordFile implements AppFileComponent {
 
             generator.writeFieldName(MODE_LIST);
             generator.writeStartArray(modeList.size());
-            for (String modeName : modeList){
+            for (String modeName : modeList) {
                 generator.writeString(modeName);
             }
             generator.writeEndArray();
 
             generator.writeFieldName(MODE_WORDS);
             generator.writeStartObject();
-            for (String modeName : modeWordSetMap.keySet()){
+            for (String modeName : modeWordSetMap.keySet()) {
                 generator.writeFieldName(modeName);
                 generator.writeStartArray();
-                for (String word : modeWordSetMap.get(modeName)){
+                for (String word : modeWordSetMap.get(modeName)) {
                     generator.writeString(word);
                 }
                 generator.writeEndArray();
@@ -117,7 +115,7 @@ public class BuzzwordFile implements AppFileComponent {
 
             generator.close();
 
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             System.exit(1);
         }
@@ -161,6 +159,8 @@ public class BuzzwordFile implements AppFileComponent {
                             jsonParser.nextToken(); // inner "]"
                         }
                         break;
+                    default:
+                        throw new JsonParseException(jsonParser, "Unable to load JSON data");
 
                 }
             }

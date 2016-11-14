@@ -41,17 +41,23 @@ public class BuzzwordGameData implements AppGameDataComponent {
         return currentMode;
     }
 
-    public ArrayList<String> getModeList(){return modeList;}
+    public ArrayList<String> getModeList() {
+        return modeList;
+    }
 
-    public Map getUsernamePasswordMap(){return usernamePasswordMap;}
+    public Map getUsernamePasswordMap() {
+        return usernamePasswordMap;
+    }
 
-    public Map getModeWordSetMap(){return modeWordSetMap;}
+    public Map getModeWordSetMap() {
+        return modeWordSetMap;
+    }
 
     public BuzzwordGameData(AppTemplate app) {
         this(app, false);
     }
 
-    public BuzzwordGameData(AppTemplate app, boolean initiateGame)  {
+    public BuzzwordGameData(AppTemplate app, boolean initiateGame) {
         if (initiateGame) {
             this.app = app;
             this.modeMatrixMap = new HashMap<>();
@@ -65,16 +71,16 @@ public class BuzzwordGameData implements AppGameDataComponent {
         }
     }
 
-    public void addNamePassMap(String name, String pass){
-       this.usernamePasswordMap.put(name, pass);
+    public void addNamePassMap(String name, String pass) {
+        this.usernamePasswordMap.put(name, pass);
     }
 
-    public void addMode(String mode){
+    public void addMode(String mode) {
         this.modeList.add(mode);
     }
 
-    public void addModeWordSet(String mode, String word){
-        if (this.modeWordSetMap.get(mode) == null){
+    public void addModeWordSet(String mode, String word) {
+        if (this.modeWordSetMap.get(mode) == null) {
             Set<String> wordSet = new HashSet<>();
             this.modeWordSetMap.put(mode, wordSet);
         }
@@ -82,14 +88,14 @@ public class BuzzwordGameData implements AppGameDataComponent {
         this.modeWordSetMap.get(mode).add(word);
     }
 
-    public boolean validateUsernamePassword(String name, String pass){
+    public boolean validateUsernamePassword(String name, String pass) {
         return this.usernamePasswordMap.get(name) != null && this.usernamePasswordMap.get(name).equals(pass);
     }
 
     /*
         return true if the name is valid.
      */
-    public boolean validateUsername(String name){
+    public boolean validateUsername(String name) {
         return this.usernamePasswordMap.get(name) == null;
     }
 
@@ -97,13 +103,13 @@ public class BuzzwordGameData implements AppGameDataComponent {
     public void reset() {
     }
 
-    public void save(){
+    public void save() {
 
         PropertyManager pm = PropertyManager.getPropertyManager();
-
         Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
         Path targetPath = appDirPath.resolve("resources/data");
 
-        app.getFileComponent().saveGameData(this, new File(targetPath.toAbsolutePath()+File.separator+ "gamedata.json").toPath());
+        File f = new File(targetPath.toAbsolutePath() + File.separator + "gamedata.json");
+        app.getFileComponent().saveGameData(this, f.toPath());
     }
 }

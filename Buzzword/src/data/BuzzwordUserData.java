@@ -21,17 +21,35 @@ public class BuzzwordUserData implements AppUserDataComponent {
     private Map<String, Integer> progress;
     private Map<String, Integer> highscore;
 
-    public void setUsername(String username){this.username = username;}
-    public String getUsername(){return username;}
-    public void setPassword(String password){this.password = password;}
-    public String getPassword(){return password;}
-    public Map<String, Integer> getProgressMap(){return progress;}
-    public int getProgress(String mode){return progress.get(mode);}
-    public void setProgress(String mode, int progress){
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Map<String, Integer> getProgressMap() {
+        return progress;
+    }
+
+    public int getProgress(String mode) {
+        return progress.get(mode);
+    }
+
+    public void setProgress(String mode, int progress) {
         this.progress.put(mode, progress);
     }
 
-    public BuzzwordUserData(){
+    public BuzzwordUserData() {
         this.username = "";
         this.password = "";
         progress = new HashMap<>();
@@ -40,35 +58,35 @@ public class BuzzwordUserData implements AppUserDataComponent {
 
     public void login(AppTemplate app) {
 
+        PropertyManager pm = PropertyManager.getPropertyManager();
+        Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
+        Path targetPath = appDirPath.resolve("resources/data");
+
         try {
-            // TODO get file path should be more simple.
-            PropertyManager pm = PropertyManager.getPropertyManager();
+            File f = new File(targetPath.toAbsolutePath() + File.separator + username + ".json");
+            app.getFileComponent().loadUserData(this, f.toPath());
 
-            Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
-            Path targetPath = appDirPath.resolve("resources/data");
-
-            app.getFileComponent().loadUserData(this, new File(targetPath.toAbsolutePath() + File.separator +username+".json").toPath());
-
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
+            System.exit(1);
         }
     }
 
-    public void signup(AppTemplate app){
-        for (String mode : ((BuzzwordGameData)app.getGameDataComponent()).getModeList()){
+    public void signup(AppTemplate app) {
+        for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
             progress.put(mode, 1);
         }
-        PropertyManager pm = PropertyManager.getPropertyManager();
 
+        PropertyManager pm = PropertyManager.getPropertyManager();
         Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
         Path targetPath = appDirPath.resolve("resources/data");
-        try{
-            File f = new File(targetPath.toAbsolutePath()+File.separator+username+".json");
-            f.createNewFile();
 
+        try {
+            File f = new File(targetPath.toAbsolutePath() + File.separator + username + ".json");
+            f.createNewFile();
             app.getFileComponent().saveUserData(this, f.toPath());
 
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             System.exit(1);
         }
@@ -76,7 +94,7 @@ public class BuzzwordUserData implements AppUserDataComponent {
     }
 
     @Override
-    public void reset(){
+    public void reset() {
         this.username = "";
         this.password = "";
         progress = new HashMap<>();
