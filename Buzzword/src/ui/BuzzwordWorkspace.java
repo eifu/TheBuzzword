@@ -3,23 +3,21 @@ package ui;
 
 import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
-import components.AppGameDataComponent;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
 import javafx.collections.FXCollections;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.*;
-
+import java.util.concurrent.ThreadLocalRandom;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
-import java.io.IOException;
 
 import static buzzword.GameScreenState.*;
 import static buzzword.BuzzwordProperty.*;
@@ -383,6 +381,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         modeLabel.setText(mode);
 
         circles = (Pane) centerVBox.getChildren().get(2);
+        for (int i = 1; i <= 16;i++) {
+            Button b = (Button) circles.lookup("#"+i);
+            b.setText(""+((char)ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+        }
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
         String level = "Level: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
@@ -433,10 +435,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         posemenu = new Pane();
         posemenu.setPrefSize(380, 330);
-        posemenu.setStyle("-fx-background-color: darkblue;" +
+        posemenu.setStyle("-fx-background-color: white;" +
                 "-fx-opacity: 0.8;");
         posemenu.setLayoutX(10);
         posemenu.setLayoutY(15);
+
+        BoxBlur boxBlur = new BoxBlur();
+        boxBlur.setWidth(100);
+        boxBlur.setHeight(100);
+        boxBlur.setIterations(3);
+        posemenu.setEffect(boxBlur);
 
         ((GameScreen) workspace).pose(posemenu, null);
     }
@@ -446,9 +454,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         try {
             if (gamePlay) {
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
+                for (int i=1; i<=16;i++){
+                    ((Button)circles.lookup("#"+i)).setTextFill(Paint.valueOf("transparent"));
+                }
                 this.gamePlay = false;
             } else {
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
+                for (int i=1; i<=16;i++){
+                    ((Button)circles.lookup("#"+i)).setTextFill(Paint.valueOf("white"));
+                }
                 this.gamePlay = true;
             }
         } catch (Exception e) {
