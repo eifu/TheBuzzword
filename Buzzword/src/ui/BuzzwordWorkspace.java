@@ -11,7 +11,9 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.*;
+
 import java.util.concurrent.ThreadLocalRandom;
+
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import propertymanager.PropertyManager;
@@ -88,7 +90,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gameStartBtn = (Button) s.getChildren().get(0);
-                    circles = (Pane)vboxHomeChildren.get(1);
+                    circles = (Pane) vboxHomeChildren.get(1);
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
 
@@ -148,7 +150,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         reloadWorkspace(gui.getAppPane());
 
 
-
                         signedIn = true;
 
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
@@ -178,7 +179,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
-
 
 
                         signedIn = true;
@@ -225,7 +225,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         initGamePlay();
 
-                        setHandler();
+
                     });
                     if (level < progress) {
                         b.setDisable(false);
@@ -235,7 +235,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             case GAMEPLAY:
 
-                personalBtn.setDisable(false);
+                personalBtn.setDisable(true);
 
                 workspaceChildren = workspace.getChildren();
                 Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
@@ -319,7 +319,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         personalInfo.setLayoutX(80);
         personalInfo.setLayoutY(60);
 
-        BuzzwordUserData userData = (BuzzwordUserData)app.getUserDataComponent();
+        BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
         Label nameLbl = new Label(userData.getUsername());
         nameLbl.setTextFill(Paint.valueOf("white"));
         nameLbl.setFont(new Font("ariel", 30));
@@ -332,28 +332,28 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         levelLbl.setLayoutX(35);
         levelLbl.setLayoutY(60);
         personalInfo.getChildren().add(levelLbl);
-        int count  = 1;
-        for (String mode : ((BuzzwordGameData)app.getGameDataComponent()).getModeList()){
-            Label modeLbl = new Label(mode + ": "+ userData.getProgress(mode)+ " out of 8");
+        int count = 1;
+        for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
+            Label modeLbl = new Label(mode + ": " + userData.getProgress(mode) + " out of 8");
             modeLbl.setTextFill(Paint.valueOf("white"));
-            modeLbl.setFont(new Font("ariel",20));
+            modeLbl.setFont(new Font("ariel", 20));
             modeLbl.setLayoutX(30);
-            modeLbl.setLayoutY(60+25*count);
-            count ++;
+            modeLbl.setLayoutY(60 + 25 * count);
+            count++;
             personalInfo.getChildren().add(modeLbl);
         }
 
-        try{
+        try {
             Button close = gui.initializeChildButton(QUIT_ICON.toString(), false);
             close.getStyleClass().add("quit-button");
             close.setLayoutX(190);
             close.setLayoutY(0);
             personalInfo.getChildren().add(close);
-            close.setOnAction(e->{
+            close.setOnAction(e -> {
                 circles.getChildren().remove(personalInfo);
                 personalBtn.setDisable(false);
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -368,7 +368,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     public void initGamePlay() {
 
-        gamePlay = false;
+        gamePlay = true;
 
         PropertyManager pm = PropertyManager.getPropertyManager();
 
@@ -381,10 +381,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         modeLabel.setText(mode);
 
         circles = (Pane) centerVBox.getChildren().get(2);
-        for (int i = 1; i <= 16;i++) {
-            Button b = (Button) circles.lookup("#"+i);
-            b.setText(""+((char)ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+        for (int i = 1; i <= 16; i++) {
+            Button b = ((Button) circles.lookup("#" + i));
+            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
         }
+
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
         String level = "Level: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
@@ -396,7 +397,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         Button quitBtn = null;
 
         try {
-            playResumeBtn = gui.initializeChildButton(PLAYGAME_ICON.toString(), false);
+            playResumeBtn = gui.initializeChildButton(RESUMEGAME_ICON.toString(), false);
             nextGameBtn = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
             prevGameBtn = gui.initializeChildButton(PREVGAME_ICON.toString(), false);
             quitBtn = gui.initializeChildButton(QUIT_ICON.toString(), false);
@@ -446,7 +447,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         boxBlur.setIterations(3);
         posemenu.setEffect(boxBlur);
 
-        ((GameScreen) workspace).pose(posemenu, null);
+
+        setHandler();
     }
 
     public void renderGamePlay() {
@@ -454,14 +456,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         try {
             if (gamePlay) {
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
-                for (int i=1; i<=16;i++){
-                    ((Button)circles.lookup("#"+i)).setTextFill(Paint.valueOf("transparent"));
+                for (int i = 1; i <= 16; i++) {
+                    ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
                 }
                 this.gamePlay = false;
             } else {
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
-                for (int i=1; i<=16;i++){
-                    ((Button)circles.lookup("#"+i)).setTextFill(Paint.valueOf("white"));
+                for (int i = 1; i <= 16; i++) {
+                    ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("white"));
                 }
                 this.gamePlay = true;
             }

@@ -258,10 +258,6 @@ public class GameScreen extends Pane {
                         btn.setLayoutX(x * 80 + 50);
                         btn.setLayoutY(y * 80 + 30);
 
-//                        Label l = new Label(""+(1+x+y*4));
-//                        l.setFont(new Font("Roboto", 24));
-//                        l.setTextFill(Paint.valueOf("white"));
-//                        stackPane.getChildren().add(l);
                         circles.getChildren().addAll(btn);
 
                     }
