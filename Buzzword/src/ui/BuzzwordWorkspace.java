@@ -2,6 +2,7 @@ package ui;
 
 
 import apptemeplate.AppTemplate;
+import buzzword.Buzzword;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
@@ -384,6 +385,34 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         for (int i = 1; i <= 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+        }
+
+        boolean done = false;
+        BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
+
+        while (!done) {
+        // TODO this is specific for countries.
+        int letterIndex1 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
+
+        int letterIndex2 = letterIndex1;
+        while (letterIndex2 == letterIndex1) {
+            letterIndex2 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
+        }
+
+        int letterIndex3 = letterIndex1;
+        while (letterIndex3 == letterIndex1 || letterIndex3 == letterIndex2) {
+            letterIndex3 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
+        }
+
+        String letter1 = gameData.getWord(letterIndex1);
+        System.out.println("letter1 " + letter1);
+
+        String letter2 = gameData.getWord(letterIndex2);
+        System.out.println("2 " + letter2);
+
+        String letter3 = gameData.getWord(letterIndex3);
+        System.out.println("3 " + letter3);
+
         }
 
 

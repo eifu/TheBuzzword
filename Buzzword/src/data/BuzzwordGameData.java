@@ -15,6 +15,8 @@ import static settings.AppPropertyType.APP_TITLE;
 
 public class BuzzwordGameData implements AppGameDataComponent {
 
+    public static final int MAXNUMBEROFCOUNTRIES = 160;
+
     private AppTemplate app;
     private Map<String, MatrixData[]> modeMatrixMap;
     private Map<String, Integer[]> modeTimeLimitMap;
@@ -111,5 +113,18 @@ public class BuzzwordGameData implements AppGameDataComponent {
 
         File f = new File(targetPath.toAbsolutePath() + File.separator + "gamedata.json");
         app.getFileComponent().saveGameData(this, f.toPath());
+    }
+
+
+    public String getWord(int index) {
+        Set<String> wordSet = modeWordSetMap.get(currentMode);
+        int i = 0;
+        for (String word : wordSet) {
+            if (i == index) {
+                return word;
+            }
+            i = i + 1;
+        }
+        return "";
     }
 }
