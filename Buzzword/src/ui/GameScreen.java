@@ -324,6 +324,7 @@ public class GameScreen extends Pane {
                 target.setAlignment(Pos.TOP_LEFT);
                 target.setTextFill(Paint.valueOf("white"));
                 Label points = new Label("75 points");
+                points.setId("target");
                 points.setTextFill(Paint.valueOf("white"));
                 points.setAlignment(Pos.CENTER);
                 targetVBox.getChildren().addAll(target, points);

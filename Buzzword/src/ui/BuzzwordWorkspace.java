@@ -387,16 +387,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
         }
 
-        boolean done = false;
-        boolean done_letter1 = false;
-        boolean done_letter2 = false;
-        boolean done_letter3 = false;
-
-        String[] matrix = new String[4 * 4];
 
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
-//        while (!done) {
         // TODO this is specific for countries.
         int letterIndex1 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
 
@@ -405,10 +398,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             letterIndex2 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
         }
 
-        int letterIndex3 = letterIndex1;
-        while (letterIndex3 == letterIndex1 || letterIndex3 == letterIndex2) {
-            letterIndex3 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
-        }
 
         String letter1 = gameData.getWord(letterIndex1);
         System.out.println("letter1 " + letter1);
@@ -416,12 +405,64 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         String letter2 = gameData.getWord(letterIndex2);
         System.out.println("2 " + letter2);
 
-        String letter3 = gameData.getWord(letterIndex3);
-        System.out.println("3 " + letter3);
-        int startIndex = 0;
-        int posIndex = 0;
 
-//        }
+        Character[][] matrix = new Character[4][4];
+        matrix = setFirstWord(letter1, matrix);
+
+        while (letter1.length() + letter2.length() > 16) {
+            letter2 = gameData.getWord(ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1));
+        }
+        if (gameData.getCurrentLevel() > 2) {
+            matrix = setSecondWord(letter2, matrix);
+        }
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+                if (matrix[y][x] == null) {
+                    matrix[y][x] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
+                }
+            }
+        }
+
+        if ((ThreadLocalRandom.current().nextInt(0, 1 + 1)) % 2 == 0) {
+            for (int y = 0; y < 4; y++) {
+                for (int x = 0; x < 2; x++) {
+                    char tmp = matrix[y][x];
+                    matrix[y][x] = matrix[y][3 - x];
+                    matrix[y][3 - x] = tmp;
+                }
+            }
+        }
+
+        switch (ThreadLocalRandom.current().nextInt(0, 3 + 1)) {
+            case 0:
+                for (int i = 0; i < 16; i++) {
+                    Button b = ((Button) circles.lookup("#" + (i + 1)));
+                    b.setText("" + matrix[i / 4][i % 4]);
+                }
+
+                break;
+            case 1:
+                for (int i = 0; i < 16; i++) {
+                    Button b = ((Button) circles.lookup("#" + (i + 1)));
+                    b.setText("" + matrix[3 - i % 4][i / 4]);
+                }
+
+                break;
+            case 2:
+                for (int i = 0; i < 16; i++) {
+                    Button b = ((Button) circles.lookup("#" + (i + 1)));
+                    b.setText(("" + (matrix[3 - i / 4][3 - i % 4])));
+                }
+
+                break;
+            case 3:
+                for (int i = 0; i < 16; i++) {
+                    Button b = ((Button) circles.lookup("#" + (i + 1)));
+                    b.setText("" + matrix[i % 4][3 - i / 4]);
+                }
+                break;
+
+        }
 
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
@@ -496,6 +537,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         posemenu.setEffect(boxBlur);
 
 
+        Pane rightPane = (Pane) gameWorkspace.getChildren().get(1);
+        Label l = (Label)rightPane.lookup("#target");
+        if (gameData.getCurrentLevel() < 3){
+            l.setText("20 points");
+        }else{
+            l.setText("40 points");
+        }
+
         setHandler();
     }
 
@@ -521,5 +570,31 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         setHandler();
+    }
+
+    private Character[][] setFirstWord(String s, Character[][] matrix) {
+        for (int i = 0; i < s.length(); i++) {
+            if (i < 4 || (8 <= i && i < 12)) {
+                matrix[i / 4][i % 4] = s.charAt(i);
+            } else {
+                matrix[i / 4][3 - i % 4] = s.charAt(i);
+            }
+        }
+
+        return matrix;
+    }
+
+    private Character[][] setSecondWord(String s, Character[][] matrix) {
+        int y;
+        int x;
+        for (int i = 0; i < s.length(); i++) {
+            if (i < 4 || (8 <= i && i < 12)) {
+                matrix[3 - (i / 4)][i % 4] = s.charAt(i);
+            } else {
+                matrix[3 - (i / 4)][3 - i % 4] = s.charAt(i);
+            }
+        }
+
+        return matrix;
     }
 }
