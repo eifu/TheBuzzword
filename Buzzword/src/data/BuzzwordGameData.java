@@ -16,6 +16,8 @@ import static settings.AppPropertyType.APP_TITLE;
 public class BuzzwordGameData implements AppGameDataComponent {
 
     public static final int MAXNUMBEROFCOUNTRIES = 160;
+    public static final int MAXNUMBEROFELEMENTS = 118;
+    public static final int MAXNUMBEROFPLACES = 279;
 
     private AppTemplate app;
     private Map<String, MatrixData[]> modeMatrixMap;

@@ -199,6 +199,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 personalBtn.setDisable(false);
 
                 int totalLevel = 8; // TODO need to get from BuzzwordGameData
+
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
 
@@ -208,6 +209,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 ComboBox comboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
+
+                if (mode.equals("countries")){
+                    totalLevel = 4;
+                }
 
                 circles = (Pane) vboxChildren.get(2);
 
@@ -231,6 +236,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     if (level < progress) {
                         b.setDisable(false);
                     }
+                }
+                // TODO find buttons and diable things.
+                // this line is not efficient
+                for (int level = totalLevel; level < 8; level++){
+                    Button b = (Button) levelChildren.get(level);
+                    b.setVisible(false);
                 }
                 break;
 
@@ -391,11 +402,21 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
         // TODO this is specific for countries.
-        int letterIndex1 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
+        int max= 0;
+        if (gameData.getCurrentMode().equals("countries")){
+            max = BuzzwordGameData.MAXNUMBEROFCOUNTRIES;
+        }else if (gameData.getCurrentMode().equals("elements")){
+            max = BuzzwordGameData.MAXNUMBEROFELEMENTS;
+        }else if (gameData.getCurrentMode().equals("places")){
+            max = BuzzwordGameData.MAXNUMBEROFPLACES;
+        }
+
+
+        int letterIndex1 = ThreadLocalRandom.current().nextInt(0,  max + 1);
 
         int letterIndex2 = letterIndex1;
         while (letterIndex2 == letterIndex1) {
-            letterIndex2 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
+            letterIndex2 = ThreadLocalRandom.current().nextInt(0, max + 1);
         }
 
 
@@ -410,8 +431,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         matrix = setFirstWord(letter1, matrix);
 
         while (letter1.length() + letter2.length() > 16) {
-            letter2 = gameData.getWord(ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1));
+            letter2 = gameData.getWord(ThreadLocalRandom.current().nextInt(0, max + 1));
         }
+
         if (gameData.getCurrentLevel() > 2) {
             matrix = setSecondWord(letter2, matrix);
         }

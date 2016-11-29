@@ -207,6 +207,7 @@ public class GameScreen extends Pane {
 
 
                         circles.getChildren().add(btn);
+//                        circles.setVisible(false);
                     }
                 }
                 container.getChildren().addAll(buzzwordTitle, modeLabel, circles);
