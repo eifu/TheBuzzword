@@ -388,9 +388,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
 
         boolean done = false;
+        boolean done_letter1 = false;
+        boolean done_letter2 = false;
+        boolean done_letter3 = false;
+
+        String[] matrix = new String[4 * 4];
+
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
-        while (!done) {
+//        while (!done) {
         // TODO this is specific for countries.
         int letterIndex1 = ThreadLocalRandom.current().nextInt(0, BuzzwordGameData.MAXNUMBEROFCOUNTRIES + 1);
 
@@ -412,8 +418,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         String letter3 = gameData.getWord(letterIndex3);
         System.out.println("3 " + letter3);
+        int startIndex = 0;
+        int posIndex = 0;
 
-        }
+//        }
 
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
@@ -457,7 +465,18 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         quitBtn.setLayoutX(545);
         gameWorkspace.getChildren().add(quitBtn);
         quitBtn.setOnAction(e -> {
+            try {
+                ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
+            } catch (Exception ee) {
+                ee.printStackTrace();
+            }
+            for (int i = 1; i <= 16; i++) {
+                ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
+            }
+            this.gamePlay = false;
             gui.getFileController().handleQuitRequest();
+
+            setHandler();
         });
 
         Button guitBtnFromGUI = gui.getQuitbtn();

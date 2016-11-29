@@ -301,13 +301,13 @@ public class GameScreen extends Pane {
                 VBox scoreVBox = new VBox();
                 SplitPane scoreWords = new SplitPane();
                 scoreWords.setPrefSize(180, 160);
-                scoreWords.getItems().add(new VBox(new Label("WAR"), new Label("RAW")));
-                scoreWords.getItems().add(new VBox(new Label("10"), new Label("20")));
+//                scoreWords.getItems().add(new VBox(new Label("WAR"), new Label("RAW")));
+//                scoreWords.getItems().add(new VBox(new Label("10"), new Label("20")));
 
                 SplitPane total = new SplitPane();
                 total.setPrefSize(180, 40);
                 total.getItems().add(new Label("TOTAL"));
-                total.getItems().add(new Label("30"));
+                total.getItems().add(new Label("0"));
                 scoreVBox.getChildren().addAll(scoreWords, total);
                 scoreVBox.setLayoutX(0);
                 scoreVBox.setLayoutY(200);
