@@ -24,7 +24,7 @@ public class AppYesNoCancelSingleton extends Stage {
     private Button yesBtn;
     private Button noBtn;
     private Button cancelBtn;
-    private String selection;
+    private String selection = "";
 
 
     private AppYesNoCancelSingleton() {
@@ -81,9 +81,9 @@ public class AppYesNoCancelSingleton extends Stage {
     }
 
 
-    public void show(String title, String message, boolean hasCancel){
-        if (hasCancel){
-            ((HBox)messagePane.getChildren().get(1)).getChildren().add(cancelBtn);
+    public void show(String title, String message, boolean hasCancel) {
+        if (hasCancel) {
+            ((HBox) messagePane.getChildren().get(1)).getChildren().add(cancelBtn);
         }
 
         setTitle(title);
@@ -92,8 +92,8 @@ public class AppYesNoCancelSingleton extends Stage {
 
         showAndWait();
 
-        if (hasCancel){
-            ((HBox)messagePane.getChildren().get(1)).getChildren().remove(2);
+        if (hasCancel) {
+            ((HBox) messagePane.getChildren().get(1)).getChildren().remove(2);
         }
 
     }
