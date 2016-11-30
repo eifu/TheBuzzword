@@ -421,10 +421,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         String letter1 = gameData.getWord(letterIndex1);
-        System.out.println("letter1 " + letter1);
+//        System.out.println("letter1 " + letter1);
 
         String letter2 = gameData.getWord(letterIndex2);
-        System.out.println("2 " + letter2);
+//        System.out.println("2 " + letter2);
 
 
         Character[][] matrix = new Character[4][4];
@@ -528,15 +528,18 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         quitBtn.setLayoutX(545);
         gameWorkspace.getChildren().add(quitBtn);
         quitBtn.setOnAction(e -> {
-            try {
-                ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
-            } catch (Exception ee) {
-                ee.printStackTrace();
+            if (this.gamePlay) {
+                try {
+                    ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+                this.gamePlay = false;
             }
+
             for (int i = 1; i <= 16; i++) {
                 ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
             }
-            this.gamePlay = false;
             gui.getFileController().handleQuitRequest();
 
             setHandler();
