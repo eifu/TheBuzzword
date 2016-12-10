@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
@@ -25,7 +26,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import propertymanager.PropertyManager;
@@ -410,22 +413,66 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         currentEntry = "";
 
-        ArrayList<Button> draggedNodes = new ArrayList<>();
+        DropShadow draggedShadow = new DropShadow();
+        draggedShadow.setOffsetX(0);
+        draggedShadow.setOffsetY(3);
+        draggedShadow.setColor(Color.WHITE);
+
+
+        ArrayList<Button> draggedButtons = new ArrayList<>();
+        ArrayList<Line> draggedLines = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
 
-            b.setOnMouseClicked(e->b.setStyle("-fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);"));
+            b.setOnMousePressed(e -> {
+                b.setEffect(draggedShadow);
+            });
 
             b.setOnDragDetected(e -> {
                 b.startFullDrag();
             });
 
             b.setOnMouseDragEntered(e -> {
-                if (!draggedNodes.contains(b)) {
-                    currentEntry += b.getText();
-                    b.setStyle("-fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);");
-                    draggedNodes.add(b);
+                if (!draggedButtons.contains(b)) {
+
+                    Line l = null;
+                    if (draggedButtons.isEmpty()) {
+                        currentEntry += b.getText();
+                        b.setEffect(draggedShadow);
+                        draggedButtons.add(b);
+                    } else {
+                        int lastId = Integer.parseInt(draggedButtons.get(draggedButtons.size() - 1).getId());
+                        int thisId = Integer.parseInt(b.getId());
+                        if (validateLastIDthisID(lastId, thisId)) {
+                            switch (thisId - lastId) {
+                                case -1:
+                                    l = (Line) circles.lookup("#hline" + b.getId());
+                                    break;
+                                case 1:
+                                    l = (Line) circles.lookup("#hline" + draggedButtons.get(draggedButtons.size() - 1).getId());
+                                    break;
+                                case -4:
+                                    l = (Line) circles.lookup("#vline" + b.getId());
+                                    break;
+                                case 4:
+                                    l = (Line) circles.lookup("#vline" + draggedButtons.get(draggedButtons.size() - 1).getId());
+                                    break;
+                                default:
+                                    l = null;
+                            }
+                            if (l != null) {
+                                l.setStroke(Paint.valueOf("white"));
+                                draggedLines.add(l);
+                            }
+
+                            currentEntry += b.getText();
+                            b.setEffect(draggedShadow);
+                            draggedButtons.add(b);
+                        }
+                    }
+
+
                 }
             });
 
@@ -433,8 +480,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 System.out.println(currentEntry);
 
                 currentEntry = "";
-                removeShadow(draggedNodes);
-                draggedNodes.clear();
+                removeButtonShadow(draggedButtons);
+                removeLineShadow(draggedLines);
+                draggedButtons.clear();
+                draggedLines.clear();
             });
 
 
@@ -632,10 +681,41 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         return matrix;
     }
 
-    private void removeShadow(ArrayList<Button> a) {
-        for (Button b : a) {
-            b.setStyle("-fx-effect: null");
+    private void removeButtonShadow(ArrayList<Button> a) {
+        for (Button c : a) {
+//            c.setStyle("-fx-effect: null");
+            c.setEffect(null);
         }
+    }
+
+    private void removeLineShadow(ArrayList<Line> a) {
+        for (Line l : a) {
+            l.setStroke(Paint.valueOf("black"));
+        }
+    }
+
+    private boolean validateLastIDthisID(int l, int t){
+        if (l%4 ==0 && t%4 ==3){
+            return false;
+        }else if (l%4 == 3 && t%4 == 0){
+            return false;
+        }else{
+            switch (t-l){
+                case -5:
+                case -4:
+                case -3:
+                case -1:
+                case 1:
+                case 3:
+                case 4:
+                case 5:
+                    return true;
+                default:
+                    return false;
+            }
+
+        }
+
     }
 
 }

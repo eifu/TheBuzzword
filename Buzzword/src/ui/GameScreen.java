@@ -242,6 +242,7 @@ public class GameScreen extends Pane {
                             hLine.setLayoutX(110 + 80 * x);
                             hLine.setLayoutY(60 + 80 * y);
                             hLine.setEndX(20);
+                            hLine.setId("hline"+(x+y*4));
                             circles.getChildren().add(hLine);
                         }
                         if (y < 3) {
@@ -250,6 +251,7 @@ public class GameScreen extends Pane {
                             vLine.setLayoutY(100 + 80 * y);
                             vLine.setRotate(90);
                             vLine.setEndX(20);
+                            vLine.setId("vline"+(x+y*4));
                             circles.getChildren().add(vLine);
                         }
 
