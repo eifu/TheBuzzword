@@ -34,6 +34,11 @@ public class TrieWordData {
         return false;
     }
 
+    static public int countWords(char[] grid){
+
+
+        return 0;
+    }
 
     class Node {
         boolean item;

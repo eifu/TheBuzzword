@@ -8,7 +8,14 @@ import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.*;
@@ -17,6 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -210,7 +218,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
 
-                if (mode.equals("countries")){
+                if (mode.equals("countries")) {
                     totalLevel = 4;
                 }
 
@@ -239,7 +247,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 }
                 // TODO find buttons and diable things.
                 // this line is not efficient
-                for (int level = totalLevel; level < 8; level++){
+                for (int level = totalLevel; level < 8; level++) {
                     Button b = (Button) levelChildren.get(level);
                     b.setVisible(false);
                 }
@@ -395,11 +403,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         circles = (Pane) centerVBox.getChildren().get(2);
 
 
-        for (int i = 1; i <= 16; i++) {
-            Button b = ((Button) circles.lookup("#" + i));
-            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
-        }
+//        for (int i = 1; i <= 16; i++) {
+//            Button b = ((Button) circles.lookup("#" + i));
+//            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+//        }
 
+        char[] grid = new char[16];
+        for (int i = 0; i < 16; i++) {
+            grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
+        }
 
 
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
@@ -481,10 +493,38 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         Pane rightPane = (Pane) gameWorkspace.getChildren().get(1);
-        Label l = (Label)rightPane.lookup("#target");
-        if (gameData.getCurrentLevel() < 3){
+
+        HBox timerLblHBox = (HBox) rightPane.lookup("#timer");
+        Label timerLbl1 = new Label("TIME REMAINING: ");
+        Label timerLbl2 = new Label();
+        Label timerLbl3 = new Label("sec");
+
+        timerLbl1.setTextFill(Paint.valueOf("red"));
+        timerLbl2.setTextFill(Paint.valueOf("red"));
+        timerLbl3.setTextFill(Paint.valueOf("red"));
+
+
+        final Integer STARTTIME = 10; // TODO the time setting changes based on level
+
+        IntegerProperty timeremaining = new SimpleIntegerProperty(STARTTIME);
+
+        final Timeline timeline = new Timeline();
+
+        timerLbl2.textProperty().bind(timeremaining.asString());
+
+        timeline.setAutoReverse(false);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME+1),
+                                                    new KeyValue(timeremaining, 0)
+                ));
+        timeline.play();
+
+        timerLblHBox.getChildren().addAll(timerLbl1, timerLbl2, timerLbl3);
+
+
+        Label l = (Label) rightPane.lookup("#target");
+        if (gameData.getCurrentLevel() < 3) {
             l.setText("20 points");
-        }else{
+        } else {
             l.setText("40 points");
         }
 

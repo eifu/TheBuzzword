@@ -285,10 +285,9 @@ public class GameScreen extends Pane {
                 timeOuterRect.setLayoutX(0);
                 timeOuterRect.setLayoutY(80);
                 timeOuterRect.setStyle("-fx-fill: rgb(127, 148, 176)");
-                Label timerLabel = new Label("TIME: REMAINING: 40 seconds");
-                timerLabel.setFont(new Font("Roboto", 12));
-                timerLabel.setTextFill(Paint.valueOf("red"));
-                timerLabel.setLayoutY(83);
+                HBox timerLabelHBox = new HBox();
+                timerLabelHBox.setId("timer");
+                timerLabelHBox.setLayoutY(83);
 
                 VBox textInputVBox = new VBox();
                 Label textInputVBoxLabel = new Label("Text input");
@@ -331,7 +330,7 @@ public class GameScreen extends Pane {
                 targetVBox.getChildren().addAll(target, points);
                 targetVBox.setLayoutY(420);
 
-                rightWorkspace.getChildren().addAll(timeOuterRect, timerLabel, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
+                rightWorkspace.getChildren().addAll(timeOuterRect, timerLabelHBox, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
 //                gameWorkspace.setRight(rightWorkspace);
                 gameWorkspace.getChildren().add(rightWorkspace);
 
