@@ -30,15 +30,18 @@ public class Buzzword extends AppTemplate {
             public AppGameDataComponent buildGameDataComponent() throws FileNotFoundException {
                 AppGameDataComponent gameDataComponent = new BuzzwordGameData(Buzzword.this, true);
 
-                URL gameDataURL = AppTemplate.class.getClassLoader().getResource("data/gamedata.json");
+                URL staticGameDataURL = AppTemplate.class.getClassLoader().getResource("data/StaticGamedata.json");
+                URL dynamicGameDataURL = AppTemplate.class.getClassLoader().getResource("data/DynamicGamedata.json");
+
                 // TODO use propertymanager to load the file path
 
-                if (gameDataURL == null){
+                if (staticGameDataURL == null || dynamicGameDataURL == null){
                     throw new FileNotFoundException("Json resource folder does not exist");
                 }
 
                 try {
-                    getFileComponent().loadGameData(gameDataComponent, Paths.get(gameDataURL.toURI()));
+                    getFileComponent().loadGameData(gameDataComponent, Paths.get(staticGameDataURL.toURI()));
+                    ((BuzzwordFile)getFileComponent()).loadDynamicGamedata(gameDataComponent, Paths.get(dynamicGameDataURL.toURI()));
                 }catch(URISyntaxException urie){
                     urie.printStackTrace();
                 }catch(IOException ioe){

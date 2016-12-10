@@ -71,7 +71,6 @@ public class BuzzwordFile implements AppFileComponent {
         BuzzwordGameData gameData = (BuzzwordGameData) data;
         Map<String, String> usernamePasswordMap = gameData.getUsernamePasswordMap();
         ArrayList<String> modeList = gameData.getModeList();
-        Map<String, Set<String>> modeWordSetMap = gameData.getModeWordSetMap();
 
 
         JsonFactory jsonFactory = new JsonFactory();
@@ -91,25 +90,6 @@ public class BuzzwordFile implements AppFileComponent {
                 generator.writeEndArray();
             }
             generator.writeEndArray();
-
-            generator.writeFieldName(MODE_LIST);
-            generator.writeStartArray(modeList.size());
-            for (String modeName : modeList) {
-                generator.writeString(modeName);
-            }
-            generator.writeEndArray();
-
-            generator.writeFieldName(MODE_WORDS);
-            generator.writeStartObject();
-            for (String modeName : modeWordSetMap.keySet()) {
-                generator.writeFieldName(modeName);
-                generator.writeStartArray();
-                for (String word : modeWordSetMap.get(modeName)) {
-                    generator.writeString(word);
-                }
-                generator.writeEndArray();
-            }
-            generator.writeEndObject();
 
             generator.writeEndObject();
 
@@ -168,19 +148,18 @@ public class BuzzwordFile implements AppFileComponent {
 
     }
 
-    @Override
-    public void loadGameData(AppGameDataComponent data, Path path) throws IOException {
+    public void loadDynamicGamedata(AppGameDataComponent data, Path path)throws IOException{
         BuzzwordGameData gamedata = (BuzzwordGameData) data;
         gamedata.reset();
 
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser jsonParser = jsonFactory.createParser(Files.newInputStream(path));
 
-        while (!jsonParser.isClosed()) {
+        while(!jsonParser.isClosed()){
             JsonToken token = jsonParser.nextToken();
-            if (JsonToken.FIELD_NAME.equals(token)) {
+            if (JsonToken.FIELD_NAME.equals(token)){
                 String fieldname = jsonParser.getCurrentName();
-                switch (fieldname) {
+                switch (fieldname){
                     case NAME_PASS_MAP:
 
                         jsonParser.nextToken(); // outer "["
@@ -196,6 +175,44 @@ public class BuzzwordFile implements AppFileComponent {
                             jsonParser.nextToken(); // inner "]"
                         }
                         break;
+                    default:
+                        throw new JsonParseException(jsonParser, "Unable to load JSON data");
+
+                }
+            }
+
+        }
+
+    }
+
+    @Override
+    public void loadGameData(AppGameDataComponent data, Path path) throws IOException {
+        BuzzwordGameData gamedata = (BuzzwordGameData) data;
+        gamedata.reset();
+
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonParser jsonParser = jsonFactory.createParser(Files.newInputStream(path));
+
+        while (!jsonParser.isClosed()) {
+            JsonToken token = jsonParser.nextToken();
+            if (JsonToken.FIELD_NAME.equals(token)) {
+                String fieldname = jsonParser.getCurrentName();
+                switch (fieldname) {
+//                    case NAME_PASS_MAP:
+//
+//                        jsonParser.nextToken(); // outer "["
+//                        String name;
+//                        String pass;
+//                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) { // inner "["
+//                            jsonParser.nextToken();
+//                            name = jsonParser.getText();
+//                            jsonParser.nextToken();
+//                            pass = jsonParser.getText();
+//
+//                            gamedata.addNamePassMap(name, pass);
+//                            jsonParser.nextToken(); // inner "]"
+//                        }
+//                        break;
 
                     case MODE_LIST:
                         jsonParser.nextToken(); // outer "["

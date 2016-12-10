@@ -22,7 +22,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
     private AppTemplate app;
     private ArrayList<String> modeList;
     private Map<String, String> usernamePasswordMap;
-    private Map<String, TrieWordData> modeWordSetMap;
+    private Map<String, TrieWordData> modeTrieWordMap;
 
     private int currentLevel;
     private String currentMode;
@@ -51,8 +51,8 @@ public class BuzzwordGameData implements AppGameDataComponent {
         return usernamePasswordMap;
     }
 
-    public Map getModeWordSetMap() {
-        return modeWordSetMap;
+    public Map getModeTrieWordMap() {
+        return modeTrieWordMap;
     }
 
     public BuzzwordGameData(AppTemplate app) {
@@ -64,7 +64,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
             this.app = app;
             this.modeList = new ArrayList<>();
             this.usernamePasswordMap = new HashMap<>();
-            this.modeWordSetMap = new HashMap<>();
+            this.modeTrieWordMap = new HashMap<>();
 
         } else {
             this.app = app;
@@ -80,12 +80,12 @@ public class BuzzwordGameData implements AppGameDataComponent {
     }
 
     public void addModeWordSet(String mode, String word) {
-        if (this.modeWordSetMap.get(mode) == null) {
+        if (this.modeTrieWordMap.get(mode) == null) {
             TrieWordData wordSet = new TrieWordData();
-            this.modeWordSetMap.put(mode, wordSet);
+            this.modeTrieWordMap.put(mode, wordSet);
         }
 
-        this.modeWordSetMap.get(mode).addWord(word);
+        this.modeTrieWordMap.get(mode).addWord(word);
     }
 
     public boolean validateUsernamePassword(String name, String pass) {
@@ -109,7 +109,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
         Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
         Path targetPath = appDirPath.resolve("resources/data");
 
-        File f = new File(targetPath.toAbsolutePath() + File.separator + "gamedata.json");
+        File f = new File(targetPath.toAbsolutePath() + File.separator + "DynamicGamedata.json");
         app.getFileComponent().saveGameData(this, f.toPath());
     }
 

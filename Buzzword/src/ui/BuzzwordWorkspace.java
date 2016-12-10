@@ -393,98 +393,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         modeLabel.setText(mode);
 
         circles = (Pane) centerVBox.getChildren().get(2);
+
+
         for (int i = 1; i <= 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
         }
 
 
-        BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
-//        // TODO this is specific for countries.
-//        int max= 0;
-//        if (gameData.getCurrentMode().equals("countries")){
-//            max = BuzzwordGameData.MAXNUMBEROFCOUNTRIES;
-//        }else if (gameData.getCurrentMode().equals("elements")){
-//            max = BuzzwordGameData.MAXNUMBEROFELEMENTS;
-//        }else if (gameData.getCurrentMode().equals("places")){
-//            max = BuzzwordGameData.MAXNUMBEROFPLACES;
-//        }
-//
-//
-//        int letterIndex1 = ThreadLocalRandom.current().nextInt(0,  max + 1);
-//
-//        int letterIndex2 = letterIndex1;
-//        while (letterIndex2 == letterIndex1) {
-//            letterIndex2 = ThreadLocalRandom.current().nextInt(0, max + 1);
-//        }
-//
-//
-//        String letter1 = gameData.getWord(letterIndex1);
-////        System.out.println("letter1 " + letter1);
-//
-//        String letter2 = gameData.getWord(letterIndex2);
-////        System.out.println("2 " + letter2);
-//
-//
-//        Character[][] matrix = new Character[4][4];
-//        matrix = setFirstWord(letter1, matrix);
-//
-//        while (letter1.length() + letter2.length() > 16) {
-//            letter2 = gameData.getWord(ThreadLocalRandom.current().nextInt(0, max + 1));
-//        }
-//
-//        if (gameData.getCurrentLevel() > 2) {
-//            matrix = setSecondWord(letter2, matrix);
-//        }
-//        for (int y = 0; y < 4; y++) {
-//            for (int x = 0; x < 4; x++) {
-//                if (matrix[y][x] == null) {
-//                    matrix[y][x] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
-//                }
-//            }
-//        }
-//
-//        if ((ThreadLocalRandom.current().nextInt(0, 1 + 1)) % 2 == 0) {
-//            for (int y = 0; y < 4; y++) {
-//                for (int x = 0; x < 2; x++) {
-//                    char tmp = matrix[y][x];
-//                    matrix[y][x] = matrix[y][3 - x];
-//                    matrix[y][3 - x] = tmp;
-//                }
-//            }
-//        }
-//
-//        switch (ThreadLocalRandom.current().nextInt(0, 3 + 1)) {
-//            case 0:
-//                for (int i = 0; i < 16; i++) {
-//                    Button b = ((Button) circles.lookup("#" + (i + 1)));
-//                    b.setText("" + matrix[i / 4][i % 4]);
-//                }
-//
-//                break;
-//            case 1:
-//                for (int i = 0; i < 16; i++) {
-//                    Button b = ((Button) circles.lookup("#" + (i + 1)));
-//                    b.setText("" + matrix[3 - i % 4][i / 4]);
-//                }
-//
-//                break;
-//            case 2:
-//                for (int i = 0; i < 16; i++) {
-//                    Button b = ((Button) circles.lookup("#" + (i + 1)));
-//                    b.setText(("" + (matrix[3 - i / 4][3 - i % 4])));
-//                }
-//
-//                break;
-//            case 3:
-//                for (int i = 0; i < 16; i++) {
-//                    Button b = ((Button) circles.lookup("#" + (i + 1)));
-//                    b.setText("" + matrix[i % 4][3 - i / 4]);
-//                }
-//                break;
-//
-//        }
+        BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
