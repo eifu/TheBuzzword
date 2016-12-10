@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.StageStyle;
 import propertymanager.PropertyManager;
 
 import java.io.FileNotFoundException;
@@ -150,6 +151,8 @@ public class AppGUI implements AppStyleArbiter{
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         primaryStage.setTitle(appTitle);
+
+        primaryStage.initStyle(StageStyle.UNDECORATED);
 
         appPane = new BorderPane();
         appPane.setLeft(toolbarPane);
