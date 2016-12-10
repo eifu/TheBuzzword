@@ -28,6 +28,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 import java.io.FileNotFoundException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -127,8 +129,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         BuzzwordGameData buzzwordGameData = (BuzzwordGameData) app.getGameDataComponent();
                         BuzzwordUserData buzzwordUserData = (BuzzwordUserData) app.getUserDataComponent();
 
-                        for (String mode : buzzwordGameData.getModeList()){
-                            Label l = (Label) personalInfo.lookup("#info"+mode);
+                        for (String mode : buzzwordGameData.getModeList()) {
+                            Label l = (Label) personalInfo.lookup("#info" + mode);
                             l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of 8");
                         }
 
@@ -180,7 +182,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     String pass = passwordTxt.getText();
 
                     BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
-                    if (gamedata.validateUsernamePassword(name, pass)) {
+
+                    String encryptedPass = encryption(pass);
+
+                    if (gamedata.validateUsernamePassword(name, encryptedPass)) {
 
                         setCurrentState(HOME);
                         reloadWorkspace(gui.getAppPane());
@@ -210,7 +215,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     String pass = ((TextField) gridChildren.get(4)).getText();
                     BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
                     if (gameData.validateUsername(name)) {
-                        gameData.addNamePassMap(name, pass);
+
+                        String encryptedPass = encryption(pass);
+
+
+                        gameData.addNamePassMap(name, encryptedPass);
                         gameData.save();
 
                         setCurrentState(HOME);
@@ -220,7 +229,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         signedIn = true;
                         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
                         userData.setUsername(name);
-                        userData.setPassword(pass);
+                        userData.setPassword(encryptedPass);
                         userData.signup(app);
 
                         renderHome(name);
@@ -402,7 +411,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         int count = 1;
         for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
             Label modeLbl = new Label();
-            modeLbl.setId("info"+mode);
+            modeLbl.setId("info" + mode);
             modeLbl.setTextFill(Paint.valueOf("white"));
             modeLbl.setFont(new Font("ariel", 20));
             modeLbl.setLayoutX(30);
@@ -637,8 +646,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         Button localPlayResumeBtn = playResumeBtn;
         timeline.setOnFinished(e -> {
-            Button b=null;
-            String winlose="";
+            Button b = null;
+            String winlose = "";
 
             try {
                 if (gameData.getCurrentLevel() < 3) {
@@ -664,8 +673,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             }
             ((GameScreen) workspace).winlose(posemenu, winlose, localPlayResumeBtn, b);
 
-            if (winlose.equals("win!")){
-                b.setOnAction(e2->{
+            if (winlose.equals("win!")) {
+                b.setOnAction(e2 -> {
                     int progress = ((BuzzwordUserData) app.getUserDataComponent()).getProgress(mode);
 
                     // if the current level is the user's highest progress, then increment the progress by 1.
@@ -676,8 +685,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
-            }else{
-                b.setOnAction(e2 ->{
+            } else {
+                b.setOnAction(e2 -> {
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
@@ -692,13 +701,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         textfield = (TextField) rightPane.lookup("#textinput");
         textfield.textProperty().addListener(((observable, oldValue, newValue) -> {
-                    for (int i = 0; i < 16; i++) {
-                        Button b = (Button) circles.lookup("#" + i);
-                        if (b.getText().equals(newValue)) {
-                            // TODO make solver and come back again.
-                        }
-                    }
-                }));
+            for (int i = 0; i < 16; i++) {
+                Button b = (Button) circles.lookup("#" + i);
+                if (b.getText().equals(newValue)) {
+                    // TODO make solver and come back again.
+                }
+            }
+        }));
 
         Label l = (Label) rightPane.lookup("#target");
         if (gameData.getCurrentLevel() < 3) {
@@ -801,6 +810,29 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         }
 
+    }
+
+    private String encryption(String pass){
+        String encryptedPass = "";
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(pass.getBytes());
+
+            byte[] bytes = md.digest();
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            encryptedPass = sb.toString();
+
+
+        } catch (NoSuchAlgorithmException nsa) {
+            nsa.printStackTrace();
+            System.exit(1);
+        }
+        return encryptedPass;
     }
 
 }
