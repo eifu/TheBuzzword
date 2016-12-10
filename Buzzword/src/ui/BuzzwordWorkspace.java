@@ -53,6 +53,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     Timeline timeline; // [gameplay]
     int currentPoints; // [gameplay]
     String currentEntry; // [gameplay]
+    TextField textfield;
     IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
 
 
@@ -642,6 +643,18 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         timerLblHBox.getChildren().addAll(timerLbl1, timerLbl2, timerLbl3);
 
+        textfield = (TextField) rightPane.lookup("#textinput");
+        textfield.textProperty().addListener(((observable, oldValue, newValue) -> {
+
+            for (int i=0; i< 16;i++){
+                Button b = (Button)circles.lookup("#"+i);
+                if (b.getText().equals(newValue)){
+                    // TODO make solver and come back again.
+                }
+            }
+
+
+        }));
 
         Label l = (Label) rightPane.lookup("#target");
         if (gameData.getCurrentLevel() < 3) {
