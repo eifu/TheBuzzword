@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class BuzzwordUserData implements AppUserDataComponent {
     private String username;
     private String password;
     private Map<String, Integer> progress;
-    private Map<String, Integer> highscore;
+    private Map<String, ArrayList<Integer>> highscore;
 
     public void setUsername(String username) {
         this.username = username;
@@ -47,6 +48,10 @@ public class BuzzwordUserData implements AppUserDataComponent {
 
     public void setProgress(String mode, int progress) {
         this.progress.put(mode, progress);
+    }
+
+    public void setHighscore(String mode, ArrayList<Integer> arraylist) {
+        this.highscore.put(mode, arraylist);
     }
 
     public BuzzwordUserData() {

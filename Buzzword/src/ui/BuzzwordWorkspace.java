@@ -2,38 +2,33 @@ package ui;
 
 
 import apptemeplate.AppTemplate;
-import buzzword.Buzzword;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import propertymanager.PropertyManager;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 import static buzzword.GameScreenState.*;
@@ -49,15 +44,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     AppGUI gui;
     BuzzwordController controller;
     GameScreenState currentState;
-    boolean signedIn;
-    boolean gamePlay;
-    Pane posemenu;
-    Pane personalInfo;
-    Button personalBtn;
+    boolean signedIn; // [home]
+    boolean gamePlay; // [gameplay]
+    Pane posemenu; // [gameplay]
+    Pane personalInfo; // [home/selecting/signingin]
+    Button personalBtn; // [home/selecting/signingin] personal Button in toolbar
     Pane circles; // circle buttons that will be under personalInfo pane.
-    Timeline timeline;
-    int currentPoints; // point on the gameplay
-    String currentEntry;
+    Timeline timeline; // [gameplay]
+    int currentPoints; // [gameplay]
+    String currentEntry; // [gameplay]
     IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
 
 
@@ -76,7 +71,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         return currentState;
     }
 
-    public Timeline getTimeline(){return timeline;}
+    public Timeline getTimeline() {
+        return timeline;
+    }
 
     public boolean isPlayingGame() {
         return gamePlay;
@@ -109,11 +106,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void setHandler() {
         switch (currentState) {
             case HOME:
+
+                // if user has signed in.
                 if (signedIn) {
                     ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
                     ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
                     StackPane s = (StackPane) vboxHomeChildren.get(2);
                     Button gameStartBtn = (Button) s.getChildren().get(0);
+
+                    // update circles for personalBtn
                     circles = (Pane) vboxHomeChildren.get(1);
                     // let comboBox visible
                     gui.getToolbarPane().getChildren().get(4).setVisible(true);
@@ -121,7 +122,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
                     personalBtn.setDisable(false);
                     personalBtn.setOnAction(e2 -> {
-
                         circles.getChildren().add(personalInfo);
                         personalBtn.setDisable(true);
                     });
@@ -131,6 +131,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 //                        personalBtn.setDisable(false);
 //                    });
 
+                    //
                     gameStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
@@ -221,7 +222,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 personalBtn.setDisable(false);
 
-                int totalLevel = 8; // TODO need to get from BuzzwordGameData
 
                 workspaceChildren = workspace.getChildren();
                 vboxChildren = ((VBox) workspaceChildren.get(0)).getChildren();
@@ -233,10 +233,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
 
+                int totalLevel = 8; // TODO need to get from BuzzwordGameData
                 if (mode.equals("countries")) {
                     totalLevel = 4;
                 }
 
+                // update circles for personalBtn
                 circles = (Pane) vboxChildren.get(2);
 
                 BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
@@ -590,7 +592,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         final Integer STARTTIME = 40; // TODO the time setting changes based on level
-
 
 
         timeline = new Timeline();

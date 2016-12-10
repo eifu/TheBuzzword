@@ -20,6 +20,7 @@ public class BuzzwordFile implements AppFileComponent {
     public static final String NAME = "NAME";
     public static final String PASS = "PASS";
     public static final String PROGRESS = "PROGRESS";
+    public static final String HIGHSCORE = "HIGHSCORE";
 
     public static final String NAME_PASS_MAP = "NAME_PASS_MAP";
     public static final String MODE_LIST = "MODE_LIST";
@@ -139,6 +140,21 @@ public class BuzzwordFile implements AppFileComponent {
                             jsonParser.nextToken(); // inner "]"
                         }
                         break;
+                    case HIGHSCORE:
+                        jsonParser.nextToken(); // {
+
+                        while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
+                            if (JsonToken.FIELD_NAME.equals(jsonParser.getCurrentToken())) {
+                                mode = jsonParser.getCurrentName();
+                                jsonParser.nextToken(); // [
+                                ArrayList<Integer> a = new ArrayList<>();
+                                while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
+                                    a.add(jsonParser.getIntValue());
+                                }
+                                userData.setHighscore(mode, a);
+                            }
+                        }
+                        break;
                     default:
                         throw new JsonParseException(jsonParser, "Unable to load JSON data");
 
@@ -148,18 +164,18 @@ public class BuzzwordFile implements AppFileComponent {
 
     }
 
-    public void loadDynamicGamedata(AppGameDataComponent data, Path path)throws IOException{
+    public void loadDynamicGamedata(AppGameDataComponent data, Path path) throws IOException {
         BuzzwordGameData gamedata = (BuzzwordGameData) data;
         gamedata.reset();
 
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser jsonParser = jsonFactory.createParser(Files.newInputStream(path));
 
-        while(!jsonParser.isClosed()){
+        while (!jsonParser.isClosed()) {
             JsonToken token = jsonParser.nextToken();
-            if (JsonToken.FIELD_NAME.equals(token)){
+            if (JsonToken.FIELD_NAME.equals(token)) {
                 String fieldname = jsonParser.getCurrentName();
-                switch (fieldname){
+                switch (fieldname) {
                     case NAME_PASS_MAP:
 
                         jsonParser.nextToken(); // outer "["
