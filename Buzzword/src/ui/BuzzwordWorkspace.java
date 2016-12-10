@@ -124,6 +124,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     personalBtn = (Button) gui.getToolbarPane().getChildren().get(5);
                     personalBtn.setDisable(false);
                     personalBtn.setOnAction(e2 -> {
+                        BuzzwordGameData buzzwordGameData = (BuzzwordGameData) app.getGameDataComponent();
+                        BuzzwordUserData buzzwordUserData = (BuzzwordUserData) app.getUserDataComponent();
+
+                        for (String mode : buzzwordGameData.getModeList()){
+                            Label l = (Label) personalInfo.lookup("#info"+mode);
+                            l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of 8");
+                        }
+
+
                         circles.getChildren().add(personalInfo);
                         personalBtn.setDisable(true);
                     });
@@ -392,7 +401,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         personalInfo.getChildren().add(levelLbl);
         int count = 1;
         for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
-            Label modeLbl = new Label(mode + ": " + userData.getProgress(mode) + " out of 8");
+            Label modeLbl = new Label();
+            modeLbl.setId("info"+mode);
             modeLbl.setTextFill(Paint.valueOf("white"));
             modeLbl.setFont(new Font("ariel", 20));
             modeLbl.setLayoutX(30);
@@ -673,30 +683,19 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 addAll(timerLbl1, timerLbl2, timerLbl3);
 
         textfield = (TextField) rightPane.lookup("#textinput");
-        textfield.textProperty().
-
-                addListener(((observable, oldValue, newValue) ->
-
-                {
-
+        textfield.textProperty().addListener(((observable, oldValue, newValue) -> {
                     for (int i = 0; i < 16; i++) {
                         Button b = (Button) circles.lookup("#" + i);
                         if (b.getText().equals(newValue)) {
                             // TODO make solver and come back again.
                         }
                     }
-
-
                 }));
 
         Label l = (Label) rightPane.lookup("#target");
-        if (gameData.getCurrentLevel() < 3)
-
-        {
+        if (gameData.getCurrentLevel() < 3) {
             l.setText("20 points");
-        } else
-
-        {
+        } else {
             l.setText("40 points");
         }
 

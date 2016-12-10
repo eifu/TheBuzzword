@@ -82,6 +82,10 @@ public class BuzzwordUserData implements AppUserDataComponent {
             progress.put(mode, 1);
         }
 
+       save(app);
+    }
+
+    public void save(AppTemplate app){
         PropertyManager pm = PropertyManager.getPropertyManager();
         Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
         Path targetPath = appDirPath.resolve("resources/data");
@@ -95,7 +99,6 @@ public class BuzzwordUserData implements AppUserDataComponent {
             ioe.printStackTrace();
             System.exit(1);
         }
-
     }
 
     @Override

@@ -3,6 +3,7 @@ package controller;
 
 import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
+import data.BuzzwordUserData;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -54,6 +55,8 @@ public class BuzzwordController implements FileController{
                     quitBtn.setVisible(true);
                 }
 
+                ((BuzzwordUserData) app.getUserDataComponent()).save(app);
+
                 buzzwordWorkspace.setCurrentState(HOME);
                 buzzwordWorkspace.setSignedIn(false);
                 buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
@@ -84,7 +87,7 @@ public class BuzzwordController implements FileController{
             quitBtn.setVisible(true);
 
             Timeline t = buzzwordWorkspace.getTimeline();
-            t.stop();
+            t.pause();
         }
 
         buzzwordWorkspace.setCurrentState(HOME);
@@ -123,6 +126,10 @@ public class BuzzwordController implements FileController{
         yesNoCancelSingleton.show(pm.getPropertyValue(CHECK_QUIT_TITLE), pm.getPropertyValue(CHECK_QUIT_MESSAGE), false);
 
         if (yesNoCancelSingleton != null && yesNoCancelSingleton.getSelection().equals(YES.getParameter())){
+            BuzzwordWorkspace buzzwordWorkspace = (BuzzwordWorkspace) app.getWorkspaceComponent();
+            if (buzzwordWorkspace.isSignedIn()){
+                ((BuzzwordUserData)app.getUserDataComponent()).save(app);
+            }
             System.exit(0);
         }
     }
