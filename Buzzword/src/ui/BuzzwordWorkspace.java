@@ -43,6 +43,8 @@ import static settings.AppPropertyType.*;
 
 public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
+    final static int DEFAULTSTARTTIME = 40;
+
     AppTemplate app;
     AppGUI gui;
     BuzzwordController controller;
@@ -56,6 +58,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     Timeline timeline;
     int currentPoints; // point on the gameplay
     String currentEntry;
+    IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
+
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -71,6 +75,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public GameScreenState getCurrentState() {
         return currentState;
     }
+
+    public Timeline getTimeline(){return timeline;}
 
     public boolean isPlayingGame() {
         return gamePlay;
@@ -471,8 +477,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                             draggedButtons.add(b);
                         }
                     }
-
-
                 }
             });
 
@@ -587,17 +591,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         final Integer STARTTIME = 40; // TODO the time setting changes based on level
 
-        IntegerProperty timeremaining = new SimpleIntegerProperty(STARTTIME);
+
 
         timeline = new Timeline();
+        timeremaining.set(STARTTIME);
+
 
         timerLbl2.textProperty().bind(timeremaining.asString());
 
-        timeline.setAutoReverse(false);
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME + 1),
                 new KeyValue(timeremaining, 0)
         ));
-        timeline.play();
         Button localPlayResumeBtn = playResumeBtn;
         timeline.setOnFinished(e -> {
             if (gameData.getCurrentLevel() < 3) {
@@ -613,8 +617,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ((GameScreen) workspace).win(posemenu, localPlayResumeBtn);
                 }
             }
-
         });
+        timeline.play();
 
         timerLblHBox.getChildren().addAll(timerLbl1, timerLbl2, timerLbl3);
 
@@ -633,7 +637,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         try {
             if (gamePlay) {
-                timeline.stop();
+                timeline.pause();
+
+
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
@@ -641,6 +647,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 this.gamePlay = false;
             } else {
                 timeline.play();
+
+
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
                 for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("white"));
@@ -683,7 +691,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     private void removeButtonShadow(ArrayList<Button> a) {
         for (Button c : a) {
-//            c.setStyle("-fx-effect: null");
             c.setEffect(null);
         }
     }
@@ -694,13 +701,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
     }
 
-    private boolean validateLastIDthisID(int l, int t){
-        if (l%4 ==0 && t%4 ==3){
+    private boolean validateLastIDthisID(int l, int t) {
+        if (l % 4 == 0 && t % 4 == 3) {
             return false;
-        }else if (l%4 == 3 && t%4 == 0){
+        } else if (l % 4 == 3 && t % 4 == 0) {
             return false;
-        }else{
-            switch (t-l){
+        } else {
+            switch (t - l) {
                 case -5:
                 case -4:
                 case -3:

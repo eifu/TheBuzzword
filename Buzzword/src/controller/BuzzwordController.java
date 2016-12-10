@@ -3,6 +3,7 @@ package controller;
 
 import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -81,6 +82,9 @@ public class BuzzwordController implements FileController{
 
             Button quitBtn = gui.getQuitbtn();
             quitBtn.setVisible(true);
+
+            Timeline t = buzzwordWorkspace.getTimeline();
+            t.stop();
         }
 
         buzzwordWorkspace.setCurrentState(HOME);
