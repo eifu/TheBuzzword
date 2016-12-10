@@ -411,7 +411,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         currentEntry = "";
 
         ArrayList<Button> draggedNodes = new ArrayList<>();
-        for (int i = 1; i <= 16; i++) {
+        for (int i = 0; i < 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
 
@@ -499,7 +499,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 this.gamePlay = false;
             }
 
-            for (int i = 1; i <= 16; i++) {
+            for (int i = 0; i < 16; i++) {
                 ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
             }
             gui.getFileController().handleQuitRequest();
@@ -586,14 +586,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             if (gamePlay) {
                 timeline.stop();
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
-                for (int i = 1; i <= 16; i++) {
+                for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
                 }
                 this.gamePlay = false;
             } else {
                 timeline.play();
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
-                for (int i = 1; i <= 16; i++) {
+                for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("white"));
                 }
                 this.gamePlay = true;

@@ -254,7 +254,7 @@ public class GameScreen extends Pane {
                         }
 
                         Button btn = new Button();
-                        btn.setId("" + (1 + x + y * 4));
+                        btn.setId("" + (x + y * 4));
                         btn.getStyleClass().add("circle-button");
                         btn.setLayoutX(x * 80 + 50);
                         btn.setLayoutY(y * 80 + 30);
