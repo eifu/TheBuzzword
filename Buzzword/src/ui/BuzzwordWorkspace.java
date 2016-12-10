@@ -285,6 +285,25 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     renderGamePlay();
                 });
 
+                Button prevButton = (Button) buttons.getLeft();
+                prevButton.setOnAction(e->{
+                    int currentLevel = ((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel();
+                    ((BuzzwordGameData)app.getGameDataComponent()).setCurrentLevel(currentLevel-1);
+
+                    reloadWorkspace(gui.getAppPane());
+                    initGamePlay();
+                });
+
+                Button nextButton = (Button) buttons.getRight();
+                nextButton.setOnAction(e->{
+                    int currentLevel = ((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel();
+                    ((BuzzwordGameData)app.getGameDataComponent()).setCurrentLevel(currentLevel+1);
+
+                    reloadWorkspace(gui.getAppPane());
+                    initGamePlay();
+                });
+
+
         }
     }
 
