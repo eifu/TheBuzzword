@@ -47,6 +47,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     Pane personalInfo;
     Button personalBtn;
     Pane circles; // circle buttons that will be under personalInfo pane.
+    Timeline timeline;
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -508,7 +509,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         IntegerProperty timeremaining = new SimpleIntegerProperty(STARTTIME);
 
-        final Timeline timeline = new Timeline();
+        timeline = new Timeline();
 
         timerLbl2.textProperty().bind(timeremaining.asString());
 
@@ -535,12 +536,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         try {
             if (gamePlay) {
+                timeline.stop();
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 for (int i = 1; i <= 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
                 }
                 this.gamePlay = false;
             } else {
+                timeline.play();
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
                 for (int i = 1; i <= 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("white"));
