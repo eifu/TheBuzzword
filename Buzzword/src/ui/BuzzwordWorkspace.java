@@ -20,6 +20,9 @@ import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.paint.Paint;
@@ -48,6 +51,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     Button personalBtn;
     Pane circles; // circle buttons that will be under personalInfo pane.
     Timeline timeline;
+    int currentPoints; // point on the gameplay
+    String currentEntry;
 
     public BuzzwordWorkspace(AppTemplate app) {
         this.app = app;
@@ -403,11 +408,37 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         circles = (Pane) centerVBox.getChildren().get(2);
 
+        currentEntry = "";
 
-//        for (int i = 1; i <= 16; i++) {
-//            Button b = ((Button) circles.lookup("#" + i));
-//            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
-//        }
+        ArrayList<Button> draggedNodes = new ArrayList<>();
+        for (int i = 1; i <= 16; i++) {
+            Button b = ((Button) circles.lookup("#" + i));
+            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+
+            b.setOnMouseClicked(e->b.setStyle("-fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);"));
+
+            b.setOnDragDetected(e -> {
+                b.startFullDrag();
+            });
+
+            b.setOnMouseDragEntered(e -> {
+                if (!draggedNodes.contains(b)) {
+                    currentEntry += b.getText();
+                    b.setStyle("-fx-effect: dropshadow(three-pass-box, white, 10, 0, 0, 0);");
+                    draggedNodes.add(b);
+                }
+            });
+
+            b.setOnMouseDragReleased(ee -> {
+                System.out.println(currentEntry);
+
+                currentEntry = "";
+                removeShadow(draggedNodes);
+                draggedNodes.clear();
+            });
+
+
+        }
 
         char[] grid = new char[16];
         for (int i = 0; i < 16; i++) {
@@ -480,15 +511,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         guitBtnFromGUI.setVisible(false);
 
         posemenu = new Pane();
-        posemenu.setPrefSize(380, 330);
+        posemenu.setPrefSize(340, 330);
         posemenu.setStyle("-fx-background-color: white;" +
                 "-fx-opacity: 0.8;");
-        posemenu.setLayoutX(10);
+        posemenu.setLayoutX(30);
         posemenu.setLayoutY(15);
 
         BoxBlur boxBlur = new BoxBlur();
-        boxBlur.setWidth(100);
-        boxBlur.setHeight(100);
+        boxBlur.setWidth(20);
+        boxBlur.setHeight(20);
         boxBlur.setIterations(3);
         posemenu.setEffect(boxBlur);
 
@@ -505,7 +536,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         timerLbl3.setTextFill(Paint.valueOf("red"));
 
 
-        final Integer STARTTIME = 10; // TODO the time setting changes based on level
+        final Integer STARTTIME = 40; // TODO the time setting changes based on level
 
         IntegerProperty timeremaining = new SimpleIntegerProperty(STARTTIME);
 
@@ -514,10 +545,27 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         timerLbl2.textProperty().bind(timeremaining.asString());
 
         timeline.setAutoReverse(false);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME+1),
-                                                    new KeyValue(timeremaining, 0)
-                ));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME + 1),
+                new KeyValue(timeremaining, 0)
+        ));
         timeline.play();
+        Button localPlayResumeBtn = playResumeBtn;
+        timeline.setOnFinished(e -> {
+            if (gameData.getCurrentLevel() < 3) {
+                if (currentPoints < 20) {
+                    ((GameScreen) workspace).lose(posemenu, localPlayResumeBtn);
+                } else {
+                    ((GameScreen) workspace).win(posemenu, localPlayResumeBtn);
+                }
+            } else {
+                if (currentPoints < 40) {
+                    ((GameScreen) workspace).lose(posemenu, localPlayResumeBtn);
+                } else {
+                    ((GameScreen) workspace).win(posemenu, localPlayResumeBtn);
+                }
+            }
+
+        });
 
         timerLblHBox.getChildren().addAll(timerLbl1, timerLbl2, timerLbl3);
 
@@ -583,4 +631,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         return matrix;
     }
+
+    private void removeShadow(ArrayList<Button> a) {
+        for (Button b : a) {
+            b.setStyle("-fx-effect: null");
+        }
+    }
+
 }
+

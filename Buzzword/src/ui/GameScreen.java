@@ -368,8 +368,6 @@ public class GameScreen extends Pane {
     }
 
     public void pose(Pane posemenu, Button playResumeButton) {
-
-
         Pane gameWorkspace = (Pane)this.getChildren().get(0);
         VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
@@ -402,5 +400,45 @@ public class GameScreen extends Pane {
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().remove(posemenu);
+    }
+
+    public void win(Pane finishmenu, Button playResumeBtn){
+        Pane gameWorkspace = (Pane)this.getChildren().get(0);
+        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
+        Pane circles = (Pane) centerVBox.getChildren().get(2);
+
+        HBox winLblHBox = new HBox();
+        winLblHBox.setPrefSize(340,0);
+        winLblHBox.setLayoutX(0);
+        winLblHBox.setLayoutY(50);
+        winLblHBox.setAlignment(Pos.CENTER);
+
+        Label winLbl = new Label("Win!");
+        winLbl.setFont(new Font("Roboto", 40));
+        winLblHBox.getChildren().add(winLbl);
+
+        circles.getChildren().addAll(finishmenu, winLblHBox);
+
+        playResumeBtn.setDisable(true);
+    }
+
+    public void lose(Pane finishmenu, Button playResumeBtn){
+        Pane gameWorkspace = (Pane)this.getChildren().get(0);
+        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
+        Pane circles = (Pane) centerVBox.getChildren().get(2);
+
+        HBox winLblHBox = new HBox();
+        winLblHBox.setPrefSize(340,0);
+        winLblHBox.setLayoutX(0);
+        winLblHBox.setLayoutY(50);
+        winLblHBox.setAlignment(Pos.CENTER);
+
+        Label loseLbl = new Label("lose!");
+        loseLbl.setFont(new Font("Roboto", 40));
+        winLblHBox.getChildren().add(loseLbl);
+
+        circles.getChildren().addAll(finishmenu, winLblHBox);
+
+        playResumeBtn.setDisable(true);
     }
 }
