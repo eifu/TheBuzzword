@@ -27,6 +27,7 @@ import javafx.util.Duration;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -287,18 +288,18 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 });
 
                 Button prevButton = (Button) buttons.getLeft();
-                prevButton.setOnAction(e->{
-                    int currentLevel = ((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel();
-                    ((BuzzwordGameData)app.getGameDataComponent()).setCurrentLevel(currentLevel-1);
+                prevButton.setOnAction(e -> {
+                    int currentLevel = ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
+                    ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(currentLevel - 1);
 
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
 
                 Button nextButton = (Button) buttons.getRight();
-                nextButton.setOnAction(e->{
-                    int currentLevel = ((BuzzwordGameData)app.getGameDataComponent()).getCurrentLevel();
-                    ((BuzzwordGameData)app.getGameDataComponent()).setCurrentLevel(currentLevel+1);
+                nextButton.setOnAction(e -> {
+                    int currentLevel = ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
+                    ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(currentLevel + 1);
 
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
@@ -434,8 +435,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
 
         Label modeLabel = (Label) centerVBox.getChildren().get(1);
-        String mode = "mode: " + ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
-        modeLabel.setText(mode);
+        String mode = ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode();
+        modeLabel.setText("mode: " + mode);
 
         circles = (Pane) centerVBox.getChildren().get(2);
 
@@ -623,47 +624,84 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(STARTTIME + 1),
                 new KeyValue(timeremaining, 0)
         ));
+
         Button localPlayResumeBtn = playResumeBtn;
         timeline.setOnFinished(e -> {
-            if (gameData.getCurrentLevel() < 3) {
-                if (currentPoints < 20) {
-                    ((GameScreen) workspace).lose(posemenu, localPlayResumeBtn);
+            Button b=null;
+            String winlose="";
+
+            try {
+                if (gameData.getCurrentLevel() < 3) {
+                    if (currentPoints < 20) {
+                        winlose = "lose!";
+                        b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
+                    } else {
+                        winlose = "win!";
+                        b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
+                    }
                 } else {
-                    ((GameScreen) workspace).win(posemenu, localPlayResumeBtn);
+                    if (currentPoints < 40) {
+                        winlose = "lose!";
+                        b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
+                    } else {
+                        winlose = "win!";
+                        b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
+                    }
                 }
-            } else {
-                if (currentPoints < 40) {
-                    ((GameScreen) workspace).lose(posemenu, localPlayResumeBtn);
-                } else {
-                    ((GameScreen) workspace).win(posemenu, localPlayResumeBtn);
-                }
+            } catch (FileNotFoundException f) {
+                f.printStackTrace();
+                System.exit(1);
             }
+            ((GameScreen) workspace).winlose(posemenu, winlose, localPlayResumeBtn, b);
+
+            if (winlose.equals("win!")){
+                b.setOnAction(e2->{
+                    int progress = ((BuzzwordUserData) app.getUserDataComponent()).getProgress(mode);
+                    ((BuzzwordUserData) app.getUserDataComponent()).setProgress(mode, progress + 1);
+                    ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(progress+1);
+
+                    reloadWorkspace(gui.getAppPane());
+                    initGamePlay();
+                });
+            }
+
         });
         timeline.play();
 
-        timerLblHBox.getChildren().addAll(timerLbl1, timerLbl2, timerLbl3);
+        timerLblHBox.getChildren().
+
+                addAll(timerLbl1, timerLbl2, timerLbl3);
 
         textfield = (TextField) rightPane.lookup("#textinput");
-        textfield.textProperty().addListener(((observable, oldValue, newValue) -> {
+        textfield.textProperty().
 
-            for (int i=0; i< 16;i++){
-                Button b = (Button)circles.lookup("#"+i);
-                if (b.getText().equals(newValue)){
-                    // TODO make solver and come back again.
-                }
-            }
+                addListener(((observable, oldValue, newValue) ->
+
+                {
+
+                    for (int i = 0; i < 16; i++) {
+                        Button b = (Button) circles.lookup("#" + i);
+                        if (b.getText().equals(newValue)) {
+                            // TODO make solver and come back again.
+                        }
+                    }
 
 
-        }));
+                }));
 
         Label l = (Label) rightPane.lookup("#target");
-        if (gameData.getCurrentLevel() < 3) {
+        if (gameData.getCurrentLevel() < 3)
+
+        {
             l.setText("20 points");
-        } else {
+        } else
+
+        {
             l.setText("40 points");
         }
 
         setHandler();
+
     }
 
     public void renderGamePlay() {

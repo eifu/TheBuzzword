@@ -242,7 +242,7 @@ public class GameScreen extends Pane {
                             hLine.setLayoutX(110 + 80 * x);
                             hLine.setLayoutY(60 + 80 * y);
                             hLine.setEndX(20);
-                            hLine.setId("hline"+(x+y*4));
+                            hLine.setId("hline" + (x + y * 4));
                             circles.getChildren().add(hLine);
                         }
                         if (y < 3) {
@@ -251,7 +251,7 @@ public class GameScreen extends Pane {
                             vLine.setLayoutY(100 + 80 * y);
                             vLine.setRotate(90);
                             vLine.setEndX(20);
-                            vLine.setId("vline"+(x+y*4));
+                            vLine.setId("vline" + (x + y * 4));
                             circles.getChildren().add(vLine);
                         }
 
@@ -371,13 +371,13 @@ public class GameScreen extends Pane {
     }
 
     public void pose(Pane posemenu, Button playResumeButton) {
-        Pane gameWorkspace = (Pane)this.getChildren().get(0);
-        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
+        Pane gameWorkspace = (Pane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
         circles.getChildren().add(posemenu);
 
-        if (playResumeButton !=null) {
+        if (playResumeButton != null) {
             playResumeButton.getStyleClass().add("play-resume-game-button");
             BorderPane buttons = (BorderPane) centerVBox.getChildren().get(4);
             buttons.setCenter(playResumeButton);
@@ -397,7 +397,7 @@ public class GameScreen extends Pane {
         }
     }
 
-    public void removePosemenu(Pane posemenu){
+    public void removePosemenu(Pane posemenu) {
         Pane gameWorkspace = (Pane) this.getChildren().get(0);
         VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
@@ -405,42 +405,31 @@ public class GameScreen extends Pane {
         circles.getChildren().remove(posemenu);
     }
 
-    public void win(Pane finishmenu, Button playResumeBtn){
-        Pane gameWorkspace = (Pane)this.getChildren().get(0);
-        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
+
+    public void winlose(Pane finishmenu, String winlose, Button playResumeBtn, Button btn) {
+        Pane gameWorkspace = (Pane) this.getChildren().get(0);
+        VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
 
-        HBox winLblHBox = new HBox();
-        winLblHBox.setPrefSize(340,0);
-        winLblHBox.setLayoutX(0);
-        winLblHBox.setLayoutY(50);
-        winLblHBox.setAlignment(Pos.CENTER);
+        HBox winloseLblHBox = new HBox();
+        winloseLblHBox.setPrefSize(340, 100);
+        winloseLblHBox.setLayoutX(30);
+        winloseLblHBox.setLayoutY(50);
+        winloseLblHBox.setAlignment(Pos.CENTER);
 
-        Label winLbl = new Label("Win!");
-        winLbl.setFont(new Font("Roboto", 40));
-        winLblHBox.getChildren().add(winLbl);
+        Label winloseLbl = new Label(winlose);
+        winloseLbl.setFont(new Font("Roboto", 40));
+        winloseLblHBox.getChildren().add(winloseLbl);
 
-        circles.getChildren().addAll(finishmenu, winLblHBox);
+        HBox btnHBox = new HBox();
+        btnHBox.setPrefSize(340, 100);
+        btnHBox.setLayoutX(30);
+        btnHBox.setLayoutY(150);
+        btnHBox.setAlignment(Pos.CENTER);
 
-        playResumeBtn.setDisable(true);
-    }
+        btnHBox.getChildren().add(btn);
 
-    public void lose(Pane finishmenu, Button playResumeBtn){
-        Pane gameWorkspace = (Pane)this.getChildren().get(0);
-        VBox centerVBox = (VBox)gameWorkspace.getChildren().get(0);
-        Pane circles = (Pane) centerVBox.getChildren().get(2);
-
-        HBox winLblHBox = new HBox();
-        winLblHBox.setPrefSize(340,0);
-        winLblHBox.setLayoutX(0);
-        winLblHBox.setLayoutY(50);
-        winLblHBox.setAlignment(Pos.CENTER);
-
-        Label loseLbl = new Label("lose!");
-        loseLbl.setFont(new Font("Roboto", 40));
-        winLblHBox.getChildren().add(loseLbl);
-
-        circles.getChildren().addAll(finishmenu, winLblHBox);
+        circles.getChildren().addAll(finishmenu, winloseLblHBox, btnHBox);
 
         playResumeBtn.setDisable(true);
     }
