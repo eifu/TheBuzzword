@@ -667,9 +667,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             if (winlose.equals("win!")){
                 b.setOnAction(e2->{
                     int progress = ((BuzzwordUserData) app.getUserDataComponent()).getProgress(mode);
-                    ((BuzzwordUserData) app.getUserDataComponent()).setProgress(mode, progress + 1);
-                    ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(progress+1);
 
+                    // if the current level is the user's highest progress, then increment the progress by 1.
+                    if (gameData.getCurrentLevel() == progress) {
+                        ((BuzzwordUserData) app.getUserDataComponent()).setProgress(mode, progress + 1);
+                        ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(progress + 1);
+                    }
+                    reloadWorkspace(gui.getAppPane());
+                    initGamePlay();
+                });
+            }else{
+                b.setOnAction(e2 ->{
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
