@@ -14,6 +14,7 @@ public enum AppPropertyType {
     PREVGAME_ICON,
     NEXTGAME_ICON,
     FACE_ICON,
+    REPLAY_ICON,
 
     //
     APP_LOGO,

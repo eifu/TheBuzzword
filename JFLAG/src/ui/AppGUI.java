@@ -106,7 +106,7 @@ public class AppGUI implements AppStyleArbiter{
         return b;
     }
 
-    public Button initializeChildButton(String icon, boolean disable) throws Exception{
+    public Button initializeChildButton(String icon, boolean disable) throws FileNotFoundException{
         PropertyManager pm = PropertyManager.getPropertyManager();
 
         URL imageDirectoryURL = AppTemplate.class.getClassLoader().getResource(APP_IMAGE_DIR_PATH.getParameter());
@@ -122,6 +122,9 @@ public class AppGUI implements AppStyleArbiter{
 
         }catch (URISyntaxException e){
             e.printStackTrace();
+            System.exit(1);
+        }catch (IOException ioe){
+            ioe.printStackTrace();
             System.exit(1);
         }
 
