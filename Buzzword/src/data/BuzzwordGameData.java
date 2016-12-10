@@ -20,11 +20,9 @@ public class BuzzwordGameData implements AppGameDataComponent {
     public static final int MAXNUMBEROFPLACES = 279;
 
     private AppTemplate app;
-    private Map<String, MatrixData[]> modeMatrixMap;
-    private Map<String, Integer[]> modeTimeLimitMap;
     private ArrayList<String> modeList;
     private Map<String, String> usernamePasswordMap;
-    private Map<String, Set<String>> modeWordSetMap;
+    private Map<String, TrieWordData> modeWordSetMap;
 
     private int currentLevel;
     private String currentMode;
@@ -64,8 +62,6 @@ public class BuzzwordGameData implements AppGameDataComponent {
     public BuzzwordGameData(AppTemplate app, boolean initiateGame) {
         if (initiateGame) {
             this.app = app;
-            this.modeMatrixMap = new HashMap<>();
-            this.modeTimeLimitMap = new HashMap<>();
             this.modeList = new ArrayList<>();
             this.usernamePasswordMap = new HashMap<>();
             this.modeWordSetMap = new HashMap<>();
@@ -85,11 +81,11 @@ public class BuzzwordGameData implements AppGameDataComponent {
 
     public void addModeWordSet(String mode, String word) {
         if (this.modeWordSetMap.get(mode) == null) {
-            Set<String> wordSet = new HashSet<>();
+            TrieWordData wordSet = new TrieWordData();
             this.modeWordSetMap.put(mode, wordSet);
         }
 
-        this.modeWordSetMap.get(mode).add(word);
+        this.modeWordSetMap.get(mode).addWord(word);
     }
 
     public boolean validateUsernamePassword(String name, String pass) {
@@ -118,15 +114,15 @@ public class BuzzwordGameData implements AppGameDataComponent {
     }
 
 
-    public String getWord(int index) {
-        Set<String> wordSet = modeWordSetMap.get(currentMode);
-        int i = 0;
-        for (String word : wordSet) {
-            if (i == index) {
-                return word;
-            }
-            i = i + 1;
-        }
-        return "";
-    }
+//    public String getWord(int index) {
+//        TrieWordData wordSet = modeWordSetMap.get(currentMode);
+//        int i = 0;
+//        for (String word : wordSet) {
+//            if (i == index) {
+//                return word;
+//            }
+//            i = i + 1;
+//        }
+//        return "";
+//    }
 }
