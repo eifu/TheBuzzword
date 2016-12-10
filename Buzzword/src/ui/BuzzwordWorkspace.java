@@ -253,10 +253,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
 
-                int totalLevel = 8; // TODO need to get from BuzzwordGameData
-                if (mode.equals("countries")) {
-                    totalLevel = 4;
-                }
+                int totalLevel = ((BuzzwordGameData)app.getGameDataComponent()).getModeMaxLevel(mode);
 
                 // update circles for personalBtn
                 circles = (Pane) vboxChildren.get(2);

@@ -6,8 +6,6 @@ import propertymanager.PropertyManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,8 +55,8 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public BuzzwordUserData() {
         this.username = "";
         this.password = "";
-        progress = new HashMap<>();
-        highscore = new HashMap<>();
+        this.progress = new HashMap<>();
+        this.highscore = new HashMap<>();
     }
 
     public void login(AppTemplate app) {
@@ -105,8 +103,8 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public void reset() {
         this.username = "";
         this.password = "";
-        progress = new HashMap<>();
-        highscore = new HashMap<>();
+        this.progress = new HashMap<>();
+        this.highscore = new HashMap<>();
     }
 
 }

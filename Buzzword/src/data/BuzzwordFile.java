@@ -24,6 +24,7 @@ public class BuzzwordFile implements AppFileComponent {
 
     public static final String NAME_PASS_MAP = "NAME_PASS_MAP";
     public static final String MODE_LIST = "MODE_LIST";
+    public static final String MODE_LEVEL = "MODE_LEVEL";
     public static final String MODE_WORDS = "MODE_WORDS";
 
     @Override
@@ -214,21 +215,6 @@ public class BuzzwordFile implements AppFileComponent {
             if (JsonToken.FIELD_NAME.equals(token)) {
                 String fieldname = jsonParser.getCurrentName();
                 switch (fieldname) {
-//                    case NAME_PASS_MAP:
-//
-//                        jsonParser.nextToken(); // outer "["
-//                        String name;
-//                        String pass;
-//                        while (jsonParser.nextToken() != JsonToken.END_ARRAY) { // inner "["
-//                            jsonParser.nextToken();
-//                            name = jsonParser.getText();
-//                            jsonParser.nextToken();
-//                            pass = jsonParser.getText();
-//
-//                            gamedata.addNamePassMap(name, pass);
-//                            jsonParser.nextToken(); // inner "]"
-//                        }
-//                        break;
 
                     case MODE_LIST:
                         jsonParser.nextToken(); // outer "["
@@ -236,6 +222,19 @@ public class BuzzwordFile implements AppFileComponent {
                         while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                             mode = jsonParser.getText();
                             gamedata.addMode(mode);
+                        }
+                        break;
+
+                    case MODE_LEVEL:
+                        jsonParser.nextToken(); // outer "["
+                        int level;
+                        while (jsonParser.nextToken() != JsonToken.END_ARRAY){
+                            jsonParser.nextToken(); // inner "["
+                            mode = jsonParser.getText();
+                            jsonParser.nextToken();
+                            level = jsonParser.getIntValue();
+                            gamedata.setModeMaxLevel(mode, level);
+                            jsonParser.nextToken(); // inner "]"
                         }
                         break;
 

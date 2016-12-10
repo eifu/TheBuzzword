@@ -23,9 +23,18 @@ public class BuzzwordGameData implements AppGameDataComponent {
     private ArrayList<String> modeList;
     private Map<String, String> usernamePasswordMap;
     private Map<String, TrieWordData> modeTrieWordMap;
+    private Map<String, Integer> modeMaxLevelMap;
 
     private int currentLevel;
     private String currentMode;
+
+    public void setModeMaxLevel(String mode, int level){
+        modeMaxLevelMap.put(mode, level);
+    }
+
+    public int getModeMaxLevel(String mode){
+        return modeMaxLevelMap.get(mode);
+    }
 
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
@@ -65,6 +74,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
             this.modeList = new ArrayList<>();
             this.usernamePasswordMap = new HashMap<>();
             this.modeTrieWordMap = new HashMap<>();
+            this.modeMaxLevelMap = new HashMap<>();
 
         } else {
             this.app = app;
