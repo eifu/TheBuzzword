@@ -2,14 +2,18 @@ package ui;
 
 
 import buzzword.GameScreenState;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
+import javafx.collections.FXCollections.*;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -302,8 +306,23 @@ public class GameScreen extends Pane {
                 textInputVBox.setLayoutY(140);
 
                 VBox scoreVBox = new VBox();
-                SplitPane scoreWords = new SplitPane();
-                scoreWords.setPrefSize(180, 160);
+
+                TableView<Word> scoreTable = new TableView<>();
+                TableColumn columnWord = new TableColumn("Word");
+                columnWord.setCellValueFactory(
+                        new PropertyValueFactory<>("word")
+                );
+                columnWord.setMinWidth(90);
+                TableColumn columnPoint = new TableColumn("Point");
+                columnPoint.setCellValueFactory(
+                        new PropertyValueFactory<>("point")
+                );
+                columnPoint.setMinWidth(90);
+                scoreTable.getColumns().addAll(columnWord, columnPoint);
+                final ObservableList<Word> data = FXCollections.observableArrayList();
+                scoreTable.setItems(data);
+
+                scoreTable.setPrefSize(180, 160);
 //                scoreWords.getItems().add(new VBox(new Label("WAR"), new Label("RAW")));
 //                scoreWords.getItems().add(new VBox(new Label("10"), new Label("20")));
 
@@ -311,9 +330,10 @@ public class GameScreen extends Pane {
                 total.setPrefSize(180, 40);
                 total.getItems().add(new Label("TOTAL"));
                 total.getItems().add(new Label("0"));
-                scoreVBox.getChildren().addAll(scoreWords, total);
+                scoreVBox.getChildren().addAll(scoreTable, total);
                 scoreVBox.setLayoutX(0);
                 scoreVBox.setLayoutY(200);
+                scoreVBox.setId("scoreVBox");
 
                 Rectangle targetOuterRect = new Rectangle();
                 targetOuterRect.setArcWidth(5.0);
@@ -335,6 +355,7 @@ public class GameScreen extends Pane {
 
                 rightWorkspace.getChildren().addAll(timeOuterRect, timerLabelHBox, textInputVBox, scoreVBox, targetOuterRect, targetVBox);
 //                gameWorkspace.setRight(rightWorkspace);
+                rightWorkspace.setId("rightworkspace");
                 gameWorkspace.getChildren().add(rightWorkspace);
 
                 this.getChildren().add(gameWorkspace);
@@ -432,5 +453,35 @@ public class GameScreen extends Pane {
         circles.getChildren().addAll(finishmenu, winloseLblHBox, btnHBox);
 
         playResumeBtn.setDisable(true);
+    }
+
+    public void addWord(String w){
+
+        Pane gameworkspace = (Pane) this.getChildren().get(0);
+        Pane rightPane = (Pane)gameworkspace.lookup("#rightworkspace");
+        TableView scoreTable = (TableView)((VBox)rightPane.lookup("#scoreVBox")).getChildren().get(0);
+        ObservableList items = scoreTable.getItems();
+        items.add(new Word(w, 20));
+//        scoreTable.setItems(items);
+
+    }
+
+    public class Word{
+        private SimpleStringProperty word;
+        private SimpleIntegerProperty point;
+        Word(String w, int p){
+            word = new SimpleStringProperty(w);
+            point = new SimpleIntegerProperty(p);
+        }
+
+        public String getWord(){return word.get();}
+        public int getPoint(){return point.get();}
+
+        public void setWord(String s){
+            word.set(s);
+        }
+        public void setPoint(int i){
+            point.set(i);
+        }
     }
 }

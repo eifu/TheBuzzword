@@ -533,6 +533,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             b.setOnMouseDragReleased(ee -> {
                 System.out.println(currentEntry);
+                if (trie.findWord(currentEntry)){
+                    ((GameScreen)workspace).addWord(currentEntry);
+                }
 
                 currentEntry = "";
                 removeButtonShadow(draggedButtons);
