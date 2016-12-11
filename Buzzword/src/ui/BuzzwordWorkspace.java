@@ -6,6 +6,7 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.TrieWordData;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
@@ -786,6 +787,19 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         circles.setOnKeyPressed(e -> {
 
+            if (e.getCode() == KeyCode.ENTER && currentTyping){
+                System.out.println(currentEntry);
+                if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
+                    currentPoints += currentEntry.length() * 4;
+
+                    ((GameScreen) workspace).addWord(currentEntry);
+                    gameData.found(currentEntry);
+                }
+
+                currentEntry = "";
+                removeButtonShadow();
+            }
+
             removeButtonShadow();
             if (currentTyping) {
                 currentEntry += e.getCode().toString();
@@ -794,12 +808,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 System.out.println("typing start");
                 currentTyping = true;
                 currentEntry = e.getCode().toString();
-
             }
             if (!coloringPath(grid, currentEntry)) {
                 removeButtonShadow();
                 System.out.println("removovv");
                 currentEntry = "";
+                currentTyping = false;
             }
             System.out.println(currentEntry);
         });
@@ -928,8 +942,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         int[] paths = new int[]{-5, -4, -3, -1, 1, 3, 4, 5};
 
-
-
         notReached[index] = false;
 
         boolean hasFound = false;
@@ -944,7 +956,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     if ((index % 4 != 0 || (index + path) % 4 != 3) && (index % 4 != 3 || (index + path) % 4 != 0)) {
 
                         if (grid[index + path] == w.charAt(0)) {
-                            hasFound = coloringPathHelper(grid, w.substring(1), notReached, index + path);
+                            hasFound = coloringPathHelper(grid, w.substring(1), notReached, index + path) || hasFound;
                             if (hasFound){
                                 circles.lookup("#" + index).setEffect(draggedShadow);
                             }
