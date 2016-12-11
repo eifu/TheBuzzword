@@ -311,12 +311,12 @@ public class GameScreen extends Pane {
                 columnWord.setCellValueFactory(
                         new PropertyValueFactory<>("word")
                 );
-                columnWord.setMinWidth(90);
+                columnWord.setMinWidth(89);
                 TableColumn columnPoint = new TableColumn("Point");
                 columnPoint.setCellValueFactory(
                         new PropertyValueFactory<>("point")
                 );
-                columnPoint.setMinWidth(90);
+                columnPoint.setMinWidth(89);
                 scoreTable.getColumns().addAll(columnWord, columnPoint);
                 final ObservableList<Word> data = FXCollections.observableArrayList();
                 scoreTable.setItems(data);
@@ -432,7 +432,7 @@ public class GameScreen extends Pane {
     }
 
 
-    public void winlose(Pane finishmenu, String winlose, Button playResumeBtn, Button btn) {
+    public void winlose(Pane finishmenu, String winlose, String notFoundWords, Button playResumeBtn, Button btn) {
         Pane gameWorkspace = (Pane) this.getChildren().get(0);
         VBox centerVBox = (VBox) gameWorkspace.getChildren().get(0);
         Pane circles = (Pane) centerVBox.getChildren().get(2);
@@ -456,6 +456,18 @@ public class GameScreen extends Pane {
         btnHBox.getChildren().add(btn);
 
         circles.getChildren().addAll(finishmenu, winloseLblHBox, btnHBox);
+
+        if (!notFoundWords.equals("")){
+            StackPane notFoundStack = new StackPane();
+            notFoundStack.setPrefSize(340, 50);
+            Label notFoundWordsLbl = new Label("words not found\n"+notFoundWords);
+            notFoundWordsLbl.setFont(new Font("Roboto", 16));
+            notFoundWordsLbl.setAlignment(Pos.CENTER);
+            notFoundStack.setLayoutX(30);
+            notFoundStack.setLayoutY(280);
+            notFoundStack.getChildren().add(notFoundWordsLbl);
+            circles.getChildren().add(notFoundStack);
+        }
 
         playResumeBtn.setDisable(true);
     }

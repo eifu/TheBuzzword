@@ -274,7 +274,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         initGamePlay();
 
-
                     });
                     if (level < progress) {
                         b.setDisable(false);
@@ -470,16 +469,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
         TrieWordData trie = (TrieWordData) gameData.getModeTrieWordMap().get(mode);
         int num = 0;
-        int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4: gameData.getCurrentLevel();
-        Set a=null;
+        int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4 : gameData.getCurrentLevel();
+        Set tempSet = null;
         while (num < targetNum) {
             for (int i = 0; i < 16; i++) {
                 grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
             }
-            a = TrieWordData.countWords(grid, trie);
-            num = a.size();
+            tempSet = TrieWordData.countWords(grid, trie);
+            num = tempSet.size();
         }
-        System.out.println(a);
+        System.out.println(tempSet);
+        gameData.setTargetWordsSet(tempSet);
 
         ArrayList<Button> draggedButtons = new ArrayList<>();
         ArrayList<Line> draggedLines = new ArrayList<>();
@@ -663,29 +663,29 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             switch (gameData.getCurrentLevel()) {
                 case 1:
                 case 2:
-                    if (currentPoints > 10){
-                        win =true;
+                    if (currentPoints > 10) {
+                        win = true;
                     }
                     break;
                 case 3:
-                    if (currentPoints> 20){
+                    if (currentPoints > 20) {
                         win = true;
                     }
                     break;
                 case 4:
-                    if (currentPoints > 30){
+                    if (currentPoints > 30) {
                         win = true;
                     }
                     break;
-                case 5 :
-                    if (currentPoints > 40){
+                case 5:
+                    if (currentPoints > 40) {
                         win = true;
                     }
                     break;
                 case 6:
                 case 7:
                 case 8:
-                    if (currentPoints > 50){
+                    if (currentPoints > 50) {
                         win = true;
                     }
                     break;
@@ -694,10 +694,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             try {
                 if (win) {
                     b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
-                        winLoseHighscore = "WIN!\n";
+                    winLoseHighscore = "WIN!\n";
                 } else {
                     b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
-                        winLoseHighscore = "LOSE!\n";
+                    winLoseHighscore = "LOSE!\n";
                 }
             } catch (FileNotFoundException f) {
                 f.printStackTrace();
@@ -710,7 +710,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 ((BuzzwordUserData) app.getUserDataComponent()).setHighscore(mode, gameData.getCurrentLevel() - 1, currentPoints);
             }
 
-            ((GameScreen) workspace).winlose(posemenu, winLoseHighscore, localPlayResumeBtn, b);
+            String notFoundWords = "";
+            for (String w : gameData.getTargetWordsSet()) {
+                if (!gameData.hasFound(w)) {
+                    notFoundWords += w + ", ";
+                }
+            }
+
+            ((GameScreen) workspace).winlose(posemenu, winLoseHighscore, notFoundWords, localPlayResumeBtn, b);
 
             if (win) {
                 b.setOnAction(e2 -> {
@@ -760,7 +767,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             case 4:
                 l.setText("30 points");
                 break;
-            case 5 :
+            case 5:
                 l.setText("40 points");
                 break;
             case 6:
