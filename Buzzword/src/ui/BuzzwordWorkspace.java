@@ -120,14 +120,14 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     public void setHandler() {
 
-        KeyCombination homeCombo      = new KeyCodeCombination(KeyCode.H, KeyCodeCombination.CONTROL_DOWN);
-        KeyCombination loginoutCombo  = new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN);
-        KeyCombination helpCombo      = new KeyCodeCombination(KeyCode.Q, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination homeCombo = new KeyCodeCombination(KeyCode.H, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination loginoutCombo = new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination helpCombo = new KeyCodeCombination(KeyCode.Q, KeyCodeCombination.CONTROL_DOWN);
         KeyCombination gameStartCombo = new KeyCodeCombination(KeyCode.P, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination createProfCombo = new KeyCodeCombination(KeyCode.P, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN);
 
         switch (currentState) {
             case HOME:
-
 
                 // if user has signed in.
                 if (signedIn) {
@@ -163,7 +163,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 //                    });
 
                     gameStartBtn.setOnAction(e -> {
-                        System.out.println("start");
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
 
@@ -190,6 +189,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         StackPane s = (StackPane) vboxHomeChildren.get(2);
                         Button gameStartBtn = (Button) s.getChildren().get(0);
                         gameStartBtn.fire();
+                    } else if (!signedIn && createProfCombo.match(e)){
+
+                        gui.setLoginoutbtnDisable(true);
+                        gui.setHomebtnDisable(false);
+
+                        setCurrentState(SIGNUP);
+                        reloadWorkspace(gui.getAppPane());
+                        setHandler();
+
                     } else if (e.getCode() == KeyCode.ESCAPE) {
                         gui.getFileController().handleQuitRequest();
                     }
@@ -243,12 +251,28 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 });
                 gui.getToolbarPane().requestFocus();
                 gui.getToolbarPane().setOnKeyPressed(e -> {
-                    if (homeCombo.match(e)){
+                    if (homeCombo.match(e)) {
                         gui.getFileController().handleHomeRequest();
-                    } else if (e.getCode() == KeyCode.ESCAPE){
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
                         gui.getFileController().handleQuitRequest();
                     }
                 });
+                ((TextField) gridChildren.get(2)).setOnKeyPressed(e -> {
+                    if (e.getCode() == KeyCode.CONTROL) {
+                        gui.getToolbarPane().requestFocus();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
+                ((TextField) gridChildren.get(4)).setOnKeyPressed(e -> {
+                    if (e.getCode() == KeyCode.CONTROL) {
+                        gui.getToolbarPane().requestFocus();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
+
+
                 break;
             case SIGNUP:
                 workspaceChildren = workspace.getChildren();
@@ -279,18 +303,32 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         userData.signup(app);
 
                         renderHome(name);
+                        renderScreen();
                         setHandler();
                     }
                 });
                 gui.getToolbarPane().requestFocus();
                 gui.getToolbarPane().setOnKeyPressed(e -> {
-                    if (homeCombo.match(e)){
-                        gui.getFileController().handleHomeRequest(); // TODO does not work
-                    } else if (e.getCode() == KeyCode.ESCAPE){
+                    if (homeCombo.match(e)) {
+                        gui.getFileController().handleHomeRequest();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
                         gui.getFileController().handleQuitRequest();
                     }
                 });
-
+                ((TextField) gridChildren.get(2)).setOnKeyPressed(e -> {
+                    if (e.getCode() == KeyCode.CONTROL) {
+                        gui.getToolbarPane().requestFocus();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
+                ((TextField) gridChildren.get(4)).setOnKeyPressed(e -> {
+                    if (e.getCode() == KeyCode.CONTROL) {
+                        gui.getToolbarPane().requestFocus();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
 
                 break;
 
@@ -340,6 +378,19 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     Button b = (Button) levelChildren.get(level);
                     b.setVisible(false);
                 }
+
+                circles.requestFocus();
+                circles.setOnKeyPressed(e->{
+                    if (homeCombo.match(e)){
+                        gui.getFileController().handleHomeRequest();
+                    } else if (loginoutCombo.match(e)){
+                        gui.getFileController().handleLoginoutRequest();
+                    } else if (helpCombo.match(e)){
+                        gui.getFileController().handleHelpRequest();
+                    }
+
+
+                });
                 break;
 
             case GAMEPLAY:
@@ -521,6 +572,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         int num = 0;
         int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4 : gameData.getCurrentLevel();
         Set tempSet = null;
+        long startTime = System.currentTimeMillis();
         while (num < targetNum) {
             for (int i = 0; i < 16; i++) {
                 grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
@@ -528,6 +580,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             tempSet = TrieWordData.countWords(grid, trie);
             num = tempSet.size();
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
         System.out.println(tempSet);
         gameData.setTargetWordsSet(tempSet);
 
@@ -587,7 +641,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             });
 
             b.setOnMouseDragReleased(ee -> {
-                System.out.println(currentEntry);
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
                     currentPoints += currentEntry.length() * 4;
 
@@ -749,6 +802,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     break;
             }
 
+            System.out.println("Currentlevel is " + gameData.getCurrentLevel());
+            System.out.println("current point  " + currentPoints);
+
             try {
                 if (win) {
                     b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
@@ -836,7 +892,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             if (e.getCode() == KeyCode.CONTROL) {
                 gui.getToolbarPane().requestFocus();
                 currentTyping = true;
-                System.out.println("yaha");
             } else if (e.getCode() == KeyCode.ESCAPE) {
 
                 if (this.isPlaying) {
@@ -858,7 +913,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 setHandler();
 
             } else if (e.getCode() == KeyCode.ENTER && currentTyping) {
-                System.out.println(currentEntry);
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
                     currentPoints += currentEntry.length() * 4;
 
@@ -878,7 +932,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     currentEntry += e.getCode().toString();
 
                 } else {
-                    System.out.println("typing start");
                     currentTyping = true;
                     currentEntry = e.getCode().toString();
                 }
@@ -887,13 +940,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 if (!coloringPath(grid, currentEntry)) {
                     removeButtonShadow();
-                    System.out.println("removovv");
                     currentEntry = "";
                     currentTyping = false;
 
                     inputLbl.setText("WRONG");
                 }
-                System.out.println(currentEntry);
             }
         });
 
@@ -902,7 +953,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 controller.handleHomeRequest();
             } else {
                 circles.requestFocus();
-                System.out.println("yesyes");
             }
         });
 
@@ -1003,9 +1053,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     }
 
     private boolean coloringPath(char[] grid, String w) {
-
-        System.out.println("mapping");
-
         boolean hasFound = false;
         boolean[] notReached;
         for (int i = 0; i < 16; i++) {
