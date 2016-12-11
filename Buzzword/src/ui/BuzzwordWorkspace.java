@@ -6,6 +6,7 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.TrieWordData;
+import javafx.scene.input.KeyCombination;
 import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
@@ -56,8 +57,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     private Button personalBtn; // [home/selecting/signingin] personal Button in toolbar
     private Pane circles; // circle buttons that will be under personalInfo pane.
     private Timeline timeline; // [gameplay]
+
+
     private int currentPoints; // [gameplay]
     private String currentEntry; // [gameplay]
+    private boolean currentTyping; // [gameplay]
+
     private TextField textfield;
     private IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
 
@@ -294,7 +299,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 currentPoints = 0;
 
 
-
                 workspaceChildren = workspace.getChildren();
                 Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
                 VBox centerVBoxChildren = (VBox) borderPaneChildren.getChildren().get(0);
@@ -441,6 +445,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     private void initGamePlay() {
 
         isPlaying = true;
+        currentTyping = false;
 
         PropertyManager pm = PropertyManager.getPropertyManager();
 
@@ -778,9 +783,25 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         }
 
-        System.out.println("a");
-        circles.setOnKeyPressed(e->{
-            System.out.println(e.getCode().toString());
+
+        circles.setOnKeyPressed(e -> {
+
+            removeButtonShadow();
+            if (currentTyping) {
+                currentEntry += e.getCode().toString();
+
+            } else {
+                System.out.println("typing start");
+                currentTyping = true;
+                currentEntry = e.getCode().toString();
+
+            }
+            if (!coloringPath(grid, currentEntry)) {
+                removeButtonShadow();
+                System.out.println("removovv");
+                currentEntry = "";
+            }
+            System.out.println(currentEntry);
         });
 
         setHandler();
@@ -814,6 +835,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
 
         setHandler();
+    }
+
+    private void removeButtonShadow() {
+        for (int i = 0; i < 16; i++) {
+            circles.lookup("#" + i).setEffect(null);
+        }
     }
 
     private void removeButtonShadow(ArrayList<Button> a) {
@@ -871,6 +898,64 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             System.exit(1);
         }
         return encryptedPass;
+    }
+
+    private boolean coloringPath(char[] grid, String w) {
+
+        System.out.println("mapping");
+
+        boolean hasFound = false;
+        boolean[] notReached;
+        for (int i = 0; i < 16; i++) {
+            notReached = new boolean[]{true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
+
+            if (grid[i] == w.charAt(0)) {
+
+                hasFound = coloringPathHelper(grid, w.substring(1), notReached, i) || hasFound;
+
+            }
+
+        }
+
+        return hasFound;
+    }
+
+    private boolean coloringPathHelper(char[] grid, String w, boolean[] notReached, int index) {
+        DropShadow draggedShadow = new DropShadow();
+        draggedShadow.setOffsetX(0);
+        draggedShadow.setOffsetY(3);
+        draggedShadow.setColor(Color.WHITE);
+
+        int[] paths = new int[]{-5, -4, -3, -1, 1, 3, 4, 5};
+
+
+
+        notReached[index] = false;
+
+        boolean hasFound = false;
+
+        if (w.equals("")) {
+            circles.lookup("#" + index).setEffect(draggedShadow);
+            return true;
+        } else {
+            for (int path : paths) {
+                if (0 <= index + path && index + path < 16) {
+
+                    if ((index % 4 != 0 || (index + path) % 4 != 3) && (index % 4 != 3 || (index + path) % 4 != 0)) {
+
+                        if (grid[index + path] == w.charAt(0)) {
+                            hasFound = coloringPathHelper(grid, w.substring(1), notReached, index + path);
+                            if (hasFound){
+                                circles.lookup("#" + index).setEffect(draggedShadow);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return hasFound;
     }
 
 }
