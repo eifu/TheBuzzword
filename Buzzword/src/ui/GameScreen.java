@@ -211,7 +211,6 @@ public class GameScreen extends Pane {
 
 
                         circles.getChildren().add(btn);
-//                        circles.setVisible(false);
                     }
                 }
                 container.getChildren().addAll(buzzwordTitle, modeLabel, circles);
@@ -321,16 +320,22 @@ public class GameScreen extends Pane {
                 scoreTable.getColumns().addAll(columnWord, columnPoint);
                 final ObservableList<Word> data = FXCollections.observableArrayList();
                 scoreTable.setItems(data);
-
+                scoreTable.setPlaceholder(new Label("Buzzword"));
                 scoreTable.setPrefSize(180, 160);
-//                scoreWords.getItems().add(new VBox(new Label("WAR"), new Label("RAW")));
-//                scoreWords.getItems().add(new VBox(new Label("10"), new Label("20")));
 
-                SplitPane total = new SplitPane();
-                total.setPrefSize(180, 40);
-                total.getItems().add(new Label("TOTAL"));
-                total.getItems().add(new Label("0"));
-                scoreVBox.getChildren().addAll(scoreTable, total);
+
+                HBox totalHBox = new HBox();
+                totalHBox.setStyle("-fx-background-color: darkgrey;");
+                totalHBox.setPrefSize(180, 20);
+                Label totalLbl = new Label("TOTAL");
+                totalLbl.setMinWidth(90);
+                totalLbl.setAlignment(Pos.CENTER_LEFT);
+                totalHBox.getChildren().add(new Label("TOTAL"));
+                Label totalScoreLbl = new Label("0");
+                totalScoreLbl.setMinWidth(90);
+                totalScoreLbl.setAlignment(Pos.CENTER_RIGHT);
+                totalHBox.getChildren().add(totalScoreLbl);
+                scoreVBox.getChildren().addAll(scoreTable, totalHBox);
                 scoreVBox.setLayoutX(0);
                 scoreVBox.setLayoutY(200);
                 scoreVBox.setId("scoreVBox");
@@ -460,9 +465,18 @@ public class GameScreen extends Pane {
         Pane gameworkspace = (Pane) this.getChildren().get(0);
         Pane rightPane = (Pane)gameworkspace.lookup("#rightworkspace");
         TableView scoreTable = (TableView)((VBox)rightPane.lookup("#scoreVBox")).getChildren().get(0);
-        ObservableList items = scoreTable.getItems();
+        ObservableList<Word> items = scoreTable.getItems();
         items.add(new Word(w, 20));
 //        scoreTable.setItems(items);
+        int totalscore = 0;
+        for (Word word : items){
+            totalscore += word.getPoint();
+        }
+
+        HBox scoreHBox = (HBox) ((VBox)rightPane.lookup("#scoreVBox")).getChildren().get(1);
+        Label totalScoreLbl = (Label)scoreHBox.getChildren().get(1);
+        totalScoreLbl.setText(totalscore+"");
+
 
     }
 

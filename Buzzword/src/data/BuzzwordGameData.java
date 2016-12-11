@@ -24,6 +24,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
     private Map<String, String> usernamePasswordMap;
     private Map<String, TrieWordData> modeTrieWordMap;
     private Map<String, Integer> modeMaxLevelMap;
+    private Set<String> foundWordsSet;
 
     private int currentLevel;
     private String currentMode;
@@ -75,6 +76,7 @@ public class BuzzwordGameData implements AppGameDataComponent {
             this.usernamePasswordMap = new HashMap<>();
             this.modeTrieWordMap = new HashMap<>();
             this.modeMaxLevelMap = new HashMap<>();
+            this.foundWordsSet = new HashSet<>();
 
         } else {
             this.app = app;
@@ -124,15 +126,11 @@ public class BuzzwordGameData implements AppGameDataComponent {
     }
 
 
-//    public String getWord(int index) {
-//        TrieWordData wordSet = modeWordSetMap.get(currentMode);
-//        int i = 0;
-//        for (String word : wordSet) {
-//            if (i == index) {
-//                return word;
-//            }
-//            i = i + 1;
-//        }
-//        return "";
-//    }
+    public boolean hasFound(String w){
+        return foundWordsSet.contains(w);
+    }
+
+    public void found(String w){
+        foundWordsSet.add(w);
+    }
 }

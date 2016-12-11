@@ -533,8 +533,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             b.setOnMouseDragReleased(ee -> {
                 System.out.println(currentEntry);
-                if (trie.findWord(currentEntry)){
+                if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)){
                     ((GameScreen)workspace).addWord(currentEntry);
+                    gameData.found(currentEntry);
                 }
 
                 currentEntry = "";
