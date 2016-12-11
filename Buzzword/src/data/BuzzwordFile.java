@@ -56,6 +56,19 @@ public class BuzzwordFile implements AppFileComponent {
             }
             generator.writeEndArray();
 
+            generator.writeFieldName(HIGHSCORE);
+            generator.writeStartObject();
+            for (String mode : progressMap.keySet()){
+                generator.writeFieldName(mode);
+                generator.writeStartArray();
+                for (int i : userData.getHighScore(mode)){
+                    generator.writeNumber(i);
+                }
+                generator.writeEndArray();
+            }
+
+            generator.writeEndObject();
+
             generator.writeEndObject();
 
             generator.close();
@@ -148,11 +161,16 @@ public class BuzzwordFile implements AppFileComponent {
                             if (JsonToken.FIELD_NAME.equals(jsonParser.getCurrentToken())) {
                                 mode = jsonParser.getCurrentName();
                                 jsonParser.nextToken(); // [
-                                ArrayList<Integer> a = new ArrayList<>();
+                                ArrayList a = new ArrayList<>();
                                 while (jsonParser.nextToken() != JsonToken.END_ARRAY) {
                                     a.add(jsonParser.getIntValue());
                                 }
-                                userData.setHighscore(mode, a);
+                                int [] aa = new int[a.size()];
+                                for (int i = 0; i < a.size(); i ++){
+                                    aa[i] =  (int) a.get(i);
+                                }
+
+                                userData.setHighscore(mode, aa);
                             }
                         }
                         break;

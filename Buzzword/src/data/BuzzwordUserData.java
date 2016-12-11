@@ -18,7 +18,7 @@ public class BuzzwordUserData implements AppUserDataComponent {
     private String username;
     private String password;
     private Map<String, Integer> progress;
-    private Map<String, ArrayList<Integer>> highscore;
+    private Map<String, int[]> highscore;
 
     public void setUsername(String username) {
         this.username = username;
@@ -48,8 +48,12 @@ public class BuzzwordUserData implements AppUserDataComponent {
         this.progress.put(mode, progress);
     }
 
-    public void setHighscore(String mode, ArrayList<Integer> arraylist) {
+    public void setHighscore(String mode, int[] arraylist) {
         this.highscore.put(mode, arraylist);
+    }
+
+    public int[] getHighScore(String mode) {
+        return highscore.get(mode);
     }
 
     public BuzzwordUserData() {
@@ -78,12 +82,14 @@ public class BuzzwordUserData implements AppUserDataComponent {
     public void signup(AppTemplate app) {
         for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
             progress.put(mode, 1);
+            highscore.put(mode, new int[((BuzzwordGameData) app.getGameDataComponent()).getModeMaxLevel(mode)]);
         }
 
-       save(app);
+
+        save(app);
     }
 
-    public void save(AppTemplate app){
+    public void save(AppTemplate app) {
         PropertyManager pm = PropertyManager.getPropertyManager();
         Path appDirPath = Paths.get(pm.getPropertyValue(APP_TITLE)).toAbsolutePath();
         Path targetPath = appDirPath.resolve("resources/data");
