@@ -57,6 +57,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     private Pane posemenu; // [gameplay]
     private Pane personalInfo; // [home/selecting/signingin]
     private Button personalBtn; // [home/selecting/signingin] personal Button in toolbar
+
     private Pane circles; // circle buttons that will be under personalInfo pane.
     private Timeline timeline; // [gameplay]
 
@@ -96,9 +97,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         ((GameScreen) workspace).removePosemenu(posemenu);
     }
 
-    public void renderGameScreen() {
+    public void renderScreen() {
         switch (currentState) {
             case HOME:
+
                 ((GameScreen) workspace).home();
                 break;
             case SIGNINGIN:
@@ -117,21 +119,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     }
 
     public void setHandler() {
+
+        KeyCombination homeCombo      = new KeyCodeCombination(KeyCode.H, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination loginoutCombo  = new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination helpCombo      = new KeyCodeCombination(KeyCode.Q, KeyCodeCombination.CONTROL_DOWN);
+        KeyCombination gameStartCombo = new KeyCodeCombination(KeyCode.P, KeyCodeCombination.CONTROL_DOWN);
+
         switch (currentState) {
             case HOME:
-                KeyCombination loginoutCombo = new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN);
-                KeyCombination personalInfoCombo = new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN);
 
-                gui.getToolbarPane().requestFocus();
-                gui.getToolbarPane().setOnKeyPressed(e->{
-                    if (loginoutCombo.match(e)){
-                        gui.getFileController().handleLoginoutRequest();
-                    }else if (signedIn && personalInfoCombo.match(e)){
-                        personalBtn.fire();
-                    }else if (e.getCode() == KeyCode.ESCAPE){
-                        gui.getFileController().handleQuitRequest();
-                    }
-                });
 
                 // if user has signed in.
                 if (signedIn) {
@@ -167,6 +163,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 //                    });
 
                     gameStartBtn.setOnAction(e -> {
+                        System.out.println("start");
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
 
@@ -180,6 +177,24 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         gui.getToolbarPane().getChildren().get(4).setVisible(false);
                     });
                 }
+
+                gui.getToolbarPane().requestFocus();
+                gui.getToolbarPane().setOnKeyPressed(e -> {
+                    if (loginoutCombo.match(e)) {
+                        gui.getFileController().handleLoginoutRequest();
+                    } else if (helpCombo.match(e)) {
+                        gui.getFileController().handleHelpRequest();
+                    } else if (signedIn && gameStartCombo.match(e)) {
+                        ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
+                        ObservableList<Node> vboxHomeChildren = ((VBox) workspaceHomeChildren.get(0)).getChildren();
+                        StackPane s = (StackPane) vboxHomeChildren.get(2);
+                        Button gameStartBtn = (Button) s.getChildren().get(0);
+                        gameStartBtn.fire();
+                    } else if (e.getCode() == KeyCode.ESCAPE) {
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
+
                 break;
             case SIGNINGIN:
                 ObservableList<Node> workspaceChildren = workspace.getChildren();
@@ -220,8 +235,18 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
                         renderHome(name);
+
+                        renderScreen();
                         setHandler();
 
+                    }
+                });
+                gui.getToolbarPane().requestFocus();
+                gui.getToolbarPane().setOnKeyPressed(e -> {
+                    if (homeCombo.match(e)){
+                        gui.getFileController().handleHomeRequest();
+                    } else if (e.getCode() == KeyCode.ESCAPE){
+                        gui.getFileController().handleQuitRequest();
                     }
                 });
                 break;
@@ -257,6 +282,16 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setHandler();
                     }
                 });
+                gui.getToolbarPane().requestFocus();
+                gui.getToolbarPane().setOnKeyPressed(e -> {
+                    if (homeCombo.match(e)){
+                        gui.getFileController().handleHomeRequest(); // TODO does not work
+                    } else if (e.getCode() == KeyCode.ESCAPE){
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
+
+
                 break;
 
             case SELECTING:
@@ -448,8 +483,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             e.printStackTrace();
             System.exit(1);
         }
-
-        renderGameScreen();
 
         // toolbar config
         gui.setLoginoutbtnIcon(true);
@@ -800,12 +833,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         circles.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.CONTROL){
+            if (e.getCode() == KeyCode.CONTROL) {
                 gui.getToolbarPane().requestFocus();
                 currentTyping = true;
                 System.out.println("yaha");
-            }
-            else if (e.getCode() == KeyCode.ESCAPE) {
+            } else if (e.getCode() == KeyCode.ESCAPE) {
 
                 if (this.isPlaying) {
                     timeline.pause();
@@ -865,10 +897,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             }
         });
 
-        gui.getToolbarPane().setOnKeyPressed(e->{
-            if (currentTyping && e.getCode() == KeyCode.H){
+        gui.getToolbarPane().setOnKeyPressed(e -> {
+            if (currentTyping && e.getCode() == KeyCode.H) {
                 controller.handleHomeRequest();
-            }else{
+            } else {
                 circles.requestFocus();
                 System.out.println("yesyes");
             }
