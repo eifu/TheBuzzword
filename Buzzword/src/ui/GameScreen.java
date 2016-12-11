@@ -297,10 +297,11 @@ public class GameScreen extends Pane {
                 VBox textInputVBox = new VBox();
                 Label textInputVBoxLabel = new Label("Text input");
                 textInputVBoxLabel.setTextFill(Paint.valueOf("white"));
-                TextField textInput = new TextField();
-                textInput.setId("textinput");
-                textInput.setMaxWidth(180);
-                textInputVBox.getChildren().addAll(textInputVBoxLabel, textInput);
+                Label inputLbl = new Label();
+                inputLbl.setId("input");
+                inputLbl.setMinWidth(180);
+                inputLbl.setStyle("-fx-background-color: darkgrey;");
+                textInputVBox.getChildren().addAll(textInputVBoxLabel, inputLbl);
                 textInputVBox.setLayoutX(0);
                 textInputVBox.setLayoutY(140);
 

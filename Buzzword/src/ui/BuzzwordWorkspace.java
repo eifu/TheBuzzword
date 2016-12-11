@@ -64,7 +64,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     private String currentEntry; // [gameplay]
     private boolean currentTyping; // [gameplay]
 
-    private TextField textfield;
+    private Label inputLbl;
     private IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
 
 
@@ -503,6 +503,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         currentEntry += b.getText();
                         b.setEffect(draggedShadow);
                         draggedButtons.add(b);
+
+                        inputLbl.setText(currentEntry);
                     } else {
                         int lastId = Integer.parseInt(draggedButtons.get(draggedButtons.size() - 1).getId());
                         int thisId = Integer.parseInt(b.getId());
@@ -531,6 +533,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                             currentEntry += b.getText();
                             b.setEffect(draggedShadow);
                             draggedButtons.add(b);
+
+                            inputLbl.setText(currentEntry);
                         }
                     }
                 }
@@ -543,6 +547,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
+
+                    inputLbl.setText("CORRECT");
+                }else{
+                    inputLbl.setText("WRONG");
                 }
 
                 currentEntry = "";
@@ -750,15 +758,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 addAll(timerLbl1, timerLbl2, timerLbl3);
 
-        textfield = (TextField) rightPane.lookup("#textinput");
-        textfield.textProperty().addListener(((observable, oldValue, newValue) -> {
-            for (int i = 0; i < 16; i++) {
-                Button b = (Button) circles.lookup("#" + i);
-                if (b.getText().equals(newValue)) {
-                    // TODO make solver and come back again.
-                }
-            }
-        }));
+        inputLbl = (Label) rightPane.lookup("#input");
+//        textfield.textProperty().bind(currentEntry);
 
         Label l = (Label) rightPane.lookup("#target");
 
@@ -794,28 +795,36 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
+                    inputLbl.setText("CORRECT");
+                }else{
+                    inputLbl.setText("WRONG");
                 }
 
                 currentEntry = "";
                 removeButtonShadow();
-            }
+            }else {
 
-            removeButtonShadow();
-            if (currentTyping) {
-                currentEntry += e.getCode().toString();
-
-            } else {
-                System.out.println("typing start");
-                currentTyping = true;
-                currentEntry = e.getCode().toString();
-            }
-            if (!coloringPath(grid, currentEntry)) {
                 removeButtonShadow();
-                System.out.println("removovv");
-                currentEntry = "";
-                currentTyping = false;
+                if (currentTyping) {
+                    currentEntry += e.getCode().toString();
+                    inputLbl.setText(currentEntry);
+
+                } else {
+                    System.out.println("typing start");
+                    currentTyping = true;
+                    currentEntry = e.getCode().toString();
+                    inputLbl.setText(currentEntry);
+                }
+                if (!coloringPath(grid, currentEntry)) {
+                    removeButtonShadow();
+                    System.out.println("removovv");
+                    currentEntry = "";
+                    currentTyping = false;
+
+                    inputLbl.setText("WRONG");
+                }
+                System.out.println(currentEntry);
             }
-            System.out.println(currentEntry);
         });
 
         setHandler();
