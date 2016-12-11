@@ -45,21 +45,21 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
     final static int DEFAULTSTARTTIME = 40;
 
-    AppTemplate app;
-    AppGUI gui;
-    BuzzwordController controller;
-    GameScreenState currentState;
-    boolean signedIn; // [home]
-    boolean gamePlay; // [gameplay]
-    Pane posemenu; // [gameplay]
-    Pane personalInfo; // [home/selecting/signingin]
-    Button personalBtn; // [home/selecting/signingin] personal Button in toolbar
-    Pane circles; // circle buttons that will be under personalInfo pane.
-    Timeline timeline; // [gameplay]
-    int currentPoints; // [gameplay]
-    String currentEntry; // [gameplay]
-    TextField textfield;
-    IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
+    private AppTemplate app;
+    private AppGUI gui;
+    private BuzzwordController controller;
+    private GameScreenState currentState;
+    private boolean signedIn; // [home]
+    private boolean isPlaying; // [gameplay]
+    private Pane posemenu; // [gameplay]
+    private Pane personalInfo; // [home/selecting/signingin]
+    private Button personalBtn; // [home/selecting/signingin] personal Button in toolbar
+    private Pane circles; // circle buttons that will be under personalInfo pane.
+    private Timeline timeline; // [gameplay]
+    private int currentPoints; // [gameplay]
+    private String currentEntry; // [gameplay]
+    private TextField textfield;
+    private IntegerProperty timeremaining = new SimpleIntegerProperty(DEFAULTSTARTTIME);
 
 
     public BuzzwordWorkspace(AppTemplate app) {
@@ -69,7 +69,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         this.currentState = HOME;
         this.workspace = new GameScreen(currentState);
         this.signedIn = false;
-        this.gamePlay = false;
+        this.isPlaying = false;
         activateWorkspace(gui.getAppPane());
     }
 
@@ -82,7 +82,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     }
 
     public boolean isPlayingGame() {
-        return gamePlay;
+        return isPlaying;
     }
 
     public void removePosemenu() {
@@ -153,7 +153,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         setHandler();
 
                         BuzzwordGameData gamedata = (BuzzwordGameData) app.getGameDataComponent();
-                        ComboBox<String> gamemodeComboBox = (ComboBox) gui.getToolbarPane().getChildren().get(4);
+                        ComboBox<String> gamemodeComboBox = (ComboBox<String>) gui.getToolbarPane().getChildren().get(4);
                         gamedata.setCurrentMode(gamemodeComboBox.getValue());
 
                         gui.setHomebtnDisable(false);
@@ -293,19 +293,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 currentPoints = 0;
 
+
+
                 workspaceChildren = workspace.getChildren();
                 Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
                 VBox centerVBoxChildren = (VBox) borderPaneChildren.getChildren().get(0);
 
                 BorderPane buttons = (BorderPane) centerVBoxChildren.getChildren().get(4);
 
-                Button playResumeButton = (Button) buttons.getCenter();
-                playResumeButton.setOnAction(e -> {
-                    renderGamePlay();
-                });
+                ((Button) buttons.getCenter()).setOnAction(e -> renderGamePlay());
 
-                Button prevButton = (Button) buttons.getLeft();
-                prevButton.setOnAction(e -> {
+                ((Button) buttons.getLeft()).setOnAction(e -> {
                     int currentLevel = ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
                     ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(currentLevel - 1);
 
@@ -313,15 +311,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     initGamePlay();
                 });
 
-                Button nextButton = (Button) buttons.getRight();
-                nextButton.setOnAction(e -> {
+                ((Button) buttons.getRight()).setOnAction(e -> {
                     int currentLevel = ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel();
                     ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(currentLevel + 1);
 
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
-
 
         }
     }
@@ -366,7 +362,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         signedIn = o;
     }
 
-    public void renderHome(String name) {
+    private void renderHome(String name) {
         ObservableList<String> options =
                 FXCollections.observableArrayList(((BuzzwordGameData) app.getGameDataComponent()).getModeList());
         ComboBox<String> comboBox = new ComboBox<>(options);
@@ -442,10 +438,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         gui.setLoginoutbtnDisable(false);
     }
 
-    public void initGamePlay() {
+    private void initGamePlay() {
 
-        gamePlay = true;
-//        ((BuzzwordGameData)app.getGameDataComponent()).reset();
+        isPlaying = true;
 
         PropertyManager pm = PropertyManager.getPropertyManager();
 
@@ -458,6 +453,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         modeLabel.setText("mode: " + mode);
 
         circles = (Pane) centerVBox.getChildren().get(2);
+        circles.requestFocus();
+
 
         currentEntry = "";
 
@@ -468,7 +465,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         char[] grid = new char[16];
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
-        TrieWordData trie = (TrieWordData) gameData.getModeTrieWordMap().get(mode);
+        TrieWordData trie = gameData.getModeTrieWordMap().get(mode);
         int num = 0;
         int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4 : gameData.getCurrentLevel();
         Set tempSet = null;
@@ -488,13 +485,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + grid[i]);
 
-            b.setOnMousePressed(e -> {
-                b.setEffect(draggedShadow);
-            });
+            b.setOnMousePressed(e -> b.setEffect(draggedShadow));
 
-            b.setOnDragDetected(e -> {
-                b.startFullDrag();
-            });
+            b.setOnDragDetected(e -> b.startFullDrag());
 
             b.setOnMouseDragEntered(e -> {
                 if (!draggedButtons.contains(b)) {
@@ -569,18 +562,19 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             nextGameBtn = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
             prevGameBtn = gui.initializeChildButton(PREVGAME_ICON.toString(), false);
             quitBtn = gui.initializeChildButton(QUIT_ICON.toString(), false);
+            playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
+            nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
+            prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
+            quitBtn.getStyleClass().add(pm.getPropertyValue(QUIT_BUTTON));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        playResumeBtn.getStyleClass().add(pm.getPropertyValue(PLAY_RESUME_BUTTON));
-        nextGameBtn.getStyleClass().add(pm.getPropertyValue(NEXT_GAME_BUTTON));
-        prevGameBtn.getStyleClass().add(pm.getPropertyValue(PREV_GAME_BUTTON));
-        quitBtn.getStyleClass().add(pm.getPropertyValue(QUIT_BUTTON));
 
-        if (((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel() == 1) {
+
+        if (prevGameBtn != null && ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel() == 1) {
             prevGameBtn.setDisable(true);
         }
-        if (((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel()
+        if (nextGameBtn != null && ((BuzzwordGameData) app.getGameDataComponent()).getCurrentLevel()
                 == ((BuzzwordUserData) app.getUserDataComponent()).getProgress(
                 ((BuzzwordGameData) app.getGameDataComponent()).getCurrentMode())) {
             nextGameBtn.setDisable(true);
@@ -596,13 +590,13 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         quitBtn.setLayoutX(545);
         gameWorkspace.getChildren().add(quitBtn);
         quitBtn.setOnAction(e -> {
-            if (this.gamePlay) {
+            if (this.isPlaying) {
                 try {
                     ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
-                this.gamePlay = false;
+                this.isPlaying = false;
             }
 
             for (int i = 0; i < 16; i++) {
@@ -657,6 +651,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         Button localPlayResumeBtn = playResumeBtn;
         timeline.setOnFinished(e -> {
+
+            isPlaying = false;
+
             Button b = null;
             boolean win = false;
             String winLoseHighscore = "";
@@ -781,6 +778,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
         }
 
+        System.out.println("a");
+        circles.setOnKeyPressed(e->{
+            System.out.println(e.getCode().toString());
+        });
+
         setHandler();
 
     }
@@ -788,23 +790,24 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void renderGamePlay() {
 
         try {
-            if (gamePlay) {
+            if (isPlaying) {
                 timeline.pause();
 
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
                 }
-                this.gamePlay = false;
+                this.isPlaying = false;
             } else {
                 timeline.play();
-
 
                 ((GameScreen) workspace).play(posemenu, gui.initializeChildButton(RESUMEGAME_ICON.toString(), false));
                 for (int i = 0; i < 16; i++) {
                     ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("white"));
                 }
-                this.gamePlay = true;
+
+                circles.requestFocus();
+                this.isPlaying = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
