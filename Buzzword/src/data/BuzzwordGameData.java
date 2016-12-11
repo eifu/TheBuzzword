@@ -114,6 +114,8 @@ public class BuzzwordGameData implements AppGameDataComponent {
 
     @Override
     public void reset() {
+        foundWordsSet = new HashSet<>();
+        targetWordsSet = new HashSet<>();
     }
 
     public void save() {

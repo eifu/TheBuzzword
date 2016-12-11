@@ -445,6 +445,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void initGamePlay() {
 
         gamePlay = true;
+//        ((BuzzwordGameData)app.getGameDataComponent()).reset();
 
         PropertyManager pm = PropertyManager.getPropertyManager();
 
@@ -737,6 +738,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     initGamePlay();
                 });
             }
+
+            gameData.reset();
         });
         timeline.play();
 
