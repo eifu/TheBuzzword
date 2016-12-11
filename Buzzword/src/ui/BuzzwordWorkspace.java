@@ -5,6 +5,7 @@ import apptemeplate.AppTemplate;
 import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
+import data.TrieWordData;
 import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
@@ -253,7 +254,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 String mode = (String) comboBox.getValue();
                 gameModeLabel.setText("mode: " + mode);
 
-                int totalLevel = ((BuzzwordGameData)app.getGameDataComponent()).getModeMaxLevel(mode);
+                int totalLevel = ((BuzzwordGameData) app.getGameDataComponent()).getModeMaxLevel(mode);
 
                 // update circles for personalBtn
                 circles = (Pane) vboxChildren.get(2);
@@ -463,12 +464,23 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         draggedShadow.setOffsetY(3);
         draggedShadow.setColor(Color.WHITE);
 
+        char[] grid = new char[16];
+        BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
+        TrieWordData trie = (TrieWordData) gameData.getModeTrieWordMap().get(mode);
+        int num = 0;
+        while (num < 2) {
+            for (int i = 0; i < 16; i++) {
+                grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
+            }
+            num = TrieWordData.countWords(grid, trie);
+        }
+        System.out.println(num);
 
         ArrayList<Button> draggedButtons = new ArrayList<>();
         ArrayList<Line> draggedLines = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
-            b.setText("" + ((char) ThreadLocalRandom.current().nextInt(65, 90 + 1)));
+            b.setText("" + grid[i]);
 
             b.setOnMousePressed(e -> {
                 b.setEffect(draggedShadow);
@@ -528,17 +540,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 draggedButtons.clear();
                 draggedLines.clear();
             });
-
-
         }
-
-        char[] grid = new char[16];
-        for (int i = 0; i < 16; i++) {
-            grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
-        }
-
-
-        BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
 
 
         Label levelLabel = (Label) centerVBox.getChildren().get(3);
@@ -804,12 +806,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 default:
                     return false;
             }
-
         }
-
     }
 
-    private String encryption(String pass){
+    private String encryption(String pass) {
         String encryptedPass = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
