@@ -461,7 +461,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         circles = (Pane) centerVBox.getChildren().get(2);
         circles.requestFocus();
 
-
         currentEntry = "";
 
         DropShadow draggedShadow = new DropShadow();
@@ -549,7 +548,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     gameData.found(currentEntry);
 
                     inputLbl.setText("CORRECT");
-                }else{
+                } else {
                     inputLbl.setText("WRONG");
                 }
 
@@ -787,8 +786,32 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
 
         circles.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.CONTROL){
+                gui.getToolbarPane().requestFocus();
+                currentTyping = true;
+                System.out.println("yaha");
+            }
+            else if (e.getCode() == KeyCode.ESCAPE) {
 
-            if (e.getCode() == KeyCode.ENTER && currentTyping){
+                if (this.isPlaying) {
+                    timeline.pause();
+                    try {
+                        ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
+                    this.isPlaying = false;
+
+                    for (int i = 0; i < 16; i++) {
+                        ((Button) circles.lookup("#" + i)).setTextFill(Paint.valueOf("transparent"));
+                    }
+                }
+
+                gui.getFileController().handleQuitRequest();
+
+                setHandler();
+
+            } else if (e.getCode() == KeyCode.ENTER && currentTyping) {
                 System.out.println(currentEntry);
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
                     currentPoints += currentEntry.length() * 4;
@@ -796,25 +819,26 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
                     inputLbl.setText("CORRECT");
-                }else{
+                } else {
                     inputLbl.setText("WRONG");
                 }
 
                 currentEntry = "";
                 removeButtonShadow();
-            }else {
+            } else {
 
                 removeButtonShadow();
                 if (currentTyping) {
                     currentEntry += e.getCode().toString();
-                    inputLbl.setText(currentEntry);
 
                 } else {
                     System.out.println("typing start");
                     currentTyping = true;
                     currentEntry = e.getCode().toString();
-                    inputLbl.setText(currentEntry);
                 }
+
+                inputLbl.setText(currentEntry);
+
                 if (!coloringPath(grid, currentEntry)) {
                     removeButtonShadow();
                     System.out.println("removovv");
@@ -825,6 +849,17 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 }
                 System.out.println(currentEntry);
             }
+        });
+
+        gui.getToolbarPane().setOnKeyPressed(e->{
+            if (currentTyping && e.getCode() == KeyCode.H){
+                controller.handleHomeRequest();
+            }else{
+                circles.requestFocus();
+                System.out.println("yesyes");
+            }
+
+
         });
 
         setHandler();
@@ -966,7 +1001,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         if (grid[index + path] == w.charAt(0)) {
                             hasFound = coloringPathHelper(grid, w.substring(1), notReached, index + path) || hasFound;
-                            if (hasFound){
+                            if (hasFound) {
                                 circles.lookup("#" + index).setEffect(draggedShadow);
                             }
                         }
