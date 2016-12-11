@@ -466,7 +466,7 @@ public class GameScreen extends Pane {
         Pane rightPane = (Pane)gameworkspace.lookup("#rightworkspace");
         TableView scoreTable = (TableView)((VBox)rightPane.lookup("#scoreVBox")).getChildren().get(0);
         ObservableList<Word> items = scoreTable.getItems();
-        items.add(new Word(w, 20));
+        items.add(new Word(w, w.length()*4));
 //        scoreTable.setItems(items);
         int totalscore = 0;
         for (Word word : items){

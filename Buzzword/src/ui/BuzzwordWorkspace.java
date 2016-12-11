@@ -132,7 +132,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         for (String mode : buzzwordGameData.getModeList()) {
                             Label l = (Label) personalInfo.lookup("#info" + mode);
-                            l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of 8");
+                            l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of "+ buzzwordGameData.getModeMaxLevel(mode));
                         }
 
 
@@ -145,7 +145,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 //                        personalBtn.setDisable(false);
 //                    });
 
-                    //
                     gameStartBtn.setOnAction(e -> {
                         setCurrentState(SELECTING);
                         reloadWorkspace(gui.getAppPane());
@@ -534,6 +533,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             b.setOnMouseDragReleased(ee -> {
                 System.out.println(currentEntry);
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)){
+                    currentPoints = currentEntry.length() * 4;
+
                     ((GameScreen)workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
                 }
