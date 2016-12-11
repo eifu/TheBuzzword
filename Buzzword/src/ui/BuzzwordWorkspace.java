@@ -7,6 +7,7 @@ import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.TrieWordData;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
@@ -118,6 +119,19 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     public void setHandler() {
         switch (currentState) {
             case HOME:
+                KeyCombination loginoutCombo = new KeyCodeCombination(KeyCode.L, KeyCodeCombination.CONTROL_DOWN);
+                KeyCombination personalInfoCombo = new KeyCodeCombination(KeyCode.P, KeyCombination.CONTROL_DOWN);
+
+                gui.getToolbarPane().requestFocus();
+                gui.getToolbarPane().setOnKeyPressed(e->{
+                    if (loginoutCombo.match(e)){
+                        gui.getFileController().handleLoginoutRequest();
+                    }else if (signedIn && personalInfoCombo.match(e)){
+                        personalBtn.fire();
+                    }else if (e.getCode() == KeyCode.ESCAPE){
+                        gui.getFileController().handleQuitRequest();
+                    }
+                });
 
                 // if user has signed in.
                 if (signedIn) {
@@ -858,8 +872,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 circles.requestFocus();
                 System.out.println("yesyes");
             }
-
-
         });
 
         setHandler();
