@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -291,6 +292,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                 personalBtn.setDisable(true);
 
+                currentPoints = 0;
+
                 workspaceChildren = workspace.getChildren();
                 Pane borderPaneChildren = (Pane) workspaceChildren.get(0);
                 VBox centerVBoxChildren = (VBox) borderPaneChildren.getChildren().get(0);
@@ -468,13 +471,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         TrieWordData trie = (TrieWordData) gameData.getModeTrieWordMap().get(mode);
         int num = 0;
         int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4: gameData.getCurrentLevel();
+        Set a=null;
         while (num < targetNum) {
             for (int i = 0; i < 16; i++) {
                 grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
             }
-            num = TrieWordData.countWords(grid, trie);
+            a = TrieWordData.countWords(grid, trie);
+            num = a.size();
         }
-        System.out.println(num);
+        System.out.println(a);
 
         ArrayList<Button> draggedButtons = new ArrayList<>();
         ArrayList<Line> draggedLines = new ArrayList<>();
@@ -534,7 +539,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             b.setOnMouseDragReleased(ee -> {
                 System.out.println(currentEntry);
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
-                    currentPoints = currentEntry.length() * 4;
+                    currentPoints += currentEntry.length() * 4;
 
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
@@ -725,7 +730,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     initGamePlay();
                 });
             }
-
         });
         timeline.play();
 
@@ -797,32 +801,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }
 
         setHandler();
-    }
-
-    private Character[][] setFirstWord(String s, Character[][] matrix) {
-        for (int i = 0; i < s.length(); i++) {
-            if (i < 4 || (8 <= i && i < 12)) {
-                matrix[i / 4][i % 4] = s.charAt(i);
-            } else {
-                matrix[i / 4][3 - i % 4] = s.charAt(i);
-            }
-        }
-
-        return matrix;
-    }
-
-    private Character[][] setSecondWord(String s, Character[][] matrix) {
-        int y;
-        int x;
-        for (int i = 0; i < s.length(); i++) {
-            if (i < 4 || (8 <= i && i < 12)) {
-                matrix[3 - (i / 4)][i % 4] = s.charAt(i);
-            } else {
-                matrix[3 - (i / 4)][3 - i % 4] = s.charAt(i);
-            }
-        }
-
-        return matrix;
     }
 
     private void removeButtonShadow(ArrayList<Button> a) {
