@@ -132,7 +132,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
                         for (String mode : buzzwordGameData.getModeList()) {
                             Label l = (Label) personalInfo.lookup("#info" + mode);
-                            l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of "+ buzzwordGameData.getModeMaxLevel(mode));
+                            l.setText(mode + ": " + buzzwordUserData.getProgress(mode) + " out of " + buzzwordGameData.getModeMaxLevel(mode));
                         }
 
 
@@ -467,7 +467,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BuzzwordGameData gameData = (BuzzwordGameData) app.getGameDataComponent();
         TrieWordData trie = (TrieWordData) gameData.getModeTrieWordMap().get(mode);
         int num = 0;
-        while (num < 2) {
+        int targetNum = gameData.getCurrentLevel() + 1 > 4 ? 4: gameData.getCurrentLevel();
+        while (num < targetNum) {
             for (int i = 0; i < 16; i++) {
                 grid[i] = (char) ThreadLocalRandom.current().nextInt(65, 90 + 1);
             }
@@ -532,10 +533,10 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             b.setOnMouseDragReleased(ee -> {
                 System.out.println(currentEntry);
-                if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)){
+                if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
                     currentPoints = currentEntry.length() * 4;
 
-                    ((GameScreen)workspace).addWord(currentEntry);
+                    ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
                 }
 
@@ -651,41 +652,70 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         Button localPlayResumeBtn = playResumeBtn;
         timeline.setOnFinished(e -> {
             Button b = null;
-            String winlose = "";
+            boolean win = false;
+            String winLoseHighscore = "";
+
+            switch (gameData.getCurrentLevel()) {
+                case 1:
+                case 2:
+                    if (currentPoints > 10){
+                        win =true;
+                    }
+                    break;
+                case 3:
+                    if (currentPoints> 20){
+                        win = true;
+                    }
+                    break;
+                case 4:
+                    if (currentPoints > 30){
+                        win = true;
+                    }
+                    break;
+                case 5 :
+                    if (currentPoints > 40){
+                        win = true;
+                    }
+                    break;
+                case 6:
+                case 7:
+                case 8:
+                    if (currentPoints > 50){
+                        win = true;
+                    }
+                    break;
+            }
 
             try {
-                if (gameData.getCurrentLevel() < 3) {
-                    if (currentPoints < 20) {
-                        winlose = "lose!";
-                        b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
-                    } else {
-                        winlose = "win!";
-                        b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
-                    }
+                if (win) {
+                    b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
+                        winLoseHighscore = "WIN!\n";
                 } else {
-                    if (currentPoints < 40) {
-                        winlose = "lose!";
-                        b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
-                    } else {
-                        winlose = "win!";
-                        b = gui.initializeChildButton(NEXTGAME_ICON.toString(), false);
-                    }
+                    b = gui.initializeChildButton(REPLAY_ICON.toString(), false);
+                        winLoseHighscore = "LOSE!\n";
                 }
             } catch (FileNotFoundException f) {
                 f.printStackTrace();
                 System.exit(1);
             }
-            ((GameScreen) workspace).winlose(posemenu, winlose, localPlayResumeBtn, b);
 
-            if (winlose.equals("win!")) {
+
+            if (currentPoints > ((BuzzwordUserData) app.getUserDataComponent()).getHighScore(mode)[gameData.getCurrentLevel() - 1]) {
+                winLoseHighscore += "new record! " + currentPoints;
+                ((BuzzwordUserData) app.getUserDataComponent()).setHighscore(mode, gameData.getCurrentLevel() - 1, currentPoints);
+            }
+
+            ((GameScreen) workspace).winlose(posemenu, winLoseHighscore, localPlayResumeBtn, b);
+
+            if (win) {
                 b.setOnAction(e2 -> {
                     int progress = ((BuzzwordUserData) app.getUserDataComponent()).getProgress(mode);
 
                     // if the current level is the user's highest progress, then increment the progress by 1.
                     if (gameData.getCurrentLevel() == progress) {
                         ((BuzzwordUserData) app.getUserDataComponent()).setProgress(mode, progress + 1);
-                        ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(progress + 1);
                     }
+                    ((BuzzwordGameData) app.getGameDataComponent()).setCurrentLevel(gameData.getCurrentLevel() + 1);
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
@@ -714,10 +744,27 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         }));
 
         Label l = (Label) rightPane.lookup("#target");
-        if (gameData.getCurrentLevel() < 3) {
-            l.setText("20 points");
-        } else {
-            l.setText("40 points");
+
+        switch (gameData.getCurrentLevel()) {
+            case 1:
+            case 2:
+                l.setText("10 points");
+                break;
+            case 3:
+                l.setText("20 points");
+                break;
+            case 4:
+                l.setText("30 points");
+                break;
+            case 5 :
+                l.setText("40 points");
+                break;
+            case 6:
+            case 7:
+            case 8:
+                l.setText("50 points");
+                break;
+
         }
 
         setHandler();
@@ -729,7 +776,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         try {
             if (gamePlay) {
                 timeline.pause();
-
 
                 ((GameScreen) workspace).pose(posemenu, gui.initializeChildButton(PLAYGAME_ICON.toString(), false));
                 for (int i = 0; i < 16; i++) {
@@ -749,7 +795,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         setHandler();
     }

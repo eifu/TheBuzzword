@@ -52,6 +52,10 @@ public class BuzzwordUserData implements AppUserDataComponent {
         this.highscore.put(mode, arraylist);
     }
 
+    public void setHighscore(String mode, int level, int score){
+        this.highscore.get(mode)[level] = score;
+    }
+
     public int[] getHighScore(String mode) {
         return highscore.get(mode);
     }
