@@ -73,6 +73,7 @@ public class AppGUI implements AppStyleArbiter{
 
     private void initializeToolbar()throws Exception{
         toolbarPane = new Pane();
+        toolbarPane.requestFocus();
         toolbarPane.setPrefSize(200, 200);
 
         Rectangle toolbarBackgroundRectangle = new Rectangle();

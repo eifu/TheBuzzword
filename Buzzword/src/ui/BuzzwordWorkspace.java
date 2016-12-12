@@ -6,9 +6,12 @@ import buzzword.GameScreenState;
 import components.AppWorkspaceComponent;
 import controller.BuzzwordController;
 import data.TrieWordData;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.text.Text;
 import propertymanager.PropertyManager;
 import data.BuzzwordGameData;
 import data.BuzzwordUserData;
@@ -129,6 +132,8 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         switch (currentState) {
             case HOME:
 
+                gui.getToolbarPane().requestFocus();
+
                 // if user has signed in.
                 if (signedIn) {
                     ObservableList<Node> workspaceHomeChildren = workspace.getChildren();
@@ -177,7 +182,6 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     });
                 }
 
-                gui.getToolbarPane().requestFocus();
                 gui.getToolbarPane().setOnKeyPressed(e -> {
                     if (loginoutCombo.match(e)) {
                         gui.getFileController().handleLoginoutRequest();
@@ -189,7 +193,7 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                         StackPane s = (StackPane) vboxHomeChildren.get(2);
                         Button gameStartBtn = (Button) s.getChildren().get(0);
                         gameStartBtn.fire();
-                    } else if (!signedIn && createProfCombo.match(e)){
+                    } else if (!signedIn && createProfCombo.match(e)) {
 
                         gui.setLoginoutbtnDisable(true);
                         gui.setHomebtnDisable(false);
@@ -380,12 +384,12 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                 }
 
                 circles.requestFocus();
-                circles.setOnKeyPressed(e->{
-                    if (homeCombo.match(e)){
+                circles.setOnKeyPressed(e -> {
+                    if (homeCombo.match(e)) {
                         gui.getFileController().handleHomeRequest();
-                    } else if (loginoutCombo.match(e)){
+                    } else if (loginoutCombo.match(e)) {
                         gui.getFileController().handleLoginoutRequest();
-                    } else if (helpCombo.match(e)){
+                    } else if (helpCombo.match(e)) {
                         gui.getFileController().handleHelpRequest();
                     }
 
@@ -498,13 +502,15 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         BuzzwordUserData userData = (BuzzwordUserData) app.getUserDataComponent();
         Label nameLbl = new Label(userData.getUsername());
         nameLbl.setTextFill(Paint.valueOf("white"));
-        nameLbl.setFont(new Font("ariel", 30));
+        nameLbl.setFont(new Font("ariel", 20));
         nameLbl.setLayoutX(25);
         nameLbl.setLayoutY(25);
+        nameLbl.setId("nameLbl");
         personalInfo.getChildren().add(nameLbl);
         Label levelLbl = new Label("Level");
+        levelLbl.setId("levelLbl");
         levelLbl.setTextFill(Paint.valueOf("white"));
-        levelLbl.setFont(new Font("ariel", 20));
+        levelLbl.setFont(new Font("ariel", 15));
         levelLbl.setLayoutX(35);
         levelLbl.setLayoutY(60);
         personalInfo.getChildren().add(levelLbl);
@@ -513,12 +519,117 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
             Label modeLbl = new Label();
             modeLbl.setId("info" + mode);
             modeLbl.setTextFill(Paint.valueOf("white"));
-            modeLbl.setFont(new Font("ariel", 20));
-            modeLbl.setLayoutX(30);
-            modeLbl.setLayoutY(60 + 25 * count);
+            modeLbl.setFont(new Font("ariel", 15));
+            modeLbl.setLayoutX(40);
+            modeLbl.setLayoutY(60 + 20 * count);
             count++;
             personalInfo.getChildren().add(modeLbl);
         }
+
+
+
+        Button editBtn = new Button("EDIT");
+        StackPane editBtnStack = new StackPane();
+        editBtnStack.setPrefSize(240, 40);
+        editBtnStack.setLayoutX(0);
+        editBtnStack.setLayoutY(85 + 20 * ((BuzzwordGameData) app.getGameDataComponent()).getModeList().size());
+        editBtnStack.getChildren().add(editBtn);
+        editBtnStack.setId("editBtnStack");
+
+        personalInfo.getChildren().add(editBtnStack);
+
+        editBtn.setOnAction(e -> {
+            personalInfo.lookup("#nameLbl").setVisible(false);
+            personalInfo.lookup("#levelLbl").setVisible(false);
+            for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
+                personalInfo.lookup("#info" + mode).setVisible(false);
+            }
+            personalInfo.lookup("#editBtnStack").setVisible(false);
+
+
+            GridPane grid = new GridPane();
+            grid.setPrefSize(220, 180);
+            grid.setAlignment(Pos.CENTER);
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(25, 25, 25, 25));
+            Text titleSignIn = new Text("Editing Password");
+            titleSignIn.setFill(Paint.valueOf("white"));
+            grid.add(titleSignIn, 0, 0, 2, 1);
+
+            Label oldPassLbl = new Label("Old\n Password:");
+            oldPassLbl.setFont(new Font("Roboto", 10));
+            oldPassLbl.setTextFill(Paint.valueOf("white"));
+            grid.add(oldPassLbl, 0, 1);
+            TextField oldPassText = new PasswordField();
+            grid.add(oldPassText, 1, 1);
+
+            Label newPassLbl = new Label("New\n Password:");
+            newPassLbl.setFont(new Font("Roboto", 10));
+            newPassLbl.setTextFill(Paint.valueOf("white"));
+            grid.add(newPassLbl, 0, 2);
+            TextField newPassText = new PasswordField();
+            grid.add(newPassText, 1, 2);
+
+            Button signUpBtn = new Button("Confirm");
+            signUpBtn.setTextFill(Paint.valueOf("white"));
+
+            Button backBtn = new Button("Back");
+            backBtn.setTextFill(Paint.valueOf("white"));
+
+            HBox hbBtn = new HBox(10);
+            hbBtn.getChildren().addAll(backBtn,signUpBtn);
+            hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+//            grid.add(hbBtn, 1, 4);
+            hbBtn.setPrefSize(220, 40);
+            hbBtn.setLayoutX(10);
+            hbBtn.setLayoutY(180);
+
+            grid.setLayoutX(10);
+            grid.setLayoutY(10);
+            grid.setId("grid");
+            personalInfo.getChildren().addAll(grid, hbBtn);
+
+            backBtn.setOnAction(e2 -> {
+                personalInfo.getChildren().remove(grid);
+                personalInfo.getChildren().remove(hbBtn);
+
+                personalInfo.lookup("#nameLbl").setVisible(true);
+                personalInfo.lookup("#levelLbl").setVisible(true);
+                for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
+                    personalInfo.lookup("#info" + mode).setVisible(true);
+                }
+                personalInfo.lookup("#editBtnStack").setVisible(true);
+            });
+
+            signUpBtn.setOnAction(e3 -> {
+                String oldPass = oldPassText.getText();
+                String newPass = newPassText.getText();
+                if (userData.getPassword().equals(encryption(oldPass))) {
+
+
+                    userData.setPassword(encryption(newPass));
+                    ((BuzzwordGameData) app.getGameDataComponent()).setUsernamePasswordMap(name, encryption(newPass));
+
+                    ((BuzzwordGameData) app.getGameDataComponent()).save();
+                    userData.save(app);
+
+
+                    personalInfo.getChildren().remove(grid);
+                    personalInfo.getChildren().remove(hbBtn);
+
+                    personalInfo.lookup("#nameLbl").setVisible(true);
+                    personalInfo.lookup("#levelLbl").setVisible(true);
+                    for (String mode : ((BuzzwordGameData) app.getGameDataComponent()).getModeList()) {
+                        personalInfo.lookup("#info" + mode).setVisible(true);
+                    }
+                    personalInfo.lookup("#editBtnStack").setVisible(true);
+
+                }
+            });
+
+
+        });
 
         try {
             Button close = gui.initializeChildButton(QUIT_ICON.toString(), false);
@@ -590,6 +701,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
         for (int i = 0; i < 16; i++) {
             Button b = ((Button) circles.lookup("#" + i));
             b.setText("" + grid[i]);
+
+            b.setOnMouseReleased(e -> {
+                removeButtonShadow();
+                removeLineShadow();
+            });
 
             b.setOnMousePressed(e -> b.setEffect(draggedShadow));
 
@@ -998,6 +1114,20 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
     private void removeButtonShadow(ArrayList<Button> a) {
         for (Button c : a) {
             c.setEffect(null);
+        }
+    }
+
+    private void removeLineShadow() {
+
+        Line l;
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                l = (Line) circles.lookup("#hline" + (x + y * 4));
+                l.setStroke(Paint.valueOf("black"));
+                l = (Line) circles.lookup("#vline" + (x + y * 4));
+                l.setStroke(Paint.valueOf("black"));
+
+            }
         }
     }
 

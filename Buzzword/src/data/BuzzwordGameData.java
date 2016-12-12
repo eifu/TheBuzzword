@@ -62,6 +62,10 @@ public class BuzzwordGameData implements AppGameDataComponent {
         return usernamePasswordMap;
     }
 
+    public void setUsernamePasswordMap(String name, String pass) {
+        this.usernamePasswordMap.put(name, pass);
+    }
+
     public Map<String, TrieWordData> getModeTrieWordMap() {
         return modeTrieWordMap;
     }
@@ -97,8 +101,12 @@ public class BuzzwordGameData implements AppGameDataComponent {
             TrieWordData wordSet = new TrieWordData();
             this.modeTrieWordMap.put(mode, wordSet);
         }
+        try {
+            this.modeTrieWordMap.get(mode).addWord(word);
 
-        this.modeTrieWordMap.get(mode).addWord(word);
+        } catch (IndexOutOfBoundsException io) {
+            io.printStackTrace();
+        }
     }
 
     public boolean validateUsernamePassword(String name, String pass) {
