@@ -366,6 +366,60 @@ public class GameScreen extends Pane {
 
                 this.getChildren().add(gameWorkspace);
                 break;
+
+            case HELP:
+                Pane helpWorkspace = new Pane();
+                helpWorkspace.setPrefSize(400, 300);
+
+                Label helperTitle = new Label("HELP");
+                helperTitle.setFont(new Font("Roboto", 40));
+                helperTitle.setTextFill(Paint.valueOf("white"));
+                helperTitle.setPrefSize(400, 300);
+                helperTitle.setAlignment(Pos.CENTER);
+                helperTitle.setLayoutX(-100);
+                helperTitle.setLayoutY(-100);
+
+                Label s1 = new Label("Shortcut 1. Create Profile\n\tCtl + Shit + p at homescreen\n"
+                + "\t** before log in"
+                );
+                s1.setLayoutX(80);
+                s1.setLayoutY(80);
+                s1.setTextFill(Paint.valueOf("white"));
+                s1.setPrefSize(400, 100);
+
+
+                Label s2 = new Label("Shortcut 2. Back to Home Screen\n\tCtl + h ");
+                s2.setLayoutX(80);
+                s2.setLayoutY(120);
+                s2.setPrefSize(400, 100);
+                s2.setTextFill(Paint.valueOf("white"));
+
+
+                Label s3 = new Label("Shortcut 3. Login / Logout\n\tCtl + l ");
+                s3.setLayoutX(80);
+                s3.setLayoutY(160);
+                s3.setTextFill(Paint.valueOf("white"));
+
+                s3.setPrefSize(400, 100);
+
+                Label s4 = new Label("Shortcut 4. Help\n\tCtl + q ");
+                s4.setLayoutX(80);
+                s4.setLayoutY(200);
+                s4.setTextFill(Paint.valueOf("white"));
+
+                s4.setPrefSize(400, 100);
+
+                Label s5 = new Label("Shortcut 5. Start Game\n\tCtl + p \n\t**after log in");
+                s5.setLayoutX(80);
+                s5.setLayoutY(240);
+                s5.setTextFill(Paint.valueOf("white"));
+                s5.setPrefSize(400, 100);
+
+                helpWorkspace.getChildren().addAll(helperTitle, s1,s2,s3,s4,s5);
+
+                this.getChildren().add(helpWorkspace);
+
+
         }
     }
 

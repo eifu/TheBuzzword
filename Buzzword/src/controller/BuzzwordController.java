@@ -113,8 +113,13 @@ public class BuzzwordController implements FileController{
         BuzzwordWorkspace buzzwordWorkspace = (BuzzwordWorkspace) app.getWorkspaceComponent();
         AppGUI gui = buzzwordWorkspace.getGui();
 
+
         buzzwordWorkspace.setCurrentState(HELP);
         buzzwordWorkspace.reloadWorkspace(gui.getAppPane());
+
+        buzzwordWorkspace.setHandler();
+
+
         gui.setHomebtnDisable(false);
     }
 

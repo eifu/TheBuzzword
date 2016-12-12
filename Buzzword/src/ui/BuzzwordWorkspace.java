@@ -427,6 +427,11 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
                     reloadWorkspace(gui.getAppPane());
                     initGamePlay();
                 });
+                break;
+            case HELP:
+
+
+                break;
 
         }
     }
