@@ -763,8 +763,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             b.setOnMouseDragReleased(ee -> {
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
-                    currentPoints += currentEntry.length() * 4;
-
+                    if (currentEntry.length() >2) {
+                        currentPoints += currentEntry.length() * 4;
+                    }
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
 
@@ -1035,8 +1036,9 @@ public class BuzzwordWorkspace extends AppWorkspaceComponent {
 
             } else if (e.getCode() == KeyCode.ENTER && currentTyping) {
                 if (trie.findWord(currentEntry) && !gameData.hasFound(currentEntry)) {
-                    currentPoints += currentEntry.length() * 4;
-
+                    if (currentEntry.length() > 2) {
+                        currentPoints += currentEntry.length() * 4;
+                    }
                     ((GameScreen) workspace).addWord(currentEntry);
                     gameData.found(currentEntry);
                     inputLbl.setText("CORRECT");
